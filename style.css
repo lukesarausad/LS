@@ -211,6 +211,11 @@ section {
 .icon {
   cursor: pointer;
   height: 2rem;
+  transition: all 0.3s ease;
+}
+
+.icon:hover {
+  transform: scale(1.1);
 }
 
 /* BUTTONS */
