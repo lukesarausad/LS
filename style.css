@@ -219,6 +219,17 @@ section {
   cursor: pointer;
 }
 
+.icon-arrow {
+  cursor: pointer;
+  height: 2rem;
+  transition: all 0.3s ease;
+}
+
+.icon-arrow:hover {
+  transform: translateY(-0.5rem);
+  cursor: pointer;
+}
+
 /* BUTTONS */
 
 .btn-container {
