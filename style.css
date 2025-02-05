@@ -548,3 +548,27 @@ footer p {
       left: -37px;
   }
 }
+
+.fade-animate {
+  opacity: 0;
+  transform: translateY(20px);
+  will-change: opacity, transform;
+}
+
+/* Optional: Different animation directions */
+.fade-animate.fade-left {
+  transform: translateX(-20px);
+}
+
+.fade-animate.fade-right {
+  transform: translateX(20px);
+}
+
+/* Optional: Different animation speeds */
+.fade-animate.fade-slow {
+  transition: all 1s ease-out !important;
+}
+
+.fade-animate.fade-fast {
+  transition: all 0.3s ease-out !important;
+}
