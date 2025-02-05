@@ -211,11 +211,11 @@ section {
 .icon {
   cursor: pointer;
   height: 2rem;
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
 }
 
 .icon:hover {
-  transform: scale(1.1);
+  transform: rotate(360deg) scale(1.5);
   cursor: pointer;
 }
 
