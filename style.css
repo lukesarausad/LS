@@ -508,6 +508,7 @@ footer p {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   position: relative;
   transition: transform 0.3s ease;
+  align-items: center;
 }
 
 .timeline-content:hover {
@@ -583,3 +584,4 @@ footer p {
 .fade-animate.fade-fast {
   transition: all 0.3s ease-out !important;
 }
+

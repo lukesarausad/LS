@@ -42,6 +42,47 @@ function initializeAnimations() {
   });
 }
 
+
+// viewer Test
+
+
+function animateValue(element, oldValue, newValue) {
+    // Clear previous content
+    element.innerHTML = '';
+    
+    // Convert to string and create element for the number
+    const number = newValue.toString();
+    const digitSpan = document.createElement('span');
+    digitSpan.className = 'counter-digit';
+    digitSpan.textContent = number;
+    
+    // Add slide-up animation
+    digitSpan.style.transform = 'translateY(20px)';
+    digitSpan.style.opacity = '0';
+    element.appendChild(digitSpan);
+    
+    // Trigger animation
+    setTimeout(() => {
+        digitSpan.style.transform = 'translateY(0)';
+        digitSpan.style.opacity = '1';
+    }, 50);
+}
+
+function initCounter() {
+    const counterElement = document.getElementById('counter');
+    let visitorCount = parseInt(localStorage.getItem('visitorCount') || '0');
+    
+    // Animate from previous count to new count
+    animateValue(counterElement, visitorCount, visitorCount + 1);
+    
+    // Update stored count
+    localStorage.setItem('visitorCount', (visitorCount + 1).toString());
+}
+
+// Initialize when page loads
+window.addEventListener('load', initCounter);
+
+
 document.addEventListener('DOMContentLoaded', initializeAnimations);
 
 
