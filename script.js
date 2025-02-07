@@ -46,41 +46,93 @@ function initializeAnimations() {
 // viewer Test
 
 
-function animateValue(element, oldValue, newValue) {
-    // Clear previous content
+// function animateValue(element, oldValue, newValue) {
+//     // Clear previous content
+//     element.innerHTML = '';
+    
+//     // Convert to string and create element for the number
+//     const number = newValue.toString();
+//     const digitSpan = document.createElement('span');
+//     digitSpan.className = 'counter-digit';
+//     digitSpan.textContent = number;
+    
+//     // Add slide-up animation
+//     digitSpan.style.transform = 'translateY(20px)';
+//     digitSpan.style.opacity = '0';
+//     element.appendChild(digitSpan);
+    
+//     // Trigger animation
+//     setTimeout(() => {
+//         digitSpan.style.transform = 'translateY(0)';
+//         digitSpan.style.opacity = '1';
+//     }, 50);
+// }
+
+// function initCounter() {
+//     const counterElement = document.getElementById('counter');
+//     let visitorCount = parseInt(localStorage.getItem('visitorCount') || '0');
+    
+//     // Animate from previous count to new count
+//     animateValue(counterElement, visitorCount, visitorCount + 1);
+    
+//     // Update stored count
+//     localStorage.setItem('visitorCount', (visitorCount + 1).toString());
+// }
+
+// // Initialize when page loads
+// window.addEventListener('load', initCounter);
+
+
+// Visitor Counter
+
+function animateValue(element, newValue) {
     element.innerHTML = '';
     
-    // Convert to string and create element for the number
     const number = newValue.toString();
     const digitSpan = document.createElement('span');
     digitSpan.className = 'counter-digit';
     digitSpan.textContent = number;
     
-    // Add slide-up animation
     digitSpan.style.transform = 'translateY(20px)';
     digitSpan.style.opacity = '0';
     element.appendChild(digitSpan);
     
-    // Trigger animation
     setTimeout(() => {
         digitSpan.style.transform = 'translateY(0)';
         digitSpan.style.opacity = '1';
     }, 50);
 }
 
-function initCounter() {
+function updateCounter() {
     const counterElement = document.getElementById('counter');
-    let visitorCount = parseInt(localStorage.getItem('visitorCount') || '0');
     
-    // Animate from previous count to new count
-    animateValue(counterElement, visitorCount, visitorCount + 1);
-    
-    // Update stored count
-    localStorage.setItem('visitorCount', (visitorCount + 1).toString());
+    // Create a hidden element to store Counter.dev's count
+    const counterValueElement = document.createElement('div');
+    counterValueElement.style.display = 'none';
+    counterValueElement.className = 'counter-value';
+    document.body.appendChild(counterValueElement);
+
+    // Observe changes to the counter value
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'childList') {
+                const count = parseInt(counterValueElement.textContent) || 0;
+                if (count > 0) {  // Only animate if we have a valid count
+                    animateValue(counterElement, count);
+                }
+            }
+        });
+    });
+
+    observer.observe(counterValueElement, {
+        childList: true,
+        characterData: true,
+        subtree: true
+    });
 }
 
 // Initialize when page loads
-window.addEventListener('load', initCounter);
+window.addEventListener('load', updateCounter);
 
 
 document.addEventListener('DOMContentLoaded', initializeAnimations);
