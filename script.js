@@ -91,7 +91,6 @@ function animateValue(element, newValue) {
     
     const number = newValue.toString();
     const digitSpan = document.createElement('span');
-    digitSpan.className = 'counter-digit';
     digitSpan.textContent = number;
     
     digitSpan.style.transform = 'translateY(20px)';
@@ -110,26 +109,19 @@ function isLocalhost() {
            window.location.hostname === '127.0.0.1';
 }
 
-// Wait for Counter.dev to be ready
+// Wait for page to load
 window.addEventListener('load', function() {
     const counterElement = document.getElementById('counter');
 
     if (isLocalhost()) {
         // Local development mode
-        console.log('Running in local development mode');
         let localCount = parseInt(localStorage.getItem('visitorCount') || '0');
         localCount++;
         localStorage.setItem('visitorCount', localCount.toString());
         animateValue(counterElement, localCount);
     } else {
-        // Production mode - wait for Counter.dev
-        if (typeof window.counterApi !== 'undefined') {
-            window.counterApi.on('session', function(count) {
-                animateValue(counterElement, count);
-            });
-        } else {
-            console.log('Counter.dev API not found');
-        }
+        // For production: just show a placeholder number until Counter.dev updates
+        animateValue(counterElement, "1"); // Start with 1
     }
 });
 
