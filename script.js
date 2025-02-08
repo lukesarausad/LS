@@ -113,7 +113,7 @@ function isLocalhost() {
 window.addEventListener('load', function() {
     const counterElement = document.getElementById('counter');
     
-    if (isLocalhost()) {
+    if (!isLocalhost()) {
         // Local development mode
         let localCount = parseInt(localStorage.getItem('visitorCount') || '0');
         localCount = Math.max(1, localCount + 1); // Ensure minimum of 1
