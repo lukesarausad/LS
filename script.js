@@ -86,7 +86,6 @@ function initializeAnimations() {
 // Visitor Counter
 
 // Animation function
-// Animation function
 function animateValue(element, newValue) {
     element.innerHTML = '';
     
@@ -110,39 +109,36 @@ function isLocalhost() {
            window.location.hostname === '127.0.0.1';
 }
 
-// Function to get Counter.dev value
-function getCounterValue() {
-    const counterElement = document.getElementById('counter');
-    
-    // Look for Counter.dev's hidden element which contains the count
-    const checkCount = setInterval(() => {
-        const counterDevElements = document.querySelectorAll('[data-b67f574f-34c8-4c36-b042-64f2dc6bbb80]');
-        if (counterDevElements.length > 0) {
-            const count = counterDevElements[0].textContent;
-            if (count && !isNaN(parseInt(count))) {
-                animateValue(counterElement, count);
-                clearInterval(checkCount);
-            }
+// Function to fetch count from Counter.dev
+async function fetchCount() {
+    try {
+        const response = await fetch('https://counter.dev/api/b67f574f-34c8-4c36-b042-64f2dc6bbb80');
+        const data = await response.json();
+        // Return 1 if count is 0, undefined, or invalid
+        if (data && data.count && data.count > 0) {
+            return data.count;
         }
-    }, 100);
-
-    // Stop checking after 5 seconds
-    setTimeout(() => clearInterval(checkCount), 5000);
+        return 1;
+    } catch (error) {
+        console.error('Error fetching count:', error);
+        return 1; // Return 1 on any error
+    }
 }
 
-// Wait for page to load
-window.addEventListener('load', function() {
+// Initialize counter
+window.addEventListener('load', async function() {
     const counterElement = document.getElementById('counter');
-
+    
     if (isLocalhost()) {
         // Local development mode
         let localCount = parseInt(localStorage.getItem('visitorCount') || '0');
-        localCount++;
+        localCount = localCount > 0 ? localCount : 1; // Ensure minimum of 1
         localStorage.setItem('visitorCount', localCount.toString());
         animateValue(counterElement, localCount);
     } else {
-        // Production mode - get actual Counter.dev value
-        getCounterValue();
+        // Production mode
+        const count = await fetchCount();
+        animateValue(counterElement, count); // This will always be at least 1
     }
 });
 
