@@ -85,6 +85,7 @@ function initializeAnimations() {
 
 // Visitor Counter
 
+// Animation function
 function animateValue(element, newValue) {
     element.innerHTML = '';
     
@@ -103,36 +104,34 @@ function animateValue(element, newValue) {
     }, 50);
 }
 
-function updateCounter() {
-    const counterElement = document.getElementById('counter');
-    
-    // Create a hidden element to store Counter.dev's count
-    const counterValueElement = document.createElement('div');
-    counterValueElement.style.display = 'none';
-    counterValueElement.className = 'counter-value';
-    document.body.appendChild(counterValueElement);
-
-    // Observe changes to the counter value
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.type === 'childList') {
-                const count = parseInt(counterValueElement.textContent) || 0;
-                if (count > 0) {  // Only animate if we have a valid count
-                    animateValue(counterElement, count);
-                }
-            }
-        });
-    });
-
-    observer.observe(counterValueElement, {
-        childList: true,
-        characterData: true,
-        subtree: true
-    });
+// Function to check if we're running locally
+function isLocalhost() {
+    return window.location.hostname === 'localhost' || 
+           window.location.hostname === '127.0.0.1';
 }
 
-// Initialize when page loads
-window.addEventListener('load', updateCounter);
+// Wait for Counter.dev to be ready
+window.addEventListener('load', function() {
+    const counterElement = document.getElementById('counter');
+
+    if (isLocalhost()) {
+        // Local development mode
+        console.log('Running in local development mode');
+        let localCount = parseInt(localStorage.getItem('visitorCount') || '0');
+        localCount++;
+        localStorage.setItem('visitorCount', localCount.toString());
+        animateValue(counterElement, localCount);
+    } else {
+        // Production mode - wait for Counter.dev
+        if (typeof window.counterApi !== 'undefined') {
+            window.counterApi.on('session', function(count) {
+                animateValue(counterElement, count);
+            });
+        } else {
+            console.log('Counter.dev API not found');
+        }
+    }
+});
 
 
 document.addEventListener('DOMContentLoaded', initializeAnimations);
