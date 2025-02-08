@@ -86,6 +86,7 @@ function initializeAnimations() {
 // Visitor Counter
 
 // Animation function
+// Animation function
 function animateValue(element, newValue) {
     element.innerHTML = '';
     
@@ -109,6 +110,26 @@ function isLocalhost() {
            window.location.hostname === '127.0.0.1';
 }
 
+// Function to get Counter.dev value
+function getCounterValue() {
+    const counterElement = document.getElementById('counter');
+    
+    // Look for Counter.dev's hidden element which contains the count
+    const checkCount = setInterval(() => {
+        const counterDevElements = document.querySelectorAll('[data-b67f574f-34c8-4c36-b042-64f2dc6bbb80]');
+        if (counterDevElements.length > 0) {
+            const count = counterDevElements[0].textContent;
+            if (count && !isNaN(parseInt(count))) {
+                animateValue(counterElement, count);
+                clearInterval(checkCount);
+            }
+        }
+    }, 100);
+
+    // Stop checking after 5 seconds
+    setTimeout(() => clearInterval(checkCount), 5000);
+}
+
 // Wait for page to load
 window.addEventListener('load', function() {
     const counterElement = document.getElementById('counter');
@@ -120,8 +141,8 @@ window.addEventListener('load', function() {
         localStorage.setItem('visitorCount', localCount.toString());
         animateValue(counterElement, localCount);
     } else {
-        // For production: just show a placeholder number until Counter.dev updates
-        animateValue(counterElement, "1"); // Start with 1
+        // Production mode - get actual Counter.dev value
+        getCounterValue();
     }
 });
 
