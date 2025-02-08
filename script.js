@@ -109,36 +109,19 @@ function isLocalhost() {
            window.location.hostname === '127.0.0.1';
 }
 
-// Function to fetch count from Counter.dev
-async function fetchCount() {
-    try {
-        const response = await fetch('https://counter.dev/api/b67f574f-34c8-4c36-b042-64f2dc6bbb80');
-        const data = await response.json();
-        // Return 1 if count is 0, undefined, or invalid
-        if (data && data.count && data.count > 0) {
-            return data.count;
-        }
-        return 1;
-    } catch (error) {
-        console.error('Error fetching count:', error);
-        return 1; // Return 1 on any error
-    }
-}
-
 // Initialize counter
-window.addEventListener('load', async function() {
+window.addEventListener('load', function() {
     const counterElement = document.getElementById('counter');
     
     if (isLocalhost()) {
         // Local development mode
         let localCount = parseInt(localStorage.getItem('visitorCount') || '0');
-        localCount = localCount > 0 ? localCount : 1; // Ensure minimum of 1
+        localCount = Math.max(1, localCount + 1); // Ensure minimum of 1
         localStorage.setItem('visitorCount', localCount.toString());
         animateValue(counterElement, localCount);
     } else {
-        // Production mode
-        const count = await fetchCount();
-        animateValue(counterElement, count); // This will always be at least 1
+        // Production mode - just show 1
+        animateValue(counterElement, "1");
     }
 });
 
