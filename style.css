@@ -540,7 +540,7 @@ footer p {
 }
 
 /* Responsive Design */
-/* @media screen and (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .timeline-container::after {
       left: 31px;
   }
@@ -559,7 +559,7 @@ footer p {
   .timeline-item:nth-child(even) .timeline-content::after {
       left: -37px;
   }
-} */
+}
 
 .fade-animate {
   opacity: 0;
