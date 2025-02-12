@@ -82,48 +82,7 @@ function initializeAnimations() {
 // // Initialize when page loads
 // window.addEventListener('load', initCounter);
 
-
-// Visitor Counter
-
-// Animation function
-function animateValue(element, newValue) {
-    element.innerHTML = '';
-    
-    const number = newValue.toString();
-    const digitSpan = document.createElement('span');
-    digitSpan.textContent = number;
-    
-    digitSpan.style.transform = 'translateY(20px)';
-    digitSpan.style.opacity = '0';
-    element.appendChild(digitSpan);
-    
-    setTimeout(() => {
-        digitSpan.style.transform = 'translateY(0)';
-        digitSpan.style.opacity = '1';
-    }, 50);
-}
-
-// Function to check if we're running locally
-function isLocalhost() {
-    return window.location.hostname === 'localhost' || 
-           window.location.hostname === '127.0.0.1';
-}
-
-// Initialize counter
-window.addEventListener('load', function() {
-    const counterElement = document.getElementById('counter');
-    
-    if (isLocalhost()) {
-        // Local development mode
-        let localCount = parseInt(localStorage.getItem('visitorCount') || '0');
-        localCount = Math.max(1, localCount + 1); // Ensure minimum of 1
-        localStorage.setItem('visitorCount', localCount.toString());
-        animateValue(counterElement, localCount);
-    } else {
-        // Production mode - just show 1
-        animateValue(counterElement, "1");
-    }
-});
+  
 
 
 document.addEventListener('DOMContentLoaded', initializeAnimations);
