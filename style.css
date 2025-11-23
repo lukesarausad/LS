@@ -381,13 +381,41 @@ section {
 
 .icon-arrow {
   cursor: pointer;
-  height: 2rem;
+  font-size: 1.5rem;
+  color: var(--accent-color);
   transition: all 0.3s ease;
 }
 
 .icon-arrow:hover {
   transform: translateY(-0.5rem);
-  cursor: pointer;
+  color: var(--accent-hover);
+}
+
+/* Section navigation arrows */
+.arrow {
+  font-size: 2rem;
+}
+
+/* Skill Bars */
+.skill-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.skill-progress {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+  border-radius: 4px;
+  transition: width 1s ease-out;
+}
+
+.skill-progress.animate {
+  width: var(--progress);
 }
 
 /* BUTTONS */
