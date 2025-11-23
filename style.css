@@ -252,8 +252,9 @@ section {
   gap: 5rem;
   height: 80vh;
   position: relative;
-  background: radial-gradient(ellipse at top right, var(--accent-light) 0%, transparent 50%),
-              radial-gradient(ellipse at bottom left, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 
 .section__pic-container {
@@ -261,22 +262,6 @@ section {
   height: 400px;
   width: 400px;
   margin: auto 0;
-}
-
-/* Profile image with gradient border for dark mode blending */
-#profile .section__pic-container {
-  position: relative;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-  padding: 4px;
-  box-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
-}
-
-#profile .section__pic-container img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 .section__text {
