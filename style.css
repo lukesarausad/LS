@@ -381,6 +381,7 @@ section {
 
 .icon-arrow {
   cursor: pointer;
+  height: 2rem;
   font-size: 1.5rem;
   color: var(--accent-color);
   transition: all 0.3s ease;
@@ -394,6 +395,7 @@ section {
 /* Section navigation arrows */
 .arrow {
   font-size: 2rem;
+  height: auto;
 }
 
 /* Skill Bars */
@@ -411,10 +413,11 @@ section {
   width: 0;
   background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
   border-radius: 4px;
-  transition: width 1s ease-out;
+  transition: width 0.6s ease-out;
 }
 
-.skill-progress.animate {
+/* Animate skill bar on article hover */
+article:hover .skill-progress {
   width: var(--progress);
 }
 
