@@ -5,6 +5,69 @@ function toggleMenu() {
   icon.classList.toggle("open");
 }
 
+// Dark Mode Toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+}
+
+// Initialize theme on page load
+function initializeTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  } else if (prefersDark) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+}
+
+// Typing Animation
+function initializeTypingAnimation() {
+  const typingElement = document.querySelector('.typing-text');
+  if (!typingElement) return;
+
+  const texts = ['Software Engineer', 'CS Student @ UW', 'Amazon SDE Intern'];
+  let textIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  let typingSpeed = 100;
+
+  function type() {
+    const currentText = texts[textIndex];
+
+    if (isDeleting) {
+      typingElement.textContent = currentText.substring(0, charIndex - 1);
+      charIndex--;
+      typingSpeed = 50;
+    } else {
+      typingElement.textContent = currentText.substring(0, charIndex + 1);
+      charIndex++;
+      typingSpeed = 100;
+    }
+
+    if (!isDeleting && charIndex === currentText.length) {
+      // Pause at end of word
+      typingSpeed = 2000;
+      isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      textIndex = (textIndex + 1) % texts.length;
+      typingSpeed = 500;
+    }
+
+    setTimeout(type, typingSpeed);
+  }
+
+  // Start typing animation
+  type();
+}
+
 function initializeAnimations() {
   // Select both timeline items and fade-animate elements
   const animatedElements = document.querySelectorAll('.timeline-item, .fade-animate');
@@ -85,7 +148,11 @@ function initializeAnimations() {
   
 
 
-document.addEventListener('DOMContentLoaded', initializeAnimations);
+document.addEventListener('DOMContentLoaded', () => {
+  initializeTheme();
+  initializeAnimations();
+  initializeTypingAnimation();
+});
 
 
 
