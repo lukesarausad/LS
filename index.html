@@ -20,11 +20,19 @@
           <li><a href="#projects">Projects</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-moon moon-icon"></i>
+          <i class="fa-solid fa-sun sun-icon"></i>
+        </button>
       </div>
     </nav>
     <nav id="hamburger-nav">
       <div class="logo">Luke Sarausad</div>
       <div class="hamburger-menu">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-moon moon-icon"></i>
+          <i class="fa-solid fa-sun sun-icon"></i>
+        </button>
         <div class="hamburger-icon" onclick="toggleMenu()">
           <span></span>
           <span></span>
@@ -46,7 +54,7 @@
       <div class="section__text">
         <p class="section__text__p1">Welcome! I'm</p>
         <h1 class="title">Luke Sarausad</h1>
-        <p class="section__text__p2">University Student</p>
+        <p class="section__text__p2"><span class="typing-text"></span></p>
         <div class="btn-container">
           <button
             class="btn btn-color-2"
@@ -72,6 +80,10 @@
             onclick="location.href='https://github.com/lukesarausad'"
           />
         </div>
+      </div>
+      <div class="scroll-indicator" onclick="location.href='#about'">
+        <span>Scroll</span>
+        <i class="fa-solid fa-chevron-down"></i>
       </div>
     </section>
 
@@ -427,7 +439,7 @@ This summer, I’ll be a Software Development Engineer Intern at Amazon in their
           </ul>
         </div>
       </nav>
-      <p>Copyright &#169; 2023 Luke Sarausad. All Rights Reserved.</p>
+      <p>Copyright &#169; 2025 Luke Sarausad. All Rights Reserved.</p>
     </footer>
     <script src="script.js"></script>
   </body>
