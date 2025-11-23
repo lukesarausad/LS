@@ -106,28 +106,16 @@ function initializeAnimations() {
 }
 
 
-// Skill Bar Animation
+// Skill Bar Animation - set progress values for hover effect
 function initializeSkillBars() {
   const skillBars = document.querySelectorAll('.skill-progress');
 
   if (skillBars.length === 0) return;
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const progressBar = entry.target;
-        const progress = progressBar.getAttribute('data-progress');
-        progressBar.style.setProperty('--progress', `${progress}%`);
-        progressBar.classList.add('animate');
-        observer.unobserve(progressBar);
-      }
-    });
-  }, {
-    threshold: 0.5
-  });
-
+  // Set the CSS variable for each skill bar based on data-progress attribute
   skillBars.forEach(bar => {
-    observer.observe(bar);
+    const progress = bar.getAttribute('data-progress');
+    bar.style.setProperty('--progress', `${progress}%`);
   });
 }
 
