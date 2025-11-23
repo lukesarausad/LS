@@ -263,6 +263,22 @@ section {
   margin: auto 0;
 }
 
+/* Profile image with gradient border for dark mode blending */
+#profile .section__pic-container {
+  position: relative;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  padding: 4px;
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
+}
+
+#profile .section__pic-container img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .section__text {
   align-self: center;
   text-align: center;
