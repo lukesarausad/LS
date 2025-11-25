@@ -374,10 +374,10 @@ section {
   transition: all 0.5s ease;
 }
 
-.icon:hover {
+/* .icon:hover {
   transform: rotate(360deg) scale(1.2);
   cursor: pointer;
-}
+} */
 
 .icon-arrow {
   cursor: pointer;
