@@ -754,6 +754,43 @@ footer p {
   line-height: 1.5;
 }
 
+/* Timeline Icons */
+.timeline-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.timeline-icon i {
+  font-size: 1.75rem;
+  color: white;
+}
+
+.timeline-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* DoorDash branded icon */
+.doordash-icon {
+  background: linear-gradient(135deg, #FF3008, #FF5733);
+  box-shadow: 0 4px 15px rgba(255, 48, 8, 0.3);
+}
+
+.doordash-icon span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
 /* Responsive Design */
 @media screen and (max-width: 768px) {
   .timeline-container::after {
