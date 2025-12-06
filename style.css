@@ -784,6 +784,18 @@ footer p {
   height: 30px;
 }
 
+/* UW branded icon */
+.uw-icon {
+  background: linear-gradient(135deg, #4b2e83, #85754d);
+  box-shadow: 0 4px 15px rgba(75, 46, 131, 0.3);
+}
+
+.uw-icon .timeline-logo {
+  background: white;
+  padding: 5px;
+  border-radius: 8px;
+}
+
 /* Amazon branded icon */
 .amazon-icon {
   background: linear-gradient(135deg, #FF9900, #FFB84D);
