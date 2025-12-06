@@ -779,6 +779,23 @@ footer p {
   border-radius: 8px;
 }
 
+.timeline-logo-svg {
+  width: 55px;
+  height: 30px;
+}
+
+/* Amazon branded icon */
+.amazon-icon {
+  background: linear-gradient(135deg, #FF9900, #FFB84D);
+  box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
+}
+
+.amazon-icon span {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #000;
+}
+
 /* DoorDash branded icon */
 .doordash-icon {
   background: linear-gradient(135deg, #FF3008, #FF5733);
