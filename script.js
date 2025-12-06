@@ -32,7 +32,7 @@ function initializeTypingAnimation() {
   const typingElement = document.querySelector('.typing-text');
   if (!typingElement) return;
 
-  const texts = ['Software Engineer', 'CS Student @ UW', 'Amazon SDE Intern'];
+  const texts = ['Software Engineer', 'CS Student @ UW', 'DoorDash SWE Intern'];
   let textIndex = 0;
   let charIndex = 0;
   let isDeleting = false;
