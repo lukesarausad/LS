@@ -1,3 +1,7 @@
+/* ========================== */
+/* HAMBURGER MENU             */
+/* ========================== */
+
 function toggleMenu() {
   const menu = document.querySelector(".menu-links");
   const icon = document.querySelector(".hamburger-icon");
@@ -5,168 +9,193 @@ function toggleMenu() {
   icon.classList.toggle("open");
 }
 
-// Dark Mode Toggle
+/* ========================== */
+/* DARK MODE TOGGLE           */
+/* ========================== */
+
 function toggleTheme() {
   const html = document.documentElement;
-  const currentTheme = html.getAttribute('data-theme');
-  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
+  const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', newTheme);
   localStorage.setItem('theme', newTheme);
 }
 
-// Initialize theme on page load
 function initializeTheme() {
-  const savedTheme = localStorage.getItem('theme');
+  const saved = localStorage.getItem('theme');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-  if (savedTheme) {
-    document.documentElement.setAttribute('data-theme', savedTheme);
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
   } else if (prefersDark) {
     document.documentElement.setAttribute('data-theme', 'dark');
   }
 }
 
-// Typing Animation
-function initializeTypingAnimation() {
-  const typingElement = document.querySelector('.typing-text');
-  if (!typingElement) return;
+/* ========================== */
+/* INTRO SCREEN               */
+/* ========================== */
 
-  const texts = ['Software Engineer', 'CS Student @ UW', 'DoorDash SWE Intern'];
+function startSite() {
+  const intro = document.getElementById('intro-screen');
+  const ball = intro.querySelector('.intro-ball');
+
+  ball.classList.add('launching');
+
+  setTimeout(() => {
+    intro.classList.add('fading');
+  }, 300);
+
+  setTimeout(() => {
+    intro.style.display = 'none';
+    document.body.style.overflow = '';
+  }, 1000);
+}
+
+/* ========================== */
+/* GOLF SWING TRANSITION      */
+/* ========================== */
+
+let isTransitioning = false;
+
+function golfNavigate(targetSection) {
+  if (isTransitioning) return;
+  isTransitioning = true;
+
+  const overlay    = document.getElementById('golf-transition');
+  const swingGroup = document.querySelector('.swing-group');
+  const launcher   = document.querySelector('.ball-launcher');
+  const ballArc    = document.querySelector('.ball-arc');
+
+  // Show overlay
+  overlay.classList.add('active');
+
+  // Slight delay then start swing
+  setTimeout(() => {
+    swingGroup.classList.add('swinging');
+  }, 280);
+
+  // Launch ball just before impact
+  setTimeout(() => {
+    launcher.classList.add('flying');
+    ballArc.classList.add('flying');
+  }, 660);
+
+  // Scroll to target mid-flight
+  setTimeout(() => {
+    const target = document.getElementById(targetSection);
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  }, 820);
+
+  // Fade out overlay
+  setTimeout(() => {
+    overlay.classList.remove('active');
+  }, 1750);
+
+  // Full cleanup
+  setTimeout(() => {
+    swingGroup.classList.remove('swinging');
+    launcher.classList.remove('flying');
+    ballArc.classList.remove('flying');
+    isTransitioning = false;
+  }, 2100);
+}
+
+/* ========================== */
+/* TYPING ANIMATION           */
+/* ========================== */
+
+function initializeTypingAnimation() {
+  const el = document.querySelector('.typing-text');
+  if (!el) return;
+
+  const texts = ['Software Engineer', 'CS Student @ UW', 'DoorDash SWE Intern', 'Golf Enthusiast'];
   let textIndex = 0;
   let charIndex = 0;
   let isDeleting = false;
-  let typingSpeed = 100;
+  let speed = 100;
 
   function type() {
-    const currentText = texts[textIndex];
+    const current = texts[textIndex];
 
     if (isDeleting) {
-      typingElement.textContent = currentText.substring(0, charIndex - 1);
+      el.textContent = current.substring(0, charIndex - 1);
       charIndex--;
-      typingSpeed = 50;
+      speed = 50;
     } else {
-      typingElement.textContent = currentText.substring(0, charIndex + 1);
+      el.textContent = current.substring(0, charIndex + 1);
       charIndex++;
-      typingSpeed = 100;
+      speed = 100;
     }
 
-    if (!isDeleting && charIndex === currentText.length) {
-      // Pause at end of word
-      typingSpeed = 2000;
+    if (!isDeleting && charIndex === current.length) {
+      speed = 2000;
       isDeleting = true;
     } else if (isDeleting && charIndex === 0) {
       isDeleting = false;
       textIndex = (textIndex + 1) % texts.length;
-      typingSpeed = 500;
+      speed = 500;
     }
 
-    setTimeout(type, typingSpeed);
+    setTimeout(type, speed);
   }
 
-  // Start typing animation
   type();
 }
 
-function initializeAnimations() {
-  // Select both timeline items and fade-animate elements
-  const animatedElements = document.querySelectorAll('.timeline-item, .fade-animate');
-  
-  if (animatedElements.length === 0) return;
+/* ========================== */
+/* SCROLL FADE ANIMATIONS     */
+/* ========================== */
 
-  // Set initial state for all elements
-  animatedElements.forEach(element => {
-      element.style.opacity = '0';
-      element.style.transform = 'translateY(20px)';
-      element.style.transition = 'all 0.6s ease-out';
+function initializeAnimations() {
+  const animated = document.querySelectorAll('.timeline-item, .fade-animate');
+  if (!animated.length) return;
+
+  animated.forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'all 0.6s ease-out';
   });
 
   const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-          if (entry.isIntersecting) {
-              // Fade in when visible
-              entry.target.style.opacity = '1';
-              entry.target.style.transform = 'translateY(0)';
-          } else {
-              // Fade out when not visible
-              entry.target.style.opacity = '0';
-              entry.target.style.transform = 'translateY(20px)';
-          }
-      });
-  }, {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.2
-  });
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      } else {
+        entry.target.style.opacity = '0';
+        entry.target.style.transform = 'translateY(20px)';
+      }
+    });
+  }, { root: null, rootMargin: '0px', threshold: 0.15 });
 
-  // Observe all elements
-  animatedElements.forEach(element => {
-      observer.observe(element);
-  });
+  animated.forEach(el => observer.observe(el));
 }
 
+/* ========================== */
+/* SKILL BARS                 */
+/* ========================== */
 
-// Skill Bar Animation - set progress values for hover effect
 function initializeSkillBars() {
-  const skillBars = document.querySelectorAll('.skill-progress');
-
-  if (skillBars.length === 0) return;
-
-  // Set the CSS variable for each skill bar based on data-progress attribute
-  skillBars.forEach(bar => {
+  document.querySelectorAll('.skill-progress').forEach(bar => {
     const progress = bar.getAttribute('data-progress');
     bar.style.setProperty('--progress', `${progress}%`);
   });
 }
 
-// viewer Test
-
-
-// function animateValue(element, oldValue, newValue) {
-//     // Clear previous content
-//     element.innerHTML = '';
-    
-//     // Convert to string and create element for the number
-//     const number = newValue.toString();
-//     const digitSpan = document.createElement('span');
-//     digitSpan.className = 'counter-digit';
-//     digitSpan.textContent = number;
-    
-//     // Add slide-up animation
-//     digitSpan.style.transform = 'translateY(20px)';
-//     digitSpan.style.opacity = '0';
-//     element.appendChild(digitSpan);
-    
-//     // Trigger animation
-//     setTimeout(() => {
-//         digitSpan.style.transform = 'translateY(0)';
-//         digitSpan.style.opacity = '1';
-//     }, 50);
-// }
-
-// function initCounter() {
-//     const counterElement = document.getElementById('counter');
-//     let visitorCount = parseInt(localStorage.getItem('visitorCount') || '0');
-    
-//     // Animate from previous count to new count
-//     animateValue(counterElement, visitorCount, visitorCount + 1);
-    
-//     // Update stored count
-//     localStorage.setItem('visitorCount', (visitorCount + 1).toString());
-// }
-
-// // Initialize when page loads
-// window.addEventListener('load', initCounter);
-
-  
-
+/* ========================== */
+/* BOOT                       */
+/* ========================== */
 
 document.addEventListener('DOMContentLoaded', () => {
   initializeTheme();
+
+  // Lock scroll while intro plays
+  document.body.style.overflow = 'hidden';
+
   initializeAnimations();
   initializeTypingAnimation();
   initializeSkillBars();
+
+  // Pre-set golfer to address position
+  const swingGroup = document.querySelector('.swing-group');
+  if (swingGroup) swingGroup.style.transform = 'rotate(-42deg)';
 });
-
-
-
