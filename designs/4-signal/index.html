@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Luke Sarausad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f3f5fa;
+    --paper: #ffffff;
+    --navy: #0e1a3a;
+    --slate: #56627f;
+    --grid: #dde3ee;
+    --cobalt: #2b50ff;
+    --mint: #17b67a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: "Familjen Grotesk", system-ui, sans-serif; background: var(--bg); color: var(--navy); font-size: 1.0625rem; line-height: 1.6; }
+  .mono { font-family: "Martian Mono", ui-monospace, monospace; font-size: .75rem; letter-spacing: 0; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--cobalt); outline-offset: 3px; border-radius: 4px; }
+  .wrap { width: min(1160px, 100% - 32px); margin-inline: auto; }
+
+  header { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(10px); }
+  header .wrap { height: 64px; display: flex; justify-content: space-between; align-items: center; }
+  .brand { font-weight: 700; text-decoration: none; font-size: 1.1rem; }
+  nav ul { list-style: none; display: flex; gap: 28px; }
+  nav a { text-decoration: none; color: var(--slate); font-weight: 500; }
+  nav a:hover { color: var(--cobalt); }
+  .menu-btn { display: none; background: none; border: 0; font: inherit; font-weight: 600; color: var(--navy); cursor: pointer; }
+
+  /* HERO: particle field */
+  .hero { position: relative; height: calc(100svh - 64px); min-height: 560px; overflow: hidden;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 48px 48px; background-position: center; }
+  .hero::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 30%, var(--bg) 78%); pointer-events: none; }
+  #field { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; touch-action: pan-y; }
+  .hero h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .hero-ui { position: absolute; z-index: 2; left: 0; right: 0; bottom: 40px; }
+  .hero-ui .wrap { display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center; }
+  .hero-ui img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; background: var(--paper); box-shadow: 0 0 0 4px var(--paper); }
+  .hero-ui .hi { color: var(--slate); }
+  .hero-ui .role { font-size: 1.4rem; font-weight: 600; min-height: 1.5em; }
+  .role .cursor { display: inline-block; width: 2px; height: 1em; background: var(--cobalt); margin-left: 2px; vertical-align: -.1em; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .hint { position: absolute; z-index: 2; top: 24px; left: 50%; transform: translateX(-50%); color: var(--slate); }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 10px; font-weight: 600; text-decoration: none; border: 1px solid var(--grid); background: var(--paper); transition: border-color .2s, background .2s, color .2s; }
+  .btn:hover { border-color: var(--cobalt); color: var(--cobalt); }
+  .btn.primary { background: var(--cobalt); border-color: var(--cobalt); color: #fff; }
+  .btn.primary:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .btn svg { width: 18px; height: 18px; }
+  .btn.icon { padding: 12px; }
+
+  section { padding: 112px 0; }
+  .head { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: end; margin-bottom: 48px; }
+  h2 { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.03em; font-weight: 700; }
+  .head p { color: var(--slate); max-width: 44ch; justify-self: end; }
+
+  /* ABOUT */
+  .about { display: grid; grid-template-columns: 1fr 1.4fr; gap: 56px; align-items: start; }
+  figure img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; display: block; }
+  figcaption { color: var(--slate); margin-top: 10px; }
+  .about-copy p { font-size: 1.2rem; max-width: 62ch; }
+  .about-copy p + p { margin-top: 1em; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--grid); border: 1px solid var(--grid); border-radius: 14px; overflow: hidden; margin-top: 36px; }
+  .stats > div { background: var(--paper); padding: 20px 22px; display: flex; gap: 14px; align-items: flex-start; }
+  .stats img { width: 34px; height: 34px; object-fit: contain; }
+  .stats h3 { font-size: .95rem; color: var(--slate); font-weight: 500; }
+  .stats p { font-size: 1.05rem !important; font-weight: 600; line-height: 1.4; }
+
+  /* SKILLS dot plot */
+  .chart { background: var(--paper); border: 1px solid var(--grid); border-radius: 16px; padding: 32px 32px 24px; }
+  .legend { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; }
+  .legend i { width: 12px; height: 12px; border-radius: 50%; }
+  .plot { position: relative; display: grid; grid-template-columns: 110px 1fr; }
+  .row { display: contents; }
+  .row .lbl { padding: 9px 0; font-weight: 500; border-top: 1px solid var(--grid); }
+  .row .track { position: relative; border-top: 1px solid var(--grid); }
+  .row .track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px dashed var(--grid); }
+  .row .pt { position: absolute; top: 50%; left: 0; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 18%, transparent); transition: left 1.2s cubic-bezier(.2,.9,.2,1); transition-delay: var(--d); }
+  .row .pt b { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); font-weight: 400; color: var(--slate); opacity: 0; transition: opacity .3s; transition-delay: calc(var(--d) + 1s); white-space: nowrap; }
+  .chart.in .pt { left: var(--v); }
+  .chart.in .pt b { opacity: 1; }
+  .axis { grid-column: 2; display: flex; justify-content: space-between; color: var(--slate); border-top: 1px solid var(--navy); padding-top: 8px; margin-top: 2px; }
+  .gap { grid-column: 1 / -1; height: 18px; }
+  .group-lbl { grid-column: 1 / -1; color: var(--slate); padding: 4px 0 8px; }
+
+  /* TIMELINE on a real time axis */
+  .tl { position: relative; padding-top: 8px; }
+  .tl-axis { position: relative; height: 56px; border-bottom: 1px solid var(--navy); }
+  .tl-axis span { position: absolute; bottom: -26px; transform: translateX(-50%); color: var(--slate); }
+  .tl-axis span::before { content: ""; position: absolute; left: 50%; bottom: 22px; height: 8px; border-left: 1px solid var(--navy); }
+  .tl-bar { position: absolute; height: 10px; bottom: -5px; border-radius: 6px; background: var(--c); transform-origin: left; transform: scaleX(0); transition: transform 1s cubic-bezier(.2,.9,.2,1); transition-delay: var(--d); }
+  .tl.in .tl-bar { transform: scaleX(1); }
+  .tl-items { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-top: 56px; }
+  .tl-items article { border-top: 3px solid var(--c); padding-top: 14px; }
+  .tl-items .when { color: var(--slate); }
+  .tl-items h3 { font-size: 1.15rem; display: flex; gap: 8px; align-items: center; margin: 4px 0; line-height: 1.25; }
+  .tl-items h3 img { width: 22px; height: 22px; object-fit: contain; }
+  .tl-items p { color: var(--slate); font-size: .98rem; }
+
+  /* PROJECTS as figures */
+  .figs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .fig { background: var(--paper); border: 1px solid var(--grid); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+  .fig .shot { aspect-ratio: 1; overflow: hidden; border-bottom: 1px solid var(--grid); }
+  .fig .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform .5s; }
+  .fig:hover .shot img { transform: scale(1.04); }
+  .fig .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+  .fig h3 { font-size: 1.4rem; letter-spacing: -0.01em; }
+  .fig .actions { margin-top: auto; }
+  .fig .btn { padding: 8px 14px; font-size: .95rem; }
+
+  /* CONTACT */
+  .contact { background: var(--navy); color: #fff; border-radius: 24px; padding: 64px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; align-items: center; }
+  .contact h2 { color: #fff; }
+  .contact p { color: #b9c3dc; margin-top: 14px; }
+  .contact .actions { justify-content: flex-end; }
+  .contact .btn { background: transparent; color: #fff; border-color: rgba(255,255,255,.3); }
+  .contact .btn.primary { background: var(--cobalt); border-color: var(--cobalt); }
+  .contact .btn:hover { border-color: #fff; color: #fff; }
+  footer { padding: 40px 0; color: var(--slate); font-size: .95rem; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  footer ul { display: flex; gap: 20px; list-style: none; flex-wrap: wrap; }
+  footer a { text-decoration: none; }
+
+  @media (max-width: 900px) {
+    nav ul { display: none; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--bg); padding: 8px 16px 20px; }
+    nav ul.open { display: flex; }
+    nav ul a { display: block; padding: 10px 0; font-size: 1.2rem; }
+    .menu-btn { display: block; }
+    .hero-ui .wrap { grid-template-columns: auto 1fr; }
+    .hero-ui .actions { grid-column: 1 / -1; }
+    .head, .about, .contact { grid-template-columns: 1fr; }
+    .head p { justify-self: start; }
+    .figs { grid-template-columns: 1fr; }
+    .tl-items { grid-template-columns: 1fr; gap: 24px; margin-top: 48px; }
+    .tl-axis span:nth-child(even) { display: none; }
+    .contact { padding: 40px 24px; }
+    .contact .actions { justify-content: flex-start; }
+    .chart { padding: 22px 16px 18px; }
+    .plot { grid-template-columns: 88px 1fr; }
+    section { padding: 80px 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="#top">Luke Sarausad</a>
+    <nav>
+      <button class="menu-btn" aria-expanded="false" aria-controls="menu">Menu</button>
+      <ul id="menu">
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#timeline">Timeline</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-label="Introduction" style="padding:0">
+    <h1>Luke Sarausad</h1>
+    <canvas id="field" aria-hidden="true"></canvas>
+    <p class="hint mono" aria-hidden="true">Move through the name to scatter it</p>
+    <div class="hero-ui">
+      <div class="wrap">
+        <img src="../../assets/profileMain.png" alt="Portrait of Luke Sarausad" />
+        <div>
+          <p class="hi">Welcome! I'm Luke Sarausad,</p>
+          <p class="role" aria-live="polite"><span class="typing"></span><span class="cursor"></span></p>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="../../assets/Luke_Resume_September.pdf" target="_blank" rel="noopener">Resume</a>
+          <a class="btn" href="#contact">Contact info</a>
+          <a class="btn icon" href="https://www.linkedin.com/in/lukesarausad/" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.95 1.32-1.95 2.7V21h-4z"/></svg></a>
+          <a class="btn icon" href="https://github.com/lukesarausad" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="head"><h2>About me</h2><p>Get to know more about the person behind the data.</p></div>
+      <div class="about">
+        <figure><img src="../../assets/pic2.JPG" alt="Luke smiling outdoors in a puffer jacket" loading="lazy" /><figcaption class="mono">Seattle, WA</figcaption></figure>
+        <div class="about-copy">
+          <p>Hi! I'm Luke Sarausad, a Computer Science major with a Data Science focus at the University of Washington and a Business minor. I'm passionate about using technology and data to solve real-world problems.</p>
+          <p>Through my previous experiences and projects I have grasped a deeper understanding of fullstack development and working with industry standard technologies like AWS, React.js and more.</p>
+          <p>This summer, I'll be a Software Engineer Intern at DoorDash in their San Francisco office. In my free time I enjoy working on projects and playing golf. Feel free to connect with me or contact me anytime!</p>
+          <div class="stats">
+            <div><img src="../../assets/experience.png" alt="" /><div><h3>Experience</h3><p>2+ years of software engineering internships and projects</p></div></div>
+            <div><img src="../../assets/Huskies.svg.png" alt="" /><div><h3>Education</h3><p>University of Washington, B.S. Computer Science, Minor in Business</p></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <div class="head"><h2>Experience</h2><p>Self-rated proficiency across the languages and tools I use most.</p></div>
+      <div class="chart">
+        <div class="legend"><span><i style="background:var(--cobalt)"></i>Languages</span><span><i style="background:var(--mint)"></i>Frameworks &amp; technologies</span></div>
+        <div class="plot" id="plot"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="timeline">
+    <div class="wrap">
+      <div class="head"><h2>My journey</h2><p>Plotted on a real time scale, 2019 to 2026.</p></div>
+      <div class="tl">
+        <div class="tl-axis" id="axis"></div>
+        <div class="tl-items">
+          <article style="--c:#8a96b3"><p class="when mono">2019–2023</p><h3>Started programming</h3><p>Explored programming through a series of courses offered at my high school and personal projects.</p></article>
+          <article style="--c:#4b2e83"><p class="when mono">2023–Present</p><h3><img src="../../assets/uw-logo.png" alt="" />University of Washington</h3><p>Studying Computer Science with a Data Science focus and Business minor at the University of Washington.</p></article>
+          <article style="--c:var(--mint)"><p class="when mono">2024</p><h3>Projects &amp; development</h3><p>Built fullstack applications and personal projects to expand my portfolio in software development.</p></article>
+          <article style="--c:#ff9900"><p class="when mono">Summer 2025</p><h3><img src="../../assets/amazon-logo.png" alt="" />Amazon</h3><p>SDE Intern in the Stores division.</p></article>
+          <article style="--c:#eb1700"><p class="when mono">Summer 2026</p><h3><img src="../../assets/doordash-logo.png" alt="" />DoorDash</h3><p>SWE Intern for the LaunchPad team. Working on building new product initiatives.</p></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="head"><h2>Projects</h2><p>Browse my recent work.</p></div>
+      <div class="figs">
+        <article class="fig"><div class="shot"><img src="../../assets/project1.png" alt="CourtFinder screenshot listing nearby parks and open courts" loading="lazy" /></div><div class="body"><h3>CourtFinder</h3><div class="actions"><a class="btn primary" href="https://issaquah-tennis-queue.vercel.app/">Live demo</a><a class="btn" href="https://github.com/bilal-ali1/Issaquah-Tennis-Queue">GitHub</a></div></div></article>
+        <article class="fig"><div class="shot"><img src="../../assets/project2.png" alt="Summairy screenshot with an article URL field" loading="lazy" /></div><div class="body"><h3>Summairy</h3><div class="actions"><a class="btn primary" href="https://github.com/lukesarausad/summairy">Live demo</a><a class="btn" href="https://github.com/lukesarausad/summairy">GitHub</a></div></div></article>
+        <article class="fig"><div class="shot"><img src="../../assets/portfolio_graphic.png" alt="Market Predictor graphic" loading="lazy" /></div><div class="body"><h3>Market Predictor</h3><div class="actions"><a class="btn primary" href="https://github.com/lukesarausad/MarketPredictor">Live demo</a><a class="btn" href="https://github.com/lukesarausad/MarketPredictor">GitHub</a></div></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" style="padding-top:0">
+    <div class="wrap">
+      <div class="contact">
+        <div><h2>Contact me</h2><p>Get in touch about internships, projects, or anything data.</p></div>
+        <div class="actions"><a class="btn primary" href="mailto:lukes25@uw.edu">Email me</a><a class="btn" href="https://www.linkedin.com/in/lukesarausad/">LinkedIn</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Copyright © 2025 Luke Sarausad. All Rights Reserved.</p>
+    <ul><li><a href="#about">About</a></li><li><a href="#experience">Experience</a></li><li><a href="#timeline">Timeline</a></li><li><a href="#projects">Projects</a></li><li><a href="#contact">Contact</a></li></ul>
+  </div>
+</footer>
+
+<script>
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const btn = document.querySelector(".menu-btn"), menu = document.getElementById("menu");
+  btn.addEventListener("click", () => btn.setAttribute("aria-expanded", menu.classList.toggle("open")));
+  menu.addEventListener("click", e => { if (e.target.tagName === "A") menu.classList.remove("open"); });
+
+  // Typing
+  const roles = ["Software Engineer", "CS Student @ UW", "DoorDash SWE Intern"];
+  const out = document.querySelector(".typing");
+  if (reduce) out.textContent = roles[0];
+  else { let r = 0, c = 0, del = false;
+    (function tick() { const t = roles[r]; out.textContent = t.slice(0, del ? --c : ++c);
+      let w = del ? 40 : 90; if (!del && c === t.length) { del = true; w = 1800; } else if (del && c === 0) { del = false; r = (r + 1) % roles.length; w = 350; }
+      setTimeout(tick, w); })(); }
+
+  // Particle name
+  const cv = document.getElementById("field"), ctx = cv.getContext("2d");
+  let W, H, dpr, pts = [], mouse = { x: -1e4, y: -1e4 };
+  function build() {
+    dpr = Math.min(2, devicePixelRatio || 1);
+    W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr;
+    const off = document.createElement("canvas"); off.width = W; off.height = H;
+    const o = off.getContext("2d");
+    const narrow = W < 700;
+    const lines = narrow ? ["LUKE", "SARAUSAD"] : ["LUKE SARAUSAD"];
+    let fs = narrow ? W * 0.2 : W * 0.115;
+    o.font = `700 ${fs}px "Familjen Grotesk"`;
+    const maxW = Math.max(...lines.map(l => o.measureText(l).width));
+    fs = Math.min(fs * (W * 0.9) / maxW, H * 0.28); o.font = `700 ${fs}px "Familjen Grotesk"`;
+    o.textAlign = "center"; o.textBaseline = "middle"; o.fillStyle = "#000";
+    const cy = narrow ? H * 0.36 : H * 0.42;
+    lines.forEach((l, i) => o.fillText(l, W / 2, cy + (i - (lines.length - 1) / 2) * fs * 0.95));
+    const data = o.getImageData(0, 0, W, H).data;
+    const step = narrow ? 4 : Math.max(5, Math.round(W / 240));
+    const old = pts; pts = [];
+    for (let y = 0; y < H; y += step) for (let x = 0; x < W; x += step) {
+      if (data[(y * W + x) * 4 + 3] > 128) {
+        const prev = old[pts.length];
+        pts.push({ hx: x, hy: y, x: prev ? prev.x : Math.random() * W, y: prev ? prev.y : (Math.random() < .5 ? -20 : H + 20) + Math.random() * 40, vx: 0, vy: 0, c: Math.random() < 0.82 ? 0 : 1, r: step * 0.36 });
+      }
+    }
+    if (reduce) pts.forEach(p => { p.x = p.hx; p.y = p.hy; });
+  }
+  const cols = ["#2b50ff", "#17b67a"];
+  function frame() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    for (const p of pts) {
+      if (!reduce) {
+        const dx = p.x - mouse.x, dy = p.y - mouse.y, d2 = dx * dx + dy * dy, R = 90;
+        if (d2 < R * R) { const d = Math.sqrt(d2) || 1, f = (1 - d / R) * 6; p.vx += dx / d * f; p.vy += dy / d * f; }
+        p.vx += (p.hx - p.x) * 0.045; p.vy += (p.hy - p.y) * 0.045;
+        p.vx *= 0.82; p.vy *= 0.82; p.x += p.vx; p.y += p.vy;
+      }
+      ctx.fillStyle = cols[p.c];
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill();
+    }
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  cv.addEventListener("pointermove", e => { const r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
+  cv.addEventListener("pointerleave", () => { mouse.x = mouse.y = -1e4; });
+  document.fonts.load('700 100px "Familjen Grotesk"').then(() => { build(); frame(); });
+  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { build(); if (reduce) frame(); }, 150); });
+
+  // Dot plot
+  const groups = [["Languages", "var(--cobalt)", "Java:90,JavaScript:90,TypeScript:85,HTML/CSS:75,Python:70,C:65"], ["Frameworks & technologies", "var(--mint)", "Git:90,Node.js:85,React.js:85,MongoDB:70,AWS:70,Azure:65"]];
+  const plot = document.getElementById("plot"); let k = 0;
+  plot.innerHTML = groups.map(([g, c, s], gi) => (gi ? '<div class="gap"></div>' : "") + `<div class="group-lbl mono">${g}</div>` + s.split(",").map(x => { const [n, v] = x.split(":");
+    return `<div class="row"><span class="lbl">${n}</span><span class="track"><span class="pt" style="--c:${c};--v:${v}%;--d:${k++ * 60}ms" role="img" aria-label="${n}: ${v} percent"><b class="mono">${v}</b></span></span></div>`; }).join("")).join("")
+    + `<div class="axis mono"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>`;
+  const chart = document.querySelector(".chart");
+  new IntersectionObserver(([e], o) => { if (e.isIntersecting) { chart.classList.add("in"); o.disconnect(); } }, { threshold: .3 }).observe(chart);
+
+  // Time axis
+  const axis = document.getElementById("axis"), Y0 = 2019, Y1 = 2027;
+  const pos = y => ((y - Y0) / (Y1 - Y0)) * 100;
+  let html = ""; for (let y = Y0; y <= Y1; y++) html += `<span class="mono" style="left:${pos(y)}%">${y}</span>`;
+  const spans = [[2019, 2023.6, "#8a96b3", 0], [2023.7, 2026.9, "#4b2e83", 1], [2024, 2025, "#17b67a", 2], [2025.4, 2025.7, "#ff9900", 3], [2026.4, 2026.7, "#eb1700", 4]];
+  const lanes = [0, 0, 1, 2, 2];
+  html += spans.map(([a, b, c, i]) => `<i class="tl-bar" style="left:${pos(a)}%;width:${pos(b) - pos(a)}%;--c:${c};--d:${i * 180}ms;bottom:${6 + lanes[i] * 14}px"></i>`).join("");
+  axis.innerHTML = html;
+  const tl = document.querySelector(".tl");
+  new IntersectionObserver(([e], o) => { if (e.isIntersecting) { tl.classList.add("in"); o.disconnect(); } }, { threshold: .4 }).observe(tl);
+</script>
+</body>
+</html>

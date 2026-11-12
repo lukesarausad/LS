@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Luke Sarausad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f6f5fa;
+    --paper: #ffffff;
+    --ink: #1b1530;
+    --muted: #625a7a;
+    --line: #dcd8e8;
+    --purple: #4b2e83;
+    --gold: #b7a57a;
+    --teal: #2a9d8f;
+    --rail: 64px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: "Schibsted Grotesk", system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; font-size: 1.0625rem; }
+  code, .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--purple); outline-offset: 3px; border-radius: 4px; }
+  .wrap { width: min(1080px, 100% - 32px); margin-inline: auto; position: relative; }
+
+  /* The main branch rail that runs down the page */
+  .rail { position: absolute; left: calc((100% - min(1080px, 100% - 32px)) / 2 + 11px); top: 0; bottom: 0; width: 2px; background: var(--line); }
+  .rail i { position: absolute; inset: 0; background: var(--purple); transform-origin: top; transform: scaleY(var(--s, 0)); }
+  main { position: relative; }
+
+  header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  header .wrap { height: 60px; display: flex; align-items: center; justify-content: space-between; }
+  .brand { font-weight: 800; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+  .brand code { font-size: .8rem; color: var(--muted); font-weight: 400; }
+  nav ul { list-style: none; display: flex; gap: 4px; }
+  nav a { text-decoration: none; padding: 6px 12px; border-radius: 6px; color: var(--muted); font-weight: 500; }
+  nav a:hover, nav a.active { color: var(--ink); background: var(--paper); box-shadow: 0 0 0 1px var(--line); }
+  .menu-btn { display: none; font: inherit; background: none; border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; cursor: pointer; color: var(--ink); }
+
+  section { position: relative; padding: 96px 0; }
+  section > .wrap { padding-left: var(--rail); }
+  .node { position: absolute; left: 4px; top: 104px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg); border: 2px solid var(--line); transition: border-color .3s, background .3s; }
+  section.lit .node { border-color: var(--purple); background: var(--purple); box-shadow: 0 0 0 5px rgba(75,46,131,.14); }
+  .hash { font-size: .85rem; color: var(--muted); }
+  h2 { font-size: clamp(2.2rem, 4.5vw, 3.4rem); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; margin: 6px 0 40px; }
+
+  /* HERO */
+  .hero { min-height: calc(100svh - 60px); display: grid; align-content: center; padding-top: 48px; }
+  .hero .node { top: auto; }
+  .hero-grid { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; }
+  .hero p.hi { font-size: 1.2rem; color: var(--muted); }
+  .hero h1 { font-size: clamp(3.2rem, 8.5vw, 7rem); line-height: .95; letter-spacing: -0.045em; font-weight: 800; margin: 10px 0 28px; }
+  .prompt { display: inline-flex; align-items: center; gap: 10px; background: var(--ink); color: #ece8f7; padding: 12px 18px; border-radius: 10px; font-size: 1rem; min-width: min(380px, 100%); }
+  .prompt .ps { color: var(--gold); }
+  .prompt .caret { width: 9px; height: 1.15em; background: #ece8f7; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; border: 1px solid var(--line); background: var(--paper); transition: transform .15s, box-shadow .15s; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 -2px var(--line); }
+  .btn.primary { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .btn.primary:hover { box-shadow: 0 6px 0 -2px #2e1b55; }
+  .btn svg { width: 18px; height: 18px; }
+  .avatar { width: clamp(200px, 26vw, 320px); aspect-ratio: 1; border-radius: 24px; overflow: hidden; background: var(--paper); border: 1px solid var(--line); position: relative; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ABOUT */
+  .about-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; }
+  .about-grid p { font-size: 1.2rem; max-width: 62ch; }
+  .about-grid p + p { margin-top: 1em; }
+  .side { display: grid; gap: 16px; align-content: start; }
+  .side img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
+  .kv { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: flex; gap: 14px; align-items: flex-start; }
+  .kv img { width: 36px; height: 36px; object-fit: contain; aspect-ratio: auto; border-radius: 0; }
+  .kv h3 { font-size: .95rem; color: var(--muted); font-weight: 500; }
+  .kv p { font-size: 1.02rem !important; font-weight: 700; line-height: 1.4; margin: 0 !important; }
+
+  /* SKILLS as contribution grids */
+  .grids { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 28px; }
+  .panel h3 { font-size: 1.15rem; margin-bottom: 18px; }
+  .skill { display: grid; grid-template-columns: 100px 1fr 34px; gap: 12px; align-items: center; padding: 7px 0; }
+  .skill span { font-weight: 500; }
+  .cells { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+  .cells i { aspect-ratio: 1; border-radius: 3px; background: #ece9f3; transition: background .25s; }
+  .grids.in .cells i.on { background: var(--c); }
+  .skill b { font-size: .8rem; color: var(--muted); font-weight: 400; text-align: right; }
+  .legend { display: flex; align-items: center; gap: 6px; justify-content: flex-end; margin-top: 16px; font-size: .8rem; color: var(--muted); }
+  .legend i { width: 12px; height: 12px; border-radius: 3px; }
+
+  /* TIMELINE as branch graph */
+  .graph { position: relative; }
+  .graph svg.lines { position: absolute; left: calc(-1 * var(--rail)); top: 0; width: calc(var(--rail) + 10px); height: 100%; overflow: visible; pointer-events: none; }
+  .graph svg.lines path { fill: none; stroke-width: 2; stroke-linecap: round; }
+  .commit { position: relative; padding: 0 0 40px; }
+  .commit .dot { position: absolute; left: calc(5px - var(--rail)); top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); border: 2px solid var(--c); transform: scale(0); transition: transform .4s cubic-bezier(.3,1.6,.5,1); }
+  .commit.in .dot { transform: scale(1); }
+  .commit.lane1 .dot { left: calc(5px - var(--rail) + var(--off)); }
+  .graph { --off: 28px; }
+  .commit .meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .tag { font-size: .78rem; padding: 2px 8px; border-radius: 999px; color: var(--c); border: 1px solid currentColor; }
+  .commit h3 { font-size: 1.35rem; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+  .commit h3 img { width: 26px; height: 26px; object-fit: contain; }
+  .commit p { color: var(--muted); max-width: 58ch; }
+  .commit.head h3::after { content: "HEAD"; font-family: "IBM Plex Mono", monospace; font-size: .72rem; background: var(--purple); color: #fff; padding: 2px 8px; border-radius: 999px; font-weight: 500; letter-spacing: 0; }
+
+  /* PROJECTS as repos */
+  .repos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .repo { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+  .repo .shot { aspect-ratio: 4/3; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--bg); }
+  .repo .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .repo .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+  .repo h3 { font-size: 1.3rem; display: flex; align-items: center; gap: 8px; }
+  .repo h3 svg { width: 18px; height: 18px; color: var(--muted); }
+  .repo .links { display: flex; gap: 8px; margin-top: auto; }
+  .repo .links .btn { padding: 8px 14px; font-size: .95rem; }
+
+  /* CONTACT */
+  .merge h2 { font-size: clamp(2.6rem, 7vw, 5.5rem); }
+  .merge p { color: var(--muted); max-width: 46ch; font-size: 1.15rem; }
+  footer { border-top: 1px solid var(--line); padding: 28px 0; color: var(--muted); font-size: .95rem; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer ul { display: flex; list-style: none; gap: 18px; flex-wrap: wrap; }
+  footer a { text-decoration: none; }
+
+  @media (max-width: 860px) {
+    :root { --rail: 40px; }
+    nav ul { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--bg); flex-direction: column; padding: 8px 16px 16px; border-bottom: 1px solid var(--line); }
+    nav ul.open { display: flex; }
+    .menu-btn { display: block; }
+    .hero-grid, .about-grid, .grids { grid-template-columns: 1fr; }
+    .avatar { order: -1; width: 160px; }
+    .repos { grid-template-columns: 1fr; }
+    section { padding: 72px 0; }
+    .node { top: 80px; }
+    .skill { grid-template-columns: 84px 1fr 30px; }
+    .graph { --off: 18px; }
+    .panel { padding: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .rail i { transform: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a href="#top" class="brand">Luke Sarausad <code>main</code></a>
+    <nav>
+      <button class="menu-btn" aria-expanded="false" aria-controls="menu">Menu</button>
+      <ul id="menu">
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#timeline">Timeline</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="rail" aria-hidden="true"><i></i></div>
+
+  <section class="hero lit" aria-label="Introduction">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <p class="hi">Welcome! I'm</p>
+          <h1>Luke Sarausad</h1>
+          <div class="prompt mono" aria-live="polite"><span class="ps" aria-hidden="true">~ $</span><span class="typing"></span><span class="caret" aria-hidden="true"></span></div>
+          <div class="actions">
+            <a class="btn primary" href="../../assets/Luke_Resume_September.pdf" target="_blank" rel="noopener">Resume</a>
+            <a class="btn" href="#contact">Contact info</a>
+            <a class="btn" href="https://www.linkedin.com/in/lukesarausad/"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.95 1.32-1.95 2.7V21h-4z"/></svg>LinkedIn</a>
+            <a class="btn" href="https://github.com/lukesarausad"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>GitHub</a>
+          </div>
+        </div>
+        <div class="avatar"><img src="../../assets/profileMain.png" alt="Portrait of Luke Sarausad" /></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <span class="node" aria-hidden="true"></span>
+      <p class="hash mono">Get to know more</p>
+      <h2>About me</h2>
+      <div class="about-grid">
+        <div>
+          <p>Hi! I'm Luke Sarausad, a Computer Science major with a Data Science focus at the University of Washington and a Business minor. I'm passionate about using technology and data to solve real-world problems.</p>
+          <p>Through my previous experiences and projects I have grasped a deeper understanding of fullstack development and working with industry standard technologies like AWS, React.js and more.</p>
+          <p>This summer, I'll be a Software Engineer Intern at DoorDash in their San Francisco office. In my free time I enjoy working on projects and playing golf. Feel free to connect with me or contact me anytime!</p>
+        </div>
+        <div class="side">
+          <img src="../../assets/pic2.JPG" alt="Luke smiling outdoors in a puffer jacket" loading="lazy" />
+          <div class="kv"><img src="../../assets/experience.png" alt="" /><div><h3>Experience</h3><p>2+ years of software engineering internships and projects</p></div></div>
+          <div class="kv"><img src="../../assets/Huskies.svg.png" alt="" /><div><h3>Education</h3><p>University of Washington, B.S. Computer Science, Minor in Business</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <span class="node" aria-hidden="true"></span>
+      <p class="hash mono">Explore my</p>
+      <h2>Experience</h2>
+      <div class="grids">
+        <div class="panel"><h3>Languages</h3><div class="skills" data-c="#4b2e83" data-skills="Java:90,JavaScript:90,TypeScript:85,HTML/CSS:75,Python:70,C:65"></div></div>
+        <div class="panel"><h3>Frameworks &amp; technologies</h3><div class="skills" data-c="#2a9d8f" data-skills="Git:90,Node.js:85,React.js:85,MongoDB:70,AWS:70,Azure:65"></div></div>
+      </div>
+      <div class="legend"><span>Less</span><i style="background:#ece9f3"></i><i style="background:#b8a9d6"></i><i style="background:#4b2e83"></i><span>More</span></div>
+    </div>
+  </section>
+
+  <section id="timeline">
+    <div class="wrap">
+      <span class="node" aria-hidden="true"></span>
+      <p class="hash mono">Take a look at</p>
+      <h2>My journey</h2>
+      <div class="graph">
+        <svg class="lines" aria-hidden="true"></svg>
+        <div class="commit" style="--c:var(--muted)" data-lane="0"><span class="dot"></span><div class="meta"><code class="hash">2019–2023</code></div><h3>Started programming</h3><p>Explored programming through a series of courses offered at my high school and personal projects.</p></div>
+        <div class="commit" style="--c:var(--purple)" data-lane="0"><span class="dot"></span><div class="meta"><code class="hash">2023–Present</code><span class="tag mono">uw</span></div><h3><img src="../../assets/uw-logo.png" alt="" />University of Washington</h3><p>Studying Computer Science with a Data Science focus and Business minor at the University of Washington.</p></div>
+        <div class="commit" style="--c:var(--teal)" data-lane="1"><span class="dot"></span><div class="meta"><code class="hash">2024</code><span class="tag mono">projects</span></div><h3>Projects &amp; development</h3><p>Built fullstack applications and personal projects to expand my portfolio in software development.</p></div>
+        <div class="commit" style="--c:#c27c0e" data-lane="1"><span class="dot"></span><div class="meta"><code class="hash">Summer 2025</code><span class="tag mono">amazon</span></div><h3><img src="../../assets/amazon-logo.png" alt="" />Amazon</h3><p>SDE Intern in the Stores division.</p></div>
+        <div class="commit head" style="--c:#e0402a" data-lane="0"><span class="dot"></span><div class="meta"><code class="hash">Summer 2026</code><span class="tag mono">doordash</span></div><h3><img src="../../assets/doordash-logo.png" alt="" />DoorDash</h3><p>SWE Intern for the LaunchPad team. Working on building new product initiatives.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <span class="node" aria-hidden="true"></span>
+      <p class="hash mono">Browse my recent</p>
+      <h2>Projects</h2>
+      <div class="repos">
+        <article class="repo"><div class="shot"><img src="../../assets/project1.png" alt="CourtFinder screenshot listing nearby parks and open courts" loading="lazy" /></div><div class="body"><h3><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.71 1.71.75.75 0 0 1-1.06 1.06A2.5 2.5 0 0 1 2 11.5zm10.5-1h-8a1 1 0 0 0-1 1v6.71A2.5 2.5 0 0 1 4.5 9h8z"/></svg>CourtFinder</h3><div class="links"><a class="btn primary" href="https://issaquah-tennis-queue.vercel.app/">Live demo</a><a class="btn" href="https://github.com/bilal-ali1/Issaquah-Tennis-Queue">GitHub</a></div></div></article>
+        <article class="repo"><div class="shot"><img src="../../assets/project2.png" alt="Summairy screenshot with an article URL field" loading="lazy" /></div><div class="body"><h3><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.71 1.71.75.75 0 0 1-1.06 1.06A2.5 2.5 0 0 1 2 11.5zm10.5-1h-8a1 1 0 0 0-1 1v6.71A2.5 2.5 0 0 1 4.5 9h8z"/></svg>Summairy</h3><div class="links"><a class="btn primary" href="https://github.com/lukesarausad/summairy">Live demo</a><a class="btn" href="https://github.com/lukesarausad/summairy">GitHub</a></div></div></article>
+        <article class="repo"><div class="shot"><img src="../../assets/portfolio_graphic.png" alt="Market Predictor graphic" loading="lazy" /></div><div class="body"><h3><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.71 1.71.75.75 0 0 1-1.06 1.06A2.5 2.5 0 0 1 2 11.5zm10.5-1h-8a1 1 0 0 0-1 1v6.71A2.5 2.5 0 0 1 4.5 9h8z"/></svg>Market Predictor</h3><div class="links"><a class="btn primary" href="https://github.com/lukesarausad/MarketPredictor">Live demo</a><a class="btn" href="https://github.com/lukesarausad/MarketPredictor">GitHub</a></div></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="merge">
+    <div class="wrap">
+      <span class="node" aria-hidden="true"></span>
+      <p class="hash mono">Get in touch</p>
+      <h2>Contact me</h2>
+      <p>Whether it's an internship, a project, or a question about something I built, my inbox is open.</p>
+      <div class="actions">
+        <a class="btn primary" href="mailto:lukes25@uw.edu">Email me</a>
+        <a class="btn" href="https://www.linkedin.com/in/lukesarausad/">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Copyright © 2025 Luke Sarausad. All Rights Reserved.</p>
+    <ul><li><a href="#about">About</a></li><li><a href="#experience">Experience</a></li><li><a href="#timeline">Timeline</a></li><li><a href="#projects">Projects</a></li><li><a href="#contact">Contact</a></li></ul>
+  </div>
+</footer>
+
+<script>
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const btn = document.querySelector(".menu-btn"), menu = document.getElementById("menu");
+  btn.addEventListener("click", () => btn.setAttribute("aria-expanded", menu.classList.toggle("open")));
+  menu.addEventListener("click", e => { if (e.target.tagName === "A") menu.classList.remove("open"); });
+
+  // Typing prompt
+  const roles = ["Software Engineer", "CS Student @ UW", "DoorDash SWE Intern"];
+  const out = document.querySelector(".typing");
+  if (reduce) out.textContent = roles[0];
+  else { let r = 0, c = 0, del = false;
+    (function tick() { const t = roles[r]; out.textContent = t.slice(0, del ? --c : ++c);
+      let w = del ? 40 : 90; if (!del && c === t.length) { del = true; w = 1800; } else if (del && c === 0) { del = false; r = (r + 1) % roles.length; w = 350; }
+      setTimeout(tick, w); })(); }
+
+  // Contribution grids
+  const lighten = (hex, a) => { const n = parseInt(hex.slice(1), 16); const m = c => Math.round(c + (255 - c) * a); return `rgb(${m(n >> 16)},${m(n >> 8 & 255)},${m(n & 255)})`; };
+  document.querySelectorAll(".skills").forEach(box => {
+    const base = box.dataset.c;
+    box.innerHTML = box.dataset.skills.split(",").map(s => {
+      const [n, v] = s.split(":"); const on = Math.round(v / 10);
+      const cells = Array.from({ length: 10 }, (_, i) => `<i class="${i < on ? "on" : ""}" style="--c:${lighten(base, Math.max(0, .62 - i * .07))};transition-delay:${i * 60}ms"></i>`).join("");
+      return `<div class="skill"><span>${n}</span><div class="cells" role="img" aria-label="${n}: ${v} percent">${cells}</div><b class="mono">${v}%</b></div>`;
+    }).join("");
+  });
+
+  // Branch graph lines
+  const graph = document.querySelector(".graph"), svg = graph.querySelector("svg.lines");
+  function drawGraph() {
+    const commits = [...graph.querySelectorAll(".commit")];
+    commits.forEach(c => c.classList.toggle("lane1", c.dataset.lane === "1"));
+    const gb = graph.getBoundingClientRect();
+    const rail = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--rail"));
+    const pt = c => { const d = c.querySelector(".dot").getBoundingClientRect(); return { x: d.left + d.width / 2 - gb.left + rail, y: d.top + d.height / 2 - gb.top }; };
+    // Feature branch forks from UW, carries projects + Amazon, merges into DoorDash
+    const a = pt(commits[1]), c = pt(commits[3]), e = pt(commits[4]), bx = pt(commits[2]).x;
+    const branch = `M ${a.x} ${a.y} C ${a.x} ${a.y + 36}, ${bx} ${a.y + 24}, ${bx} ${a.y + 60} L ${bx} ${c.y} C ${bx} ${c.y + 44}, ${e.x} ${e.y - 56}, ${e.x} ${e.y}`;
+    svg.innerHTML = `<path d="${branch}" stroke="#2a9d8f"/>`;
+    svg.querySelectorAll("path").forEach(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = reduce ? 0 : L; p.dataset.len = L; });
+    progress();
+  }
+  function progress() {
+    const r = graph.getBoundingClientRect(); const t = Math.min(1, Math.max(0, (innerHeight * 0.75 - r.top) / r.height));
+    svg.querySelectorAll("path").forEach(p => { if (!reduce) p.style.strokeDashoffset = p.dataset.len * (1 - t); });
+  }
+
+  // Rail fill + nodes + reveal
+  const railFill = document.querySelector(".rail i"), mainEl = document.querySelector("main");
+  function onScroll() {
+    const r = mainEl.getBoundingClientRect();
+    const t = Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / r.height));
+    railFill.style.setProperty("--s", reduce ? 1 : t);
+    progress();
+  }
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add(e.target.classList.contains("grids") || e.target.classList.contains("commit") ? "in" : "lit"); }), { threshold: 0.3 });
+  document.querySelectorAll("section, .grids, .commit").forEach(el => io.observe(el));
+
+  // Active nav
+  const links = [...document.querySelectorAll("nav a")];
+  const navIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(l => l.classList.toggle("active", l.hash === "#" + e.target.id)); }), { rootMargin: "-45% 0px -50% 0px" });
+  document.querySelectorAll("section[id]").forEach(s => navIO.observe(s));
+
+  addEventListener("scroll", onScroll, { passive: true });
+  addEventListener("resize", drawGraph);
+  document.fonts.ready.then(() => { drawGraph(); onScroll(); });
+</script>
+</body>
+</html>
