@@ -6,12 +6,12 @@
 <title>Luke Sarausad</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
-  :root { --bg: #dfe4ea; --ink: #14213d; --coral: #ff6b4a; --mute: #5d6b85; --card: #eef1f5; --swim: #3f74d6; }
+  :root { --display: "Hedvig Letters Serif", Georgia, serif; --text: "Hanken Grotesk", system-ui, sans-serif; --bg: #dfe4ea; --ink: #14213d; --coral: #ff6b4a; --mute: #5d6b85; --card: #eef1f5; --swim: #3f74d6; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--ink); font: 300 17px/1.6 "Sora", system-ui, sans-serif; }
+  body { background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--text); }
   a { color: inherit; }
   :focus-visible { outline: 2px solid var(--coral); outline-offset: 4px; border-radius: 6px; }
   canvas.field { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
@@ -20,7 +20,7 @@
 
   .hero { position: relative; min-height: 100svh; display: grid; place-items: center; text-align: center; pointer-events: none; }
   .hero > div { pointer-events: auto; }
-  h1 { font-weight: 600; font-size: clamp(40px, 8vw, 104px); line-height: 1; letter-spacing: -0.045em; }
+  h1 { font: 400 clamp(44px, 8.4vw, 112px)/1 var(--display); letter-spacing: -0.03em; }
   .hero p { margin-top: 18px; color: var(--mute); font-size: clamp(16px, 1.6vw, 19px); }
   .hero .go { display: inline-flex; gap: 10px; margin-top: 36px; }
   .btn { padding: 12px 22px; border-radius: 99px; text-decoration: none; font-weight: 400; background: var(--ink); color: var(--bg); transition: background .25s; }
@@ -47,7 +47,7 @@
   .list .m { color: var(--mute); font-size: 14px; }
 
   .contact { text-align: center; padding-bottom: 60px; }
-  .contact h3 { font-weight: 600; font-size: clamp(36px, 6vw, 72px); letter-spacing: -0.045em; line-height: 1; }
+  .contact h3 { font: 400 clamp(40px, 6vw, 76px)/1 var(--display); letter-spacing: -0.03em; }
   .contact .go { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
   footer { text-align: center; color: var(--mute); font-size: 13px; padding: 30px 0 40px; }
 
@@ -93,12 +93,12 @@
   .sheet.open::backdrop { background: rgba(20,33,61,.35); backdrop-filter: blur(6px); }
   .sheet-body { opacity: 0; transition: opacity .3s; }
   .sheet.open .sheet-body { opacity: 1; transition-delay: .25s; }
-  .close { position: absolute; top: 18px; right: 18px; z-index: 2; font: 400 14px "Sora", sans-serif; padding: 8px 16px; border-radius: 99px; border: 0; background: var(--ink); color: var(--card); cursor: pointer; opacity: 0; transition: opacity .3s, background .25s; }
+  .close { position: absolute; top: 18px; right: 18px; z-index: 2; font: 500 14px var(--text); padding: 8px 16px; border-radius: 99px; border: 0; background: var(--ink); color: var(--card); cursor: pointer; opacity: 0; transition: opacity .3s, background .25s; }
   .sheet.open .close { opacity: 1; transition-delay: .25s; }
   .close:hover { background: var(--coral); }
   .detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 48px); padding: clamp(28px, 5vw, 56px); align-items: center; }
   .dtext { display: grid; gap: 16px; align-content: start; }
-  .detail h3 { font-weight: 600; font-size: clamp(32px, 4vw, 48px); letter-spacing: -0.04em; line-height: 1; }
+  .detail h3 { font: 400 clamp(34px, 4.4vw, 52px)/1.02 var(--display); letter-spacing: -0.025em; }
   .dl { font-size: 18px; line-height: 1.55; color: var(--ink); max-width: 36ch; }
   .detail .cap { margin: -6px 0 0; }
   .detail .race { padding-top: 14px; border-top: 1px solid #cdd4de; }
@@ -117,6 +117,27 @@
   @media (max-width: 760px) {
     .detail { grid-template-columns: 1fr; padding-top: 64px; }
     .media.tall { max-height: 60svh; }
+  }
+
+  .lead, .list .n, .rh .n { font-family: var(--display); font-weight: 400; }
+  .lead { letter-spacing: -0.015em; line-height: 1.3; }
+  .list .n, .rh .n { letter-spacing: -0.01em; }
+  .btn, .tags li, .tag, .more { font-family: var(--text); }
+  /* journey rows open like the cards */
+  .list li.j { padding: 0; display: block; }
+  .jrow { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 90px 1fr auto 22px; gap: 16px; align-items: baseline; width: 100%; padding: 18px 12px; margin: 0 -12px; width: calc(100% + 24px); border-radius: 14px; transition: background .25s; }
+  .jrow:hover { background: rgba(20,33,61,.05); }
+  .jrow:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+  .jrow .more { margin: 0; align-self: center; }
+  .jrow:hover .more i { background: var(--coral); transform: rotate(90deg); }
+  .jrow.hide { visibility: hidden; }
+  .detail .when { color: var(--coral); font-weight: 600; font-size: 15px; }
+  .detail .role { color: var(--mute); margin-top: -6px; }
+  .media.photo { aspect-ratio: 4 / 5; max-height: 70svh; width: 100%; justify-self: center; }
+  @media (max-width: 600px) {
+    .jrow { grid-template-columns: 1fr 22px; row-gap: 2px; }
+    .jrow .y { grid-column: 1; } .jrow .n { grid-column: 1; } .jrow .m { grid-column: 1; }
+    .jrow .more { grid-column: 2; grid-row: 1 / 4; }
   }
   @media (max-width: 760px) { .duo { grid-template-columns: 1fr; } }
   @media (prefers-reduced-motion: reduce) { .dots i { transition: none; } }
@@ -206,10 +227,10 @@
     <div class="panel">
       <h2>Journey</h2>
       <ol class="list">
-        <li><span class="y">2026</span><span class="n">DoorDash</span><span class="m">SWE intern</span></li>
-        <li><span class="y">2025</span><span class="n">Amazon</span><span class="m">SDE intern</span></li>
-        <li><span class="y">2023</span><span class="n">University of Washington</span><span class="m">B.S. CS</span></li>
-        <li><span class="y">2019</span><span class="n">First line of code</span><span class="m"></span></li>
+        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="Summer 2026" data-title="DoorDash" data-role="SWE intern" data-desc="Software engineering intern on the LaunchPad team, building new product initiatives." data-img="journey-doordash.jpg"><span class="y">2026</span><span class="n">DoorDash</span><span class="m">SWE intern</span><span class="more" aria-hidden="true"><i></i></span></button></li>
+        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="Summer 2025" data-title="Amazon" data-role="SDE intern" data-desc="Software development engineer intern in the Stores division." data-img="journey-amazon.jpg"><span class="y">2025</span><span class="n">Amazon</span><span class="m">SDE intern</span><span class="more" aria-hidden="true"><i></i></span></button></li>
+        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="2023 to present" data-title="University of Washington" data-role="B.S. CS" data-desc="Studying Computer Science with a Data Science focus and a minor in Business." data-img="journey-uw.jpg"><span class="y">2023</span><span class="n">University of Washington</span><span class="m">B.S. CS</span><span class="more" aria-hidden="true"><i></i></span></button></li>
+        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="2019 to 2023" data-title="First line of code" data-role="" data-desc="Explored programming through high school courses and personal projects." data-img="journey-start.jpg"><span class="y">2019</span><span class="n">First line of code</span><span class="m"></span><span class="more" aria-hidden="true"><i></i></span></button></li>
       </ol>
     </div>
   </section>
@@ -355,9 +376,19 @@
       if (el.tagName === 'VIDEO' && el.error) fail();
     });
   }
+  function rowDetail(d) {
+    const wrap = document.createElement('div'); wrap.className = 'detail';
+    const t = document.createElement('div'); t.className = 'dtext';
+    const add = (tag, cls, txt, id) => { if (!txt) return; const e = document.createElement(tag); if (cls) e.className = cls; if (id) e.id = id; e.textContent = txt; t.appendChild(e); };
+    add('p', 'when', d.when); add('h3', '', d.title, 'sheet-title'); add('p', 'role', d.role); add('p', 'dl', d.desc);
+    const fig = document.createElement('figure'); fig.className = 'media photo';
+    fig.dataset.label = d.title + ' photo'; fig.dataset.file = 'assets/' + d.img;
+    const img = document.createElement('img'); img.src = '../../../assets/' + d.img; img.alt = d.title;
+    fig.appendChild(img); wrap.append(t, fig); return wrap;
+  }
   async function open(card) {
     if (busy) return; busy = true; from = card;
-    body.replaceChildren(document.getElementById('tpl-' + card.dataset.open).content.cloneNode(true));
+    body.replaceChildren(card.dataset.open === 'row' ? rowDetail(card.dataset) : document.getElementById('tpl-' + card.dataset.open).content.cloneNode(true));
     wireMedia(body);
     sheet.showModal();
     document.documentElement.style.overflow = 'hidden';
@@ -378,7 +409,7 @@
     document.documentElement.style.overflow = '';
     from.focus(); busy = false;
   }
-  document.querySelectorAll('.card').forEach(c => c.addEventListener('click', () => open(c)));
+  document.querySelectorAll('.card, .jrow').forEach(c => c.addEventListener('click', () => open(c)));
   sheet.querySelector('.close').addEventListener('click', close);
   sheet.addEventListener('cancel', e => { e.preventDefault(); close(); });
   sheet.addEventListener('click', e => { if (e.target === sheet) close(); });
