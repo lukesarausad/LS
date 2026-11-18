@@ -15,6 +15,7 @@
   :root[data-pal="fairway"] { --bg: #dfe6dc; --card: #eff3ec; --ink: #18321f; --ink-rgb: 24,50,31; --accent: #2f8a4c; --accent-rgb: 47,138,76; --on-accent: #ffffff; --mute: #5a6d5e; --line: #cad6c6; --swim: #3a78c2; --shade-rgb: 24,50,31; }
   :root[data-pal="glacier"] { --bg: #e3ebf3; --card: #f3f7fb; --ink: #0c2340; --ink-rgb: 12,35,64; --accent: #1f6feb; --accent-rgb: 31,111,235; --on-accent: #ffffff; --mute: #57708f; --line: #ccd8e5; --swim: #12a4a4; --shade-rgb: 12,35,64; }
   :root[data-pal="night"] { --bg: #0e1524; --card: #161f33; --ink: #e9edf6; --ink-rgb: 233,237,246; --accent: #ffb547; --accent-rgb: 255,181,71; --on-accent: #1b1405; --mute: #8e98b0; --line: #2a3550; --swim: #5aa2ff; --shade-rgb: 4,7,14; color-scheme: dark; }
+  :root[data-pal="black"] { --bg: #000000; --card: #121212; --ink: #f1efea; --ink-rgb: 241,239,234; --accent: #f4c46a; --accent-rgb: 244,196,106; --on-accent: #1a1204; --mute: #9b978f; --line: #2a2a2a; --swim: #6fa8ff; --shade-rgb: 0,0,0; color-scheme: dark; }
   body, .panel, .sheet, .btn, .tag, .media { transition: background-color .5s, color .5s; }
   .pal { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 40; display: flex; gap: 6px; padding: 6px; border-radius: 99px; background: var(--card); box-shadow: 0 6px 20px -8px rgba(var(--shade-rgb),.5); }
   .pal button { width: 26px; height: 26px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: linear-gradient(135deg, var(--a) 50%, var(--b) 50%); box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); transition: transform .2s; }
@@ -196,6 +197,7 @@
   .fit-open .race .dots { margin: 12px 0 8px; }
   .entry .when { color: var(--accent); font-weight: 600; font-size: 15px; }
   .entry h3 { font: 400 clamp(30px, 3.6vw, 44px)/1.04 var(--display); letter-spacing: -0.025em; margin: 6px 0 4px; }
+  :root[data-pal="black"] .logo.inv, :root[data-pal="night"] .logo.inv { filter: invert(1) hue-rotate(180deg); }
   .entry h3 .nw { white-space: nowrap; }
   .entry h3 .logo { display: inline-block; height: .7em; width: auto; margin-left: .1em; vertical-align: baseline; position: relative; top: .02em; }
   .entry h3 .flag { height: .58em; border-radius: 3px; box-shadow: 0 0 0 1px rgba(var(--ink-rgb), .15); }
@@ -295,8 +297,8 @@
       <h2 class="sec-h">Journey</h2>
       <article class="panel entry wide"><div class="dtext"><p class="when">Summer 2026</p><h3><span class="nw">DoorDash&nbsp;<img class="logo" src="../../../assets/logo-doordash.png" alt="" /></span></h3><p class="role">SWE intern</p><p class="dl">On the Ads and Promos team in New York, I built a credits ledger that gives 300K+ advertisers transaction-level visibility into their ad credits.</p></div><div class="rowwrap"><div class="pics row" style="--n:2;--sum:2.083"><figure class="media fit" style="--ar:1.333" data-label="Luke and coworkers toasting at dinner" data-file="assets/journey-doordash-1.jpg"><img src="../../../assets/journey-doordash-1.jpg" alt="Luke and coworkers toasting at dinner" loading="lazy" /></figure><figure class="media fit" style="--ar:0.75" data-label="Luke and another intern in the DoorDash office" data-file="assets/journey-doordash-2.jpg"><img src="../../../assets/journey-doordash-2.jpg" alt="Luke and another intern in the DoorDash office" loading="lazy" /></figure></div></div></article>
       <article class="panel entry wide"><div class="dtext"><p class="when">2026</p><h3>Study <span class="nw">abroad&nbsp;<svg class="logo flag" viewBox="0 0 3 2" role="img" aria-label="Italy"><rect width="1" height="2" fill="#009246"/><rect x="1" width="1" height="2" fill="#f4f5f0"/><rect x="2" width="1" height="2" fill="#ce2b37"/></svg></span></h3><p class="dl">Details coming soon.</p></div><div class="rowwrap"><div class="pics row" style="--n:2;--sum:2.666"><figure class="media fit" style="--ar:1.333" data-label="Luke and friends on a sand dune in the desert" data-file="assets/journey-abroad-1.jpg"><img src="../../../assets/journey-abroad-1.jpg" alt="Luke and friends on a sand dune in the desert" loading="lazy" /></figure><figure class="media fit" style="--ar:1.333" data-label="Luke and friends in a busy market square at dusk" data-file="assets/journey-abroad-2.jpg"><img src="../../../assets/journey-abroad-2.jpg" alt="Luke and friends in a busy market square at dusk" loading="lazy" /></figure></div></div></article>
-      <article class="panel entry wide"><div class="dtext"><p class="when">Summer 2025</p><h3><span class="nw">Amazon&nbsp;<img class="logo" src="../../../assets/logo-amazon.png" alt="" /></span></h3><p class="role">SWE intern</p><p class="dl">On the Seller Success Program, I built seller analytics and ML pipelines on AWS that predict when new sellers might drop off.</p></div><div class="rowwrap"><div class="pics row" style="--n:2;--sum:1.313"><figure class="media fit" style="--ar:0.75" data-label="Luke holding his Amazon badge" data-file="assets/journey-amazon-1.jpg"><img src="../../../assets/journey-amazon-1.jpg" alt="Luke holding his Amazon badge" loading="lazy" /></figure><figure class="media fit" style="--ar:0.563" data-label="Luke and another intern in an Amazon office overlooking Seattle" data-file="assets/journey-amazon-2.mp4"><video src="../../../assets/journey-amazon-2.mp4" poster="../../../assets/journey-amazon-2.jpg" autoplay muted loop playsinline aria-label="Luke and another intern in an Amazon office overlooking Seattle"></video></figure></div></div></article>
-      <article class="panel entry side"><div class="split"><div class="dtext"><p class="when">2023 to present</p><h3>University of <span class="nw">Washington&nbsp;<img class="logo" src="../../../assets/logo-uw.png" alt="" /></span></h3><p class="role">B.S. CS</p><p class="dl">Studying Computer Science with a Data Science focus and a minor in Business.</p></div><figure class="media photo" data-label="Luke in front of a building on the UW campus" data-file="assets/journey-uw.jpg"><img src="../../../assets/journey-uw.jpg" alt="Luke in front of a building on the UW campus" loading="lazy" /></figure></div></article>
+      <article class="panel entry wide"><div class="dtext"><p class="when">Summer 2025</p><h3><span class="nw">Amazon&nbsp;<img class="logo inv" src="../../../assets/logo-amazon.png" alt="" /></span></h3><p class="role">SWE intern</p><p class="dl">On the Seller Success Program, I built seller analytics and ML pipelines on AWS that predict when new sellers might drop off.</p></div><div class="rowwrap"><div class="pics row" style="--n:2;--sum:1.313"><figure class="media fit" style="--ar:0.75" data-label="Luke holding his Amazon badge" data-file="assets/journey-amazon-1.jpg"><img src="../../../assets/journey-amazon-1.jpg" alt="Luke holding his Amazon badge" loading="lazy" /></figure><figure class="media fit" style="--ar:0.563" data-label="Luke and another intern in an Amazon office overlooking Seattle" data-file="assets/journey-amazon-2.mp4"><video src="../../../assets/journey-amazon-2.mp4" poster="../../../assets/journey-amazon-2.jpg" autoplay muted loop playsinline aria-label="Luke and another intern in an Amazon office overlooking Seattle"></video></figure></div></div></article>
+      <article class="panel entry side"><div class="split"><div class="dtext"><p class="when">2023 to present</p><h3>University of <span class="nw">Washington&nbsp;<img class="logo inv" src="../../../assets/logo-uw.png" alt="" /></span></h3><p class="role">B.S. CS</p><p class="dl">Studying Computer Science with a Data Science focus and a minor in Business.</p></div><figure class="media photo" data-label="Luke in front of a building on the UW campus" data-file="assets/journey-uw.jpg"><img src="../../../assets/journey-uw.jpg" alt="Luke in front of a building on the UW campus" loading="lazy" /></figure></div></article>
       <article class="panel entry side"><div class="split"><div class="dtext"><p class="when">2019 to 2023</p><h3>First line of code</h3><p class="dl">Explored programming through high school courses and personal projects.</p></div><figure class="media photo" data-label="Luke as a young kid wearing headphones at a desk" data-file="assets/journey-start.jpg"><img src="../../../assets/journey-start.jpg" alt="Luke as a young kid wearing headphones at a desk" loading="lazy" /></figure></div></article>
     </div>
   </section>
@@ -326,6 +328,7 @@
   <button type="button" data-p="fairway" aria-label="Fairway" style="--a:#dfe6dc;--b:#2f8a4c"></button>
   <button type="button" data-p="glacier" aria-label="Glacier" style="--a:#e3ebf3;--b:#1f6feb"></button>
   <button type="button" data-p="night" aria-label="Night" style="--a:#0e1524;--b:#ffb547"></button>
+  <button type="button" data-p="black" aria-label="Black" style="--a:#000;--b:#fff4dc"></button>
 </div>
 <script>
   const cv = document.querySelector('canvas.field'), cx = cv.getContext('2d');
@@ -360,8 +363,22 @@
     // the head chases the pointer, every other dot chases the one ahead of it
     let px = mx, py = my;
     trail.forEach((t, i) => { const k = i === 0 ? .42 : .38; t.x += (px - t.x) * k; t.y += (py - t.y) * k; px = t.x; py = t.y; });
-    const quiet = now - idle > 1400, fadeOut = quiet ? Math.max(0, 1 - (now - idle - 1400) / 600) : 1;
-    if (seen && fadeOut > 0) {
+    const glow = document.documentElement.dataset.pal === 'black';
+    const quiet = now - idle > 1400;
+    let fadeOut = quiet ? Math.max(0, 1 - (now - idle - 1400) / 600) : 1;
+    if (glow) fadeOut = quiet ? Math.max(.55, 1 - (now - idle - 1400) / 1500) : 1;
+    if (seen && fadeOut > 0 && glow) {
+      // a small warm light: wide soft halo, faint embers behind it, bright core
+      const h = trail[3], g = cx.createRadialGradient(h.x, h.y, 0, h.x, h.y, 170);
+      g.addColorStop(0, `rgba(255,236,200,${.20 * fadeOut})`); g.addColorStop(.35, `rgba(255,220,170,${.07 * fadeOut})`); g.addColorStop(1, 'rgba(255,220,170,0)');
+      cx.fillStyle = g; cx.fillRect(h.x - 170, h.y - 170, 340, 340);
+      cx.globalCompositeOperation = 'lighter';
+      trail.forEach((t, i) => { if (i < 2 || i % 2) return; const f = 1 - i / TRAIL; cx.fillStyle = `rgba(255,214,150,${.35 * f * fadeOut})`; cx.beginPath(); cx.arc(t.x, t.y, 1 + 2 * f, 0, 6.283); cx.fill(); });
+      const c = trail[0], core = cx.createRadialGradient(c.x, c.y, 0, c.x, c.y, 14);
+      core.addColorStop(0, `rgba(255,250,235,${fadeOut})`); core.addColorStop(.3, `rgba(255,228,180,${.6 * fadeOut})`); core.addColorStop(1, 'rgba(255,220,170,0)');
+      cx.fillStyle = core; cx.beginPath(); cx.arc(c.x, c.y, 14, 0, 6.283); cx.fill();
+      cx.globalCompositeOperation = 'source-over';
+    } else if (seen && fadeOut > 0) {
       trail.forEach((t, i) => {
         const f = 1 - i / TRAIL;
         cx.fillStyle = `rgba(${CORAL},${(.15 + .75 * f) * fadeOut})`;
@@ -371,8 +388,8 @@
     bursts = bursts.filter(b => now - b.t < 700);
     for (const b of bursts) {
       const k = (now - b.t) / 700, e = 1 - Math.pow(1 - k, 3);
-      cx.fillStyle = `rgba(${CORAL},${1 - k})`;
-      for (const p of b.parts) { cx.beginPath(); cx.arc(b.x + Math.cos(p.a) * p.v * e, b.y + Math.sin(p.a) * p.v * e, 3 * (1 - k) + .6, 0, 6.283); cx.fill(); }
+      cx.fillStyle = glow ? `rgba(255,226,170,${1 - k})` : `rgba(${CORAL},${1 - k})`;
+      for (const p of b.parts) { cx.beginPath(); cx.arc(b.x + Math.cos(p.a) * p.v * e, b.y + Math.sin(p.a) * p.v * e, (glow ? 2 : 3) * (1 - k) + .6, 0, 6.283); cx.fill(); }
     }
     if ((seen && fadeOut > 0) || bursts.length) requestAnimationFrame(frame); else { running = false; cx.clearRect(0, 0, W, H); }
   }
