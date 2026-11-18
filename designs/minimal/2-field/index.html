@@ -52,7 +52,6 @@
   footer { text-align: center; color: var(--mute); font-size: 13px; padding: 30px 0 40px; }
 
   .duo { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; }
-  .golf { display: flex; flex-direction: column; }
   .golf .matrix { margin-top: auto; }
   .golf .cap { margin-bottom: auto; }
   .matrix { width: 100%; max-width: 100%; height: auto; aspect-ratio: 19 / 7; display: block; }
@@ -74,6 +73,51 @@
   .m .k { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin: 0 5px 0 10px; vertical-align: 1px; }
   .m .k:first-child { margin-left: 0; }
   .m .k.swim { background: var(--swim); } .m .k.bike { background: var(--ink); } .m .k.run { background: var(--coral); }
+
+  .intro { margin-bottom: 16px; }
+  .card { font: inherit; color: inherit; text-align: left; border: 0; cursor: pointer; position: relative; display: flex; flex-direction: column; transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -18px rgba(20,33,61,.45); }
+  .card .h2 { display: block; font-weight: 600; font-size: 15px; color: var(--coral); margin-bottom: 28px; }
+  .card .race, .card .rh, .card .m, .card .cap { display: block; }
+  .card .rh { display: flex; }
+  .card .dots { display: flex; }
+  .more { margin-top: 24px; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 400; color: var(--ink); }
+  .more i { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); position: relative; transition: background .3s, transform .4s; }
+  .more i::before, .more i::after { content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 2px; margin: -1px -5px; background: var(--card); border-radius: 2px; }
+  .more i::after { transform: rotate(90deg); }
+  .card:hover .more i { background: var(--coral); transform: rotate(90deg); }
+  .card.hide { visibility: hidden; }
+
+  .sheet { position: fixed; inset: 0; margin: auto; width: min(980px, 100% - 32px); max-height: min(90svh, 860px); border: 0; padding: 0; border-radius: 28px; background: var(--card); color: var(--ink); overflow: auto; transform-origin: 0 0; }
+  .sheet::backdrop { background: rgba(20,33,61,0); backdrop-filter: blur(0); transition: background .45s, backdrop-filter .45s; }
+  .sheet.open::backdrop { background: rgba(20,33,61,.35); backdrop-filter: blur(6px); }
+  .sheet-body { opacity: 0; transition: opacity .3s; }
+  .sheet.open .sheet-body { opacity: 1; transition-delay: .25s; }
+  .close { position: absolute; top: 18px; right: 18px; z-index: 2; font: 400 14px "Sora", sans-serif; padding: 8px 16px; border-radius: 99px; border: 0; background: var(--ink); color: var(--card); cursor: pointer; opacity: 0; transition: opacity .3s, background .25s; }
+  .sheet.open .close { opacity: 1; transition-delay: .25s; }
+  .close:hover { background: var(--coral); }
+  .detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 48px); padding: clamp(28px, 5vw, 56px); align-items: center; }
+  .dtext { display: grid; gap: 16px; align-content: start; }
+  .detail h3 { font-weight: 600; font-size: clamp(32px, 4vw, 48px); letter-spacing: -0.04em; line-height: 1; }
+  .dl { font-size: 18px; line-height: 1.55; color: var(--ink); max-width: 36ch; }
+  .detail .cap { margin: -6px 0 0; }
+  .detail .race { padding-top: 14px; border-top: 1px solid #cdd4de; }
+  .detail .race .m { margin-top: 6px; }
+  .pics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .pics .media { aspect-ratio: 3 / 4; }
+  .media { position: relative; margin: 0; border-radius: 20px; overflow: hidden; background: var(--bg); aspect-ratio: 1; max-width: 100%; }
+  .media.tall { aspect-ratio: 9 / 14; max-height: 72svh; justify-self: center; width: 100%; }
+  .media img, .media video { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.85) contrast(1.04); }
+  /* halftone dot screen ties photos to the field */
+  .media::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(rgba(20,33,61,.22) 1px, transparent 1.6px) 0 0 / 7px 7px; mix-blend-mode: multiply; opacity: .55; }
+  .media.empty img, .media.empty video { display: none; }
+  .media.empty { display: grid; place-items: center; text-align: center; padding: 20px; }
+  .media.empty::after { opacity: 1; background: radial-gradient(rgba(20,33,61,.18) 1.4px, transparent 2px) 0 0 / 14px 14px; }
+  .media.empty::before { content: attr(data-label) "\A" "Add " attr(data-file); white-space: pre-wrap; max-width: 100%; font-size: 12px; color: var(--mute); line-height: 1.5; position: relative; z-index: 1; background: var(--bg); padding: 6px 12px; border-radius: 99px; }
+  @media (max-width: 760px) {
+    .detail { grid-template-columns: 1fr; padding-top: 64px; }
+    .media.tall { max-height: 60svh; }
+  }
   @media (max-width: 760px) { .duo { grid-template-columns: 1fr; } }
   @media (prefers-reduced-motion: reduce) { .dots i { transition: none; } }
 
@@ -95,28 +139,68 @@
     <span class="hint">Move or click anywhere</span>
   </header>
 
-  <section class="wrap" id="off">
+  <section class="wrap" id="about">
+    <div class="panel intro">
+      <h2>About me</h2>
+      <p class="lead">Outside of code, I'm usually training or on the golf course. I ran the Seattle Marathon last November, and this July I'm racing Ironman 70.3 Coeur d'Alene.</p>
+    </div>
     <div class="duo">
-      <div class="panel golf">
-        <h2>Golf</h2>
+      <button class="panel card golf" type="button" data-open="golf" aria-haspopup="dialog">
+        <span class="h2">Golf</span>
         <canvas class="matrix" width="380" height="140" role="img" aria-label="Handicap index 14.2"></canvas>
-        <p class="cap">Handicap index</p>
-      </div>
-      <div class="panel endure">
-        <h2>Endurance</h2>
-        <div class="race">
-          <div class="rh"><span class="n">Seattle Marathon</span><span class="tag done">3:54:45</span></div>
-          <div class="dots" data-legs="run:26.2" aria-label="26.2 miles, finished November 2025"></div>
-          <p class="m">26.2 mi, November 2025</p>
-        </div>
-        <div class="race">
-          <div class="rh"><span class="n">Half Ironman</span><span class="tag">Training</span></div>
-          <div class="dots" data-legs="swim:1.2,bike:56,run:13.1" aria-label="70.3 miles: 1.2 mile swim, 56 mile bike, 13.1 mile run, July 2027"></div>
-          <p class="m"><i class="k swim"></i>1.2 swim <i class="k bike"></i>56 bike <i class="k run"></i>13.1 run, July 2027</p>
-        </div>
-      </div>
+        <span class="cap">Handicap index</span>
+        <span class="more" aria-hidden="true"><i></i>Watch my swing</span>
+      </button>
+      <button class="panel card endure" type="button" data-open="fit" aria-haspopup="dialog">
+        <span class="h2">Fitness</span>
+        <span class="race">
+          <span class="rh"><span class="n">Seattle Marathon</span><span class="tag done">3:54:45</span></span>
+          <span class="dots" data-legs="run:26.2" aria-label="26.2 miles, finished November 2025"></span>
+          <span class="m">26.2 mi, November 2025</span>
+        </span>
+        <span class="race">
+          <span class="rh"><span class="n">Ironman 70.3 Coeur d'Alene</span><span class="tag">Training</span></span>
+          <span class="dots" data-legs="swim:1.2,bike:56,run:13.1" aria-label="70.3 miles: 1.2 mile swim, 56 mile bike, 13.1 mile run, July 2027"></span>
+          <span class="m"><i class="k swim"></i>1.2 swim <i class="k bike"></i>56 bike <i class="k run"></i>13.1 run, July 2027</span>
+        </span>
+        <span class="more" aria-hidden="true"><i></i>See photos</span>
+      </button>
     </div>
   </section>
+
+  <dialog class="sheet" aria-labelledby="sheet-title">
+    <button class="close" type="button" aria-label="Close">Close</button>
+    <div class="sheet-body"></div>
+  </dialog>
+
+  <template id="tpl-golf">
+    <div class="detail">
+      <div class="dtext">
+        <h3 id="sheet-title">Golf</h3>
+        <canvas class="matrix big" width="380" height="140" role="img" aria-label="Handicap index 14.2"></canvas>
+        <p class="cap">Handicap index</p>
+        <p class="dl">Here's my swing.</p>
+      </div>
+      <figure class="media tall" data-label="Swing video" data-file="assets/golf-swing.mp4">
+        <video src="../../../assets/golf-swing.mp4" autoplay muted loop playsinline aria-label="Luke swinging a golf club"></video>
+      </figure>
+    </div>
+  </template>
+
+  <template id="tpl-fit">
+    <div class="detail">
+      <div class="dtext">
+        <h3 id="sheet-title">Fitness</h3>
+        <p class="dl">I ran the Seattle Marathon last November. Now I'm adding swimming and cycling to train for a half Ironman this July.</p>
+        <div class="race"><div class="rh"><span class="n">Seattle Marathon</span><span class="tag done">3:54:45</span></div><p class="m">November 2025, 26.2 mi</p></div>
+        <div class="race"><div class="rh"><span class="n">Ironman 70.3 Coeur d'Alene</span><span class="tag">July 2027</span></div><p class="m"><i class="k swim"></i>1.2 swim <i class="k bike"></i>56 bike <i class="k run"></i>13.1 run</p></div>
+      </div>
+      <div class="pics">
+        <figure class="media" data-label="Marathon photo" data-file="assets/marathon.jpg"><img src="../../../assets/marathon.jpg" alt="Luke running the Seattle Marathon" /></figure>
+        <figure class="media" data-label="Training photo" data-file="assets/training.jpg"><img src="../../../assets/training.jpg" alt="Luke training for the half Ironman" /></figure>
+      </div>
+    </div>
+  </template>
 
   <section class="wrap">
     <div class="panel">
@@ -207,48 +291,97 @@
 
   // dot-matrix handicap that counts down to 14.2
   const FONT = { '0':['01110','10001','10011','10101','11001','10001','01110'], '1':['00100','01100','00100','00100','00100','00100','01110'], '2':['01110','10001','00001','00010','00100','01000','11111'], '3':['11110','00001','00001','01110','00001','00001','11110'], '4':['00010','00110','01010','10010','11111','00010','00010'], '5':['11111','10000','11110','00001','00001','10001','01110'], '6':['00110','01000','10000','11110','10001','10001','01110'], '7':['11111','00001','00010','00100','01000','01000','01000'], '8':['01110','10001','10001','01110','10001','10001','01110'], '9':['01110','10001','10001','01111','00001','00010','01100'], '.':['0','0','0','0','0','0','1'] };
-  const mc = document.querySelector('.matrix'), mx2 = mc.getContext('2d');
   const TARGET = 14.2, COLS = 19, ROWS = 7;
-  let hover = -1;
-  function drawMatrix(val) {
-    const dprM = Math.min(devicePixelRatio || 1, 2), w = mc.clientWidth || 380, h = w * ROWS / COLS;
-    if (mc.width !== Math.round(w * dprM)) { mc.width = Math.round(w * dprM); mc.height = Math.round(h * dprM); }
-    mx2.setTransform(dprM, 0, 0, dprM, 0, 0); mx2.clearRect(0, 0, w, h);
-    const str = val.toFixed(1).padStart(4, ' '), cell = w / COLS;
-    let col = 0; const lit = new Set();
-    for (const ch of str) {
-      const g = FONT[ch];
-      if (g) g.forEach((row, y) => [...row].forEach((b, x) => { if (b === '1') lit.add((col + x) + ',' + y); }));
-      col += (ch === '.' ? 1 : 5) + 1;
+  function matrix(mc) {
+    const g = mc.getContext('2d'); let hover = -1, shown = TARGET;
+    function draw() {
+      const dpr = Math.min(devicePixelRatio || 1, 2), w = mc.clientWidth || 380, h = w * ROWS / COLS;
+      if (mc.width !== Math.round(w * dpr)) { mc.width = Math.round(w * dpr); mc.height = Math.round(h * dpr); }
+      g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+      const str = shown.toFixed(1).padStart(4, ' '), cell = w / COLS, lit = new Set();
+      let col = 0;
+      for (const ch of str) {
+        const f = FONT[ch];
+        if (f) f.forEach((row, y) => [...row].forEach((b, x) => { if (b === '1') lit.add((col + x) + ',' + y); }));
+        col += (ch === '.' ? 1 : 5) + 1;
+      }
+      for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) {
+        const on = lit.has(x + ',' + y), near = hover >= 0 && Math.abs(x - hover) <= 1;
+        g.fillStyle = on ? '#ff6b4a' : 'rgba(20,33,61,.12)';
+        g.beginPath(); g.arc((x + .5) * cell, (y + .5) * cell, cell * (on ? (near ? .47 : .4) : .16), 0, 6.283); g.fill();
+      }
     }
-    for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) {
-      const on = lit.has(x + ',' + y), near = hover >= 0 && Math.abs(x - hover) <= 1;
-      mx2.fillStyle = on ? '#ff6b4a' : 'rgba(20,33,61,.12)';
-      mx2.beginPath(); mx2.arc((x + .5) * cell, (y + .5) * cell, cell * (on ? (near ? .47 : .4) : .16), 0, 6.283); mx2.fill();
+    mc.addEventListener('pointermove', e => { const r = mc.getBoundingClientRect(); hover = Math.floor((e.clientX - r.left) / r.width * COLS); draw(); });
+    mc.addEventListener('pointerleave', () => { hover = -1; draw(); });
+    addEventListener('resize', draw);
+    function count(from = 36, dur = 1800) {
+      if (still) { shown = TARGET; return draw(); }
+      const t0 = performance.now();
+      (function step(now) {
+        const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+        shown = p < 1 ? Math.round((from + (TARGET - from) * e) * 10) / 10 : TARGET;
+        draw(); if (p < 1) requestAnimationFrame(step);
+      })(t0);
     }
+    draw();
+    return { draw, count };
   }
-  let shown = TARGET;
-  drawMatrix(shown);
-  addEventListener('resize', () => drawMatrix(shown));
-  mc.addEventListener('pointermove', e => { const r = mc.getBoundingClientRect(); hover = Math.floor((e.clientX - r.left) / r.width * COLS); drawMatrix(shown); });
-  mc.addEventListener('pointerleave', () => { hover = -1; drawMatrix(shown); });
-  function countDown() {
-    if (still) return;
-    const from = 36, t0 = performance.now(), dur = 1800;
-    (function step(now) {
-      const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
-      shown = p < 1 ? Math.round((from + (TARGET - from) * e) * 10) / 10 : TARGET;
-      drawMatrix(shown);
-      if (p < 1) requestAnimationFrame(step);
-    })(t0);
-  }
+  const cardMatrix = matrix(document.querySelector('.card .matrix'));
+
   const io = new IntersectionObserver(es => es.forEach(en => {
     if (!en.isIntersecting) return;
     io.unobserve(en.target);
-    if (en.target === mc) countDown(); else en.target.classList.add('on');
+    if (en.target.tagName === 'CANVAS') cardMatrix.count(); else en.target.classList.add('on');
   }), { threshold: .4 });
-  io.observe(mc);
+  io.observe(document.querySelector('.card .matrix'));
   document.querySelectorAll('.dots').forEach(d => still ? d.classList.add('on') : io.observe(d));
+
+  // cards grow into a larger sheet (FLIP from the card's box to the sheet's box)
+  const sheet = document.querySelector('.sheet'), body = sheet.querySelector('.sheet-body');
+  const EASE = 'cubic-bezier(.65,0,.15,1)', DUR = 560;
+  let from = null, busy = false;
+  function flip(rect, reverse) {
+    const f = sheet.getBoundingClientRect();
+    const t = `translate(${rect.left - f.left}px, ${rect.top - f.top}px) scale(${rect.width / f.width}, ${rect.height / f.height})`;
+    const frames = [{ transform: t, borderRadius: '28px' }, { transform: 'none', borderRadius: '28px' }];
+    return sheet.animate(reverse ? frames.reverse() : frames, { duration: still ? 0 : DUR, easing: EASE }).finished;
+  }
+  function wireMedia(root) {
+    root.querySelectorAll('.media').forEach(m => {
+      const el = m.querySelector('img, video');
+      const fail = () => m.classList.add('empty');
+      el.addEventListener('error', fail);
+      if (el.tagName === 'IMG' && el.complete && !el.naturalWidth) fail();
+      if (el.tagName === 'VIDEO' && el.error) fail();
+    });
+  }
+  async function open(card) {
+    if (busy) return; busy = true; from = card;
+    body.replaceChildren(document.getElementById('tpl-' + card.dataset.open).content.cloneNode(true));
+    wireMedia(body);
+    sheet.showModal();
+    document.documentElement.style.overflow = 'hidden';
+    const bigEl = body.querySelector('.matrix.big'), big = bigEl && matrix(bigEl);
+    const rect = card.getBoundingClientRect();
+    card.classList.add('hide');
+    requestAnimationFrame(() => sheet.classList.add('open'));
+    await flip(rect, false);
+    if (big) big.count(30, 1400);
+    busy = false;
+  }
+  async function close() {
+    if (busy || !sheet.open) return; busy = true;
+    sheet.classList.remove('open');
+    body.querySelectorAll('video').forEach(v => v.pause());
+    await flip(from.getBoundingClientRect(), true);
+    sheet.close(); from.classList.remove('hide');
+    document.documentElement.style.overflow = '';
+    from.focus(); busy = false;
+  }
+  document.querySelectorAll('.card').forEach(c => c.addEventListener('click', () => open(c)));
+  sheet.querySelector('.close').addEventListener('click', close);
+  sheet.addEventListener('cancel', e => { e.preventDefault(); close(); });
+  sheet.addEventListener('click', e => { if (e.target === sheet) close(); });
 </script>
 </body>
 </html>
