@@ -25,7 +25,7 @@
   body { background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--text); }
   a { color: inherit; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
-  canvas.field { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  canvas.field { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 30; pointer-events: none; }
   main, footer { position: relative; z-index: 1; }
   .wrap { width: min(880px, 100% - 32px); margin: 0 auto; }
 
@@ -250,7 +250,7 @@
       <p>Software engineer. CS at UW. SWE intern at DoorDash.</p>
       <div class="go"><a class="btn" href="../../../assets/Luke_Resume_Nov.pdf">Resume</a><a class="btn ghost" href="#contact">Contact</a></div>
     </div>
-    <span class="hint">Move or click anywhere</span>
+    
   </header>
 
   <section class="wrap" id="about">
@@ -330,46 +330,52 @@
 <script>
   const cv = document.querySelector('canvas.field'), cx = cv.getContext('2d');
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const GAP = 26; let INK, CORAL;
+  let INK, CORAL;
   function readPal() { const cs = getComputedStyle(document.documentElement); INK = cs.getPropertyValue('--ink-rgb').split(',').map(Number); CORAL = cs.getPropertyValue('--accent-rgb').split(',').map(Number); }
   readPal();
-  let W, H, dpr, dots = [], mx = -999, my = -999, waves = [], t0 = performance.now();
-
+  // cursor trail: a short chain of dots that springs after the pointer; clicks throw out a small burst
+  let W, H, dpr, mx = -999, my = -999, seen = false, idle = 0, bursts = [];
+  const TRAIL = 18, trail = Array.from({ length: TRAIL }, () => ({ x: -999, y: -999 }));
   function size() {
     dpr = Math.min(devicePixelRatio || 1, 2);
     W = innerWidth; H = innerHeight;
     cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    dots = [];
-    for (let y = GAP / 2; y < H; y += GAP) for (let x = GAP / 2; x < W; x += GAP) dots.push({ x, y });
   }
   size(); addEventListener('resize', size);
-  addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; });
-  addEventListener('pointerleave', () => { mx = my = -999; });
-  addEventListener('pointerdown', e => { if (!e.target.closest('a')) waves.push({ x: e.clientX, y: e.clientY, t: performance.now() }); });
-  // load ripple from the center
-  waves.push({ x: innerWidth / 2, y: innerHeight / 2, t: t0 });
-
+  addEventListener('pointermove', e => {
+    mx = e.clientX; my = e.clientY; idle = performance.now();
+    if (!seen) { trail.forEach(t => { t.x = mx; t.y = my; }); seen = true; }
+    if (still) return; if (!running) { running = true; requestAnimationFrame(frame); }
+  });
+  document.addEventListener('pointerleave', () => { seen = false; });
+  addEventListener('pointerdown', e => {
+    if (still || e.target.closest('a, button')) return;
+    const parts = Array.from({ length: 14 }, (_, i) => { const a = i / 14 * Math.PI * 2 + Math.random() * .3; return { a, v: 90 + Math.random() * 70 }; });
+    bursts.push({ x: e.clientX, y: e.clientY, t: performance.now(), parts });
+    if (!running) { running = true; requestAnimationFrame(frame); }
+  });
+  let running = false;
   function frame(now) {
     cx.clearRect(0, 0, W, H);
-    // fade the field as you scroll away from the hero
-    const fade = Math.max(0.25, 1 - scrollY / H);
-    waves = waves.filter(w => now - w.t < 2600);
-    for (const d of dots) {
-      let r = 1.1, push = 0, heat = 0;
-      const dx = d.x - mx, dy = d.y - my, dist = Math.hypot(dx, dy);
-      if (dist < 160) { const k = 1 - dist / 160; r += k * k * 5; push = k * 10; heat = k; }
-      for (const w of waves) {
-        const wd = Math.hypot(d.x - w.x, d.y - w.y), front = (now - w.t) * 0.7, band = Math.abs(wd - front);
-        if (band < 50) { const k = (1 - band / 50) * (1 - (now - w.t) / 2600); r += k * 4; heat = Math.max(heat, k); }
-      }
-      const ox = dist ? dx / dist * push : 0, oy = dist ? dy / dist * push : 0;
-      const c = INK.map((v, i) => Math.round(v + (CORAL[i] - v) * heat));
-      cx.fillStyle = `rgba(${c},${(0.28 + heat * 0.7) * fade})`;
-      cx.beginPath(); cx.arc(d.x + ox, d.y + oy, r, 0, 6.283); cx.fill();
+    // the head chases the pointer, every other dot chases the one ahead of it
+    let px = mx, py = my;
+    trail.forEach((t, i) => { const k = i === 0 ? .42 : .38; t.x += (px - t.x) * k; t.y += (py - t.y) * k; px = t.x; py = t.y; });
+    const quiet = now - idle > 1400, fadeOut = quiet ? Math.max(0, 1 - (now - idle - 1400) / 600) : 1;
+    if (seen && fadeOut > 0) {
+      trail.forEach((t, i) => {
+        const f = 1 - i / TRAIL;
+        cx.fillStyle = `rgba(${CORAL},${(.15 + .75 * f) * fadeOut})`;
+        cx.beginPath(); cx.arc(t.x, t.y, 1.2 + 5 * f * f, 0, 6.283); cx.fill();
+      });
     }
-    if (!still) requestAnimationFrame(frame);
+    bursts = bursts.filter(b => now - b.t < 700);
+    for (const b of bursts) {
+      const k = (now - b.t) / 700, e = 1 - Math.pow(1 - k, 3);
+      cx.fillStyle = `rgba(${CORAL},${1 - k})`;
+      for (const p of b.parts) { cx.beginPath(); cx.arc(b.x + Math.cos(p.a) * p.v * e, b.y + Math.sin(p.a) * p.v * e, 3 * (1 - k) + .6, 0, 6.283); cx.fill(); }
+    }
+    if ((seen && fadeOut > 0) || bursts.length) requestAnimationFrame(frame); else { running = false; cx.clearRect(0, 0, W, H); }
   }
-  requestAnimationFrame(frame);
   // dot rows: one dot per mile, the half Ironman drawn as rings because it is still ahead
   document.querySelectorAll('.dots').forEach((el, r) => {
     if (el.dataset.legs.includes('swim')) el.classList.add('ring');
@@ -462,7 +468,7 @@
   function setPal(name) {
     if (name) document.documentElement.dataset.pal = name; else delete document.documentElement.dataset.pal;
     palBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.p === name));
-    readPal(); matrices.forEach(d => d()); if (still) requestAnimationFrame(frame);
+    readPal(); matrices.forEach(d => d());
     try { localStorage.setItem('field-open-pal', name); } catch (e) {}
   }
   palBtns.forEach(b => b.addEventListener('click', () => setPal(b.dataset.p)));
