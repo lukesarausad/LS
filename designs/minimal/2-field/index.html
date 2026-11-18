@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Luke Sarausad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600&display=swap" rel="stylesheet" />
+<style>
+  :root { --bg: #dfe4ea; --ink: #14213d; --coral: #ff6b4a; --mute: #5d6b85; --card: #eef1f5; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font: 300 17px/1.6 "Sora", system-ui, sans-serif; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--coral); outline-offset: 4px; border-radius: 6px; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  main, footer { position: relative; z-index: 1; }
+  .wrap { width: min(880px, 100% - 32px); margin: 0 auto; }
+
+  .hero { position: relative; min-height: 100svh; display: grid; place-items: center; text-align: center; pointer-events: none; }
+  .hero > div { pointer-events: auto; }
+  h1 { font-weight: 600; font-size: clamp(40px, 8vw, 104px); line-height: 1; letter-spacing: -0.045em; }
+  .hero p { margin-top: 18px; color: var(--mute); font-size: clamp(16px, 1.6vw, 19px); }
+  .hero .go { display: inline-flex; gap: 10px; margin-top: 36px; }
+  .btn { padding: 12px 22px; border-radius: 99px; text-decoration: none; font-weight: 400; background: var(--ink); color: var(--bg); transition: background .25s; }
+  .btn.ghost { background: transparent; box-shadow: inset 0 0 0 1px var(--ink); color: var(--ink); }
+  .btn:hover { background: var(--coral); color: #fff; box-shadow: none; }
+  .hint { position: absolute; bottom: 28px; left: 50%; translate: -50% 0; font-size: 13px; color: var(--mute); }
+
+  section { padding: 36px 0; }
+  .contact { padding-top: 120px; }
+  .panel { background: var(--card); border-radius: 28px; padding: clamp(28px, 5vw, 56px); }
+  h2 { font-weight: 600; font-size: 15px; color: var(--coral); margin-bottom: 28px; }
+  .lead { font-size: clamp(22px, 3vw, 32px); line-height: 1.35; letter-spacing: -0.02em; font-weight: 400; max-width: 26ch; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; list-style: none; }
+  .tags li { padding: 8px 16px; border-radius: 99px; background: var(--bg); font-size: 15px; }
+
+  .list { list-style: none; }
+  .list li { display: grid; grid-template-columns: 90px 1fr auto; gap: 16px; align-items: baseline; padding: 18px 0; border-top: 1px solid #cdd4de; }
+  .list li:first-child { border-top: 0; }
+  .list .y { color: var(--mute); font-size: 15px; }
+  .list .n { font-size: clamp(19px, 2.2vw, 24px); font-weight: 400; letter-spacing: -0.01em; }
+  .list a.n { text-decoration: none; position: relative; }
+  .list a.n::after { content: ""; position: absolute; left: 0; bottom: -2px; height: 2px; width: 100%; background: var(--coral); transform: scaleX(0); transform-origin: left; transition: transform .35s; }
+  .list a.n:hover::after, .list a.n:focus-visible::after { transform: none; }
+  .list .m { color: var(--mute); font-size: 14px; }
+
+  .contact { text-align: center; padding-bottom: 60px; }
+  .contact h3 { font-weight: 600; font-size: clamp(36px, 6vw, 72px); letter-spacing: -0.045em; line-height: 1; }
+  .contact .go { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+  footer { text-align: center; color: var(--mute); font-size: 13px; padding: 30px 0 40px; }
+
+  @media (max-width: 600px) {
+    .list li { grid-template-columns: 1fr; gap: 2px; }
+    .hint { display: none; }
+  }
+</style>
+</head>
+<body>
+<canvas aria-hidden="true"></canvas>
+<main>
+  <header class="hero">
+    <div>
+      <h1>Luke Sarausad</h1>
+      <p>Software engineer. CS at UW. SWE intern at DoorDash.</p>
+      <div class="go"><a class="btn" href="../../../assets/Luke_Resume_September.pdf">Resume</a><a class="btn ghost" href="#contact">Contact</a></div>
+    </div>
+    <span class="hint">Move or click anywhere</span>
+  </header>
+
+  <section class="wrap">
+    <div class="panel">
+      <h2>About</h2>
+      <p class="lead">I build fast, simple software for the web and love turning ideas into real products.</p>
+      <ul class="tags"><li>Java</li><li>TypeScript</li><li>JavaScript</li><li>React</li><li>Node.js</li><li>Python</li><li>C</li><li>HTML/CSS</li><li>Git</li><li>MongoDB</li><li>AWS</li><li>Azure</li></ul>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="panel">
+      <h2>Journey</h2>
+      <ol class="list">
+        <li><span class="y">2026</span><span class="n">DoorDash</span><span class="m">SWE intern</span></li>
+        <li><span class="y">2025</span><span class="n">Amazon</span><span class="m">SDE intern</span></li>
+        <li><span class="y">2023</span><span class="n">University of Washington</span><span class="m">B.S. CS</span></li>
+        <li><span class="y">2019</span><span class="n">First line of code</span><span class="m"></span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="panel">
+      <h2>Projects</h2>
+      <ul class="list">
+        <li><span class="y">Live</span><a class="n" href="https://issaquah-tennis-queue.vercel.app/">CourtFinder</a><a class="m" href="https://github.com/bilal-ali1/Issaquah-Tennis-Queue">Code</a></li>
+        <li><span class="y">AI</span><a class="n" href="https://github.com/lukesarausad/summairy">Summairy</a><a class="m" href="https://github.com/lukesarausad/summairy">Code</a></li>
+        <li><span class="y">ML</span><a class="n" href="https://github.com/lukesarausad/MarketPredictor">Market Predictor</a><a class="m" href="https://github.com/lukesarausad/MarketPredictor">Code</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="contact wrap" id="contact">
+    <h3>Let's talk.</h3>
+    <div class="go">
+      <a class="btn" href="mailto:lukes25@uw.edu">Email</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/lukesarausad/">LinkedIn</a>
+      <a class="btn ghost" href="https://github.com/lukesarausad">GitHub</a>
+    </div>
+  </section>
+</main>
+<footer>© 2025 Luke Sarausad</footer>
+
+<script>
+  const cv = document.querySelector('canvas'), cx = cv.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const GAP = 26, INK = [20, 33, 61], CORAL = [255, 107, 74];
+  let W, H, dpr, dots = [], mx = -999, my = -999, waves = [], t0 = performance.now();
+
+  function size() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    dots = [];
+    for (let y = GAP / 2; y < H; y += GAP) for (let x = GAP / 2; x < W; x += GAP) dots.push({ x, y });
+  }
+  size(); addEventListener('resize', size);
+  addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; });
+  addEventListener('pointerleave', () => { mx = my = -999; });
+  addEventListener('pointerdown', e => { if (!e.target.closest('a')) waves.push({ x: e.clientX, y: e.clientY, t: performance.now() }); });
+  // load ripple from the center
+  waves.push({ x: innerWidth / 2, y: innerHeight / 2, t: t0 });
+
+  function frame(now) {
+    cx.clearRect(0, 0, W, H);
+    // fade the field as you scroll away from the hero
+    const fade = Math.max(0.25, 1 - scrollY / H);
+    waves = waves.filter(w => now - w.t < 2600);
+    for (const d of dots) {
+      let r = 1.1, push = 0, heat = 0;
+      const dx = d.x - mx, dy = d.y - my, dist = Math.hypot(dx, dy);
+      if (dist < 160) { const k = 1 - dist / 160; r += k * k * 5; push = k * 10; heat = k; }
+      for (const w of waves) {
+        const wd = Math.hypot(d.x - w.x, d.y - w.y), front = (now - w.t) * 0.7, band = Math.abs(wd - front);
+        if (band < 50) { const k = (1 - band / 50) * (1 - (now - w.t) / 2600); r += k * 4; heat = Math.max(heat, k); }
+      }
+      const ox = dist ? dx / dist * push : 0, oy = dist ? dy / dist * push : 0;
+      const c = INK.map((v, i) => Math.round(v + (CORAL[i] - v) * heat));
+      cx.fillStyle = `rgba(${c},${(0.28 + heat * 0.7) * fade})`;
+      cx.beginPath(); cx.arc(d.x + ox, d.y + oy, r, 0, 6.283); cx.fill();
+    }
+    if (!still) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+</script>
+</body>
+</html>

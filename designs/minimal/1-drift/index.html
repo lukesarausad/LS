@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Luke Sarausad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;800&family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root { --bg: #ffffff; --ink: #0c1340; --blue: #2340ff; --mist: #eef0fb; --mute: #6a7095; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font: 400 17px/1.55 "Inter Tight", system-ui, sans-serif; overflow-x: hidden; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; border-radius: 4px; }
+  .wrap { width: min(1200px, 100% - 32px); margin: 0 auto; }
+
+  nav { position: fixed; inset: 0 0 auto; z-index: 10; mix-blend-mode: difference; color: #fff; }
+  nav .wrap { display: flex; justify-content: space-between; padding: 22px 0; font-weight: 500; }
+  nav a { text-decoration: none; }
+  nav .nl { display: flex; gap: 24px; list-style: none; }
+
+  /* hero */
+  .hero { min-height: 100svh; display: grid; align-content: center; }
+  h1 { font: 800 clamp(40px, 10.6vw, 152px)/0.88 "Unbounded", sans-serif; letter-spacing: -0.05em; }
+  h1 .line { display: flex; white-space: nowrap; align-items: center; gap: 0.12em; overflow: hidden; padding-bottom: 0.04em; }
+  h1 .ch { display: inline-block; transform: translateY(105%); animation: rise .9s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--i) * 45ms + 100ms); }
+  h1 .pill { width: 0; height: 0.72em; border-radius: 99em; overflow: hidden; flex: none; animation: open 1s cubic-bezier(.7,0,.2,1) 1s forwards; }
+  h1 .pill { background: var(--blue); }
+  h1 .pill img { width: 2.1em; height: 100%; object-fit: cover; object-position: 50% 24%; mix-blend-mode: multiply; filter: grayscale(1) contrast(1.1); }
+  @keyframes rise { to { transform: none; } }
+  @keyframes open { to { width: 2.1em; } }
+  .sub { margin-top: 36px; display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; opacity: 0; animation: fade .8s ease 1.5s forwards; }
+  .sub p { font-size: clamp(18px, 2vw, 22px); max-width: 30ch; }
+  @keyframes fade { to { opacity: 1; } }
+  .btn { display: inline-block; padding: 14px 26px; border-radius: 99px; background: var(--blue); color: #fff; text-decoration: none; font-weight: 500; transition: transform .25s; }
+  .btn:hover { transform: scale(1.05); }
+
+  /* marquee */
+  .tape { padding: 120px 0; overflow: hidden; }
+  .row { display: flex; gap: 0.5em; white-space: nowrap; font: 300 clamp(40px, 7vw, 104px)/1.1 "Unbounded", sans-serif; letter-spacing: -0.04em; will-change: transform; }
+  .row span:nth-child(even) { color: var(--blue); font-weight: 800; }
+  .row.b { color: var(--mute); }
+
+  section { padding: 100px 0; }
+  h2 { font: 500 15px/1 "Inter Tight", sans-serif; color: var(--mute); margin-bottom: 40px; }
+
+  /* journey */
+  .years { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .years li { list-style: none; border-top: 2px solid var(--ink); padding-top: 16px; }
+  .years b { display: block; font: 800 clamp(32px, 4vw, 56px)/1 "Unbounded", sans-serif; letter-spacing: -0.04em; margin-bottom: 10px; }
+  .years li:last-child { border-color: var(--blue); }
+  .years li:last-child b { color: var(--blue); }
+
+  /* work */
+  .work li { list-style: none; border-bottom: 1px solid var(--mist); }
+  .work a { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 0; text-decoration: none; }
+  .work .t { font: 800 clamp(34px, 6.5vw, 96px)/1 "Unbounded", sans-serif; letter-spacing: -0.05em; color: transparent; background: linear-gradient(var(--blue), var(--blue)) left / 0% 100% no-repeat, linear-gradient(#cdd2ea, #cdd2ea); -webkit-background-clip: text; background-clip: text; transition: background-size .6s cubic-bezier(.7,0,.2,1); }
+  .work a:hover .t, .work a:focus-visible .t { background-size: 100% 100%, auto; }
+  .work small { color: var(--mute); font-size: 15px; white-space: nowrap; }
+  .peek { position: fixed; left: 0; top: 0; width: 280px; aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; pointer-events: none; z-index: 5; opacity: 0; transform: translate(24px, -50%) scale(.6) rotate(-6deg); transition: opacity .3s, transform .4s cubic-bezier(.2,.8,.2,1); }
+  .peek.on { opacity: 1; transform: translate(24px, -50%) scale(1) rotate(-3deg); }
+  @media (hover: none) { .work .t { background: none; color: var(--ink); } }
+  .peek img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* contact */
+  .hello { padding: 140px 0 60px; }
+  .hello a.big { display: inline-block; font: 800 clamp(44px, 11vw, 168px)/0.95 "Unbounded", sans-serif; letter-spacing: -0.05em; text-decoration: none; color: var(--blue); transition: letter-spacing .5s cubic-bezier(.2,.8,.2,1); }
+  .hello a.big:hover { letter-spacing: -0.02em; }
+  .links { display: flex; gap: 28px; margin-top: 48px; flex-wrap: wrap; font-weight: 500; }
+  footer { padding: 40px 0; color: var(--mute); font-size: 14px; }
+
+  @media (max-width: 720px) {
+    nav .nl { display: none; }
+    .years { grid-template-columns: 1fr 1fr; row-gap: 36px; }
+    .work small { display: none; }
+    .peek { display: none; }
+    .tape { padding: 60px 0; }
+    h1 { font-size: 12.4vw; }
+    .hero { min-height: 88svh; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    h1 .ch { animation: none; transform: none; }
+    h1 .pill { animation: none; width: 2.1em; }
+    .sub { animation: none; opacity: 1; }
+    .row { transform: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+<nav><div class="wrap"><a href="#top">LS</a><div class="nl"><a href="#work">Work</a><a href="#hello">Contact</a></div></div></nav>
+
+<main id="top">
+  <header class="hero wrap">
+    <h1 aria-label="Luke Sarausad">
+      <span class="line" aria-hidden="true" data-word="LUKE"><span class="pill"><img src="../../../assets/profileMain.jpeg" alt="" /></span></span>
+      <span class="line" aria-hidden="true" data-word="SARAUSAD"></span>
+    </h1>
+    <div class="sub">
+      <p>Software engineer studying CS at UW. Incoming SWE intern at DoorDash.</p>
+      <a class="btn" href="../../../assets/Luke_Resume_September.pdf">Resume</a>
+    </div>
+  </header>
+
+  <div class="tape" aria-label="Skills: Java, TypeScript, React, Node.js, Python, AWS, JavaScript, C, MongoDB, Git, Azure, HTML and CSS">
+    <div class="row a" aria-hidden="true"><span>Java</span><span>TypeScript</span><span>React</span><span>Node.js</span><span>Python</span><span>AWS</span><span>Java</span><span>TypeScript</span><span>React</span></div>
+    <div class="row b" aria-hidden="true"><span>JavaScript</span><span>C</span><span>MongoDB</span><span>Git</span><span>Azure</span><span>HTML/CSS</span><span>JavaScript</span><span>C</span><span>MongoDB</span></div>
+  </div>
+
+  <section class="wrap">
+    <h2>Journey</h2>
+    <ol class="years">
+      <li><b>2019</b>First line of code</li>
+      <li><b>2023</b>University of Washington</li>
+      <li><b>2025</b>Amazon, SDE intern</li>
+      <li><b>2026</b>DoorDash, SWE intern</li>
+    </ol>
+  </section>
+
+  <section class="wrap" id="work">
+    <h2>Work</h2>
+    <ul class="work">
+      <li><a href="https://issaquah-tennis-queue.vercel.app/" data-img="../../../assets/project1.png"><span class="t">CourtFinder</span><small>Tennis court queue</small></a></li>
+      <li><a href="https://github.com/lukesarausad/summairy" data-img="../../../assets/project2.png"><span class="t">Summairy</span><small>AI summaries</small></a></li>
+      <li><a href="https://github.com/lukesarausad/MarketPredictor" data-img="../../../assets/portfolio_graphic.png"><span class="t">Market Predictor</span><small>Stock forecasting</small></a></li>
+    </ul>
+  </section>
+
+  <section class="hello wrap" id="hello">
+    <a class="big" href="mailto:lukes25@uw.edu">Say hi</a>
+    <div class="links">
+      <a href="https://www.linkedin.com/in/lukesarausad/">LinkedIn</a>
+      <a href="https://github.com/lukesarausad">GitHub</a>
+      <a href="../../../assets/Luke_Resume_September.pdf">Resume</a>
+    </div>
+  </section>
+</main>
+<footer class="wrap">© 2025 Luke Sarausad</footer>
+<div class="peek" aria-hidden="true"><img alt="" /></div>
+
+<script>
+  // split name into masked letters
+  let i = 0;
+  document.querySelectorAll('h1 .line').forEach(line => {
+    const word = line.dataset.word, pill = line.querySelector('.pill');
+    const box = document.createElement('span');
+    [...word].forEach(c => { const s = document.createElement('span'); s.className = 'ch'; s.textContent = c; s.style.setProperty('--i', i++); box.appendChild(s); });
+    pill ? line.insertBefore(box, pill) : line.appendChild(box);
+  });
+
+  // marquee rows drift with scroll
+  const rows = document.querySelectorAll('.row'), tape = document.querySelector('.tape');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function drift() {
+    const r = tape.getBoundingClientRect(), p = (innerHeight - r.top) / (innerHeight + r.height);
+    rows[0].style.transform = `translateX(${-p * 40}%)`;
+    rows[1].style.transform = `translateX(${(p - 1) * 40}%)`;
+  }
+  if (!still) { addEventListener('scroll', () => requestAnimationFrame(drift), { passive: true }); drift(); }
+
+  // project image follows cursor
+  const peek = document.querySelector('.peek'), pimg = peek.querySelector('img');
+  let x = 0, y = 0, px = 0, py = 0;
+  document.querySelectorAll('.work a').forEach(a => {
+    a.addEventListener('mouseenter', () => { pimg.src = a.dataset.img; peek.classList.add('on'); });
+    a.addEventListener('mouseleave', () => peek.classList.remove('on'));
+  });
+  addEventListener('mousemove', e => { x = e.clientX; y = e.clientY; });
+  (function loop() { px += (x - px) * 0.15; py += (y - py) * 0.15; peek.style.left = px + 'px'; peek.style.top = py + 'px'; requestAnimationFrame(loop); })();
+</script>
+</body>
+</html>
