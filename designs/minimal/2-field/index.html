@@ -169,9 +169,10 @@
     .pics.three .media:first-child { grid-column: 1 / -1; aspect-ratio: 4 / 5; }
   }
 
-  .pics.row { display: flex; gap: 12px; }
-  .pics.row .media.fit { flex: var(--ar, 1) 1 0; aspect-ratio: var(--ar, 1); min-width: 0; }
-  @media (max-width: 600px) { .pics.row { flex-direction: column; } .pics.row .media.fit { flex: none; width: 100%; } }
+  .rowwrap { container-type: inline-size; }
+  .pics.row { display: flex; gap: 12px; justify-content: center; height: min(50svh, calc((100cqw - 12px * (var(--n) - 1)) / var(--sum))); }
+  .pics.row .media.fit { flex: none; height: 100%; aspect-ratio: var(--ar, 1); }
+  @media (max-width: 600px) { .pics.row { flex-direction: column; height: auto; } .pics.row .media.fit { width: 100%; height: auto; } }
   @media (max-width: 760px) { .duo { grid-template-columns: 1fr; } }
   @media (prefers-reduced-motion: reduce) { .dots i { transition: none; } }
 
@@ -271,9 +272,9 @@
       <ol class="list">
         <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="Summer 2026" data-title="DoorDash" data-role="SWE intern" data-desc="Software engineering intern on the LaunchPad team, building new product initiatives." data-img="journey-doordash-1.jpg:1.333,journey-doordash-2.jpg:0.75" data-alts="Luke and coworkers toasting at dinner|Luke and another intern in the DoorDash office"><span class="y">2026</span><span class="n">DoorDash</span><span class="m">SWE intern</span><span class="more" aria-hidden="true"><i></i></span></button></li>
         <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="2026" data-title="Study abroad" data-role="" data-desc="Details coming soon." data-img="journey-abroad-1.jpg:1.333,journey-abroad-2.jpg:1.333" data-alts="Luke and friends on a sand dune in the desert|Luke and friends in a busy market square at dusk"><span class="y">2026</span><span class="n">Study abroad</span><span class="m"></span><span class="more" aria-hidden="true"><i></i></span></button></li>
-        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="Summer 2025" data-title="Amazon" data-role="SDE intern" data-desc="Software development engineer intern in the Stores division." data-img="journey-amazon.jpg"><span class="y">2025</span><span class="n">Amazon</span><span class="m">SDE intern</span><span class="more" aria-hidden="true"><i></i></span></button></li>
+        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="Summer 2025" data-title="Amazon" data-role="SDE intern" data-desc="Software development engineer intern in the Stores division." data-img="journey-amazon-1.jpg:0.75,journey-amazon-2.jpg:0.563" data-alts="Luke holding his Amazon badge|Luke and another intern in an Amazon office overlooking Seattle"><span class="y">2025</span><span class="n">Amazon</span><span class="m">SDE intern</span><span class="more" aria-hidden="true"><i></i></span></button></li>
         <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="2023 to present" data-title="University of Washington" data-role="B.S. CS" data-desc="Studying Computer Science with a Data Science focus and a minor in Business." data-img="journey-uw.jpg"><span class="y">2023</span><span class="n">University of Washington</span><span class="m">B.S. CS</span><span class="more" aria-hidden="true"><i></i></span></button></li>
-        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="2019 to 2023" data-title="First line of code" data-role="" data-desc="Explored programming through high school courses and personal projects." data-img="journey-start.jpg"><span class="y">2019</span><span class="n">First line of code</span><span class="m"></span><span class="more" aria-hidden="true"><i></i></span></button></li>
+        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="2019 to 2023" data-title="First line of code" data-role="" data-desc="Explored programming through high school courses and personal projects." data-img="journey-start.jpg" data-alts="Luke as a young kid wearing headphones at a desk"><span class="y">2019</span><span class="n">First line of code</span><span class="m"></span><span class="more" aria-hidden="true"><i></i></span></button></li>
       </ol>
     </div>
   </section>
@@ -453,7 +454,10 @@
       wrap.classList.add('stack');
       const row = document.createElement('div'); row.className = 'pics row';
       imgs.forEach((m, i) => row.appendChild(makeFig(m, i, 'fit')));
-      wrap.append(t, row); return wrap;
+      row.style.setProperty('--n', imgs.length);
+      row.style.setProperty('--sum', imgs.reduce((a, m) => a + parseFloat(m[1] || 1), 0));
+      const rw = document.createElement('div'); rw.className = 'rowwrap'; rw.appendChild(row);
+      wrap.append(t, rw); return wrap;
     }
     wrap.append(t, makeFig(imgs[0], 0, d.shot ? 'shot' : 'photo')); return wrap;
   }
