@@ -144,6 +144,10 @@
   .jrow.hide { visibility: hidden; }
   .detail .when { color: var(--accent); font-weight: 600; font-size: 15px; }
   .detail .role { color: var(--mute); margin-top: -6px; }
+  .dtext .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+  .media.shot { aspect-ratio: 1; width: 100%; max-height: 70svh; justify-self: center; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+  .media.shot img { object-fit: contain; filter: none; }
+  .media.shot::after { opacity: .18; }
   .media.photo { aspect-ratio: 4 / 5; max-height: 70svh; width: 100%; justify-self: center; }
   @media (max-width: 600px) {
     .jrow { grid-template-columns: 1fr 22px; row-gap: 2px; }
@@ -251,9 +255,9 @@
     <div class="panel">
       <h2>Projects</h2>
       <ul class="list">
-        <li><span class="y">Live</span><a class="n" href="https://issaquah-tennis-queue.vercel.app/">CourtFinder</a><a class="m" href="https://github.com/bilal-ali1/Issaquah-Tennis-Queue">Code</a></li>
-        <li><span class="y">AI</span><a class="n" href="https://github.com/lukesarausad/summairy">Summairy</a><a class="m" href="https://github.com/lukesarausad/summairy">Code</a></li>
-        <li><span class="y">ML</span><a class="n" href="https://github.com/lukesarausad/MarketPredictor">Market Predictor</a><a class="m" href="https://github.com/lukesarausad/MarketPredictor">Code</a></li>
+        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="Live" data-title="CourtFinder" data-role="Web app" data-desc="Find nearby parks in Issaquah, see which tennis courts are open, and book a time." data-img="project1.png" data-shot="1" data-live="https://issaquah-tennis-queue.vercel.app/" data-code="https://github.com/bilal-ali1/Issaquah-Tennis-Queue"><span class="y">Live</span><span class="n">CourtFinder</span><span class="m">Web app</span><span class="more" aria-hidden="true"><i></i></span></button></li>
+        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="AI" data-title="Summairy" data-role="AI tool" data-desc="Paste an article link and get a short summary, or a version ready to post on LinkedIn or X." data-img="project2.png" data-shot="1" data-live="" data-code="https://github.com/lukesarausad/summairy"><span class="y">AI</span><span class="n">Summairy</span><span class="m">AI tool</span><span class="more" aria-hidden="true"><i></i></span></button></li>
+        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="ML" data-title="Market Predictor" data-role="ML model" data-desc="A machine learning model that predicts stock market movement." data-img="portfolio_graphic.png" data-shot="1" data-live="" data-code="https://github.com/lukesarausad/MarketPredictor"><span class="y">ML</span><span class="n">Market Predictor</span><span class="m">ML model</span><span class="more" aria-hidden="true"><i></i></span></button></li>
       </ul>
     </div>
   </section>
@@ -403,7 +407,14 @@
     const t = document.createElement('div'); t.className = 'dtext';
     const add = (tag, cls, txt, id) => { if (!txt) return; const e = document.createElement(tag); if (cls) e.className = cls; if (id) e.id = id; e.textContent = txt; t.appendChild(e); };
     add('p', 'when', d.when); add('h3', '', d.title, 'sheet-title'); add('p', 'role', d.role); add('p', 'dl', d.desc);
-    const fig = document.createElement('figure'); fig.className = 'media photo';
+    if (d.live || d.code) {
+      const links = document.createElement('div'); links.className = 'links';
+      const link = (href, label, cls) => { const l = document.createElement('a'); l.className = 'btn ' + cls; l.href = href; l.target = '_blank'; l.rel = 'noopener'; l.textContent = label; links.appendChild(l); };
+      if (d.live) link(d.live, 'Live demo', '');
+      if (d.code) link(d.code, 'GitHub', d.live ? 'ghost' : '');
+      t.appendChild(links);
+    }
+    const fig = document.createElement('figure'); fig.className = 'media ' + (d.shot ? 'shot' : 'photo');
     fig.dataset.label = d.title + ' photo'; fig.dataset.file = 'assets/' + d.img;
     const img = document.createElement('img'); img.src = '../../../assets/' + d.img; img.alt = d.title;
     fig.appendChild(img); wrap.append(t, fig); return wrap;
