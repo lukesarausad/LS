@@ -6,7 +6,7 @@
 <title>Luke Sarausad</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&family=Mrs+Saint+Delafield&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root { --display: "Hedvig Letters Serif", Georgia, serif; --text: "Hanken Grotesk", system-ui, sans-serif;
     --bg: #dfe4ea; --card: #eef1f5; --ink: #14213d; --ink-rgb: 20,33,61; --accent: #ff6b4a; --accent-rgb: 255,107,74; --on-accent: #ffffff; --mute: #5d6b85; --line: #cdd4de; --swim: #3f74d6; --shade-rgb: 20,33,61; }
@@ -210,16 +210,31 @@
   .proj .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 6px; }
   .proj .btn { padding: 10px 18px; font-size: 15px; }
 
+
+  /* signature: outline is drawn left to right, then the ink fills in */
+  .sig { width: min(980px, 92vw); margin: 0 auto; line-height: 0; }
+  .sig svg { width: 100%; height: auto; overflow: visible; clip-path: inset(-25% 110% -25% -10%); }
+  .sig text { font-family: "Mrs Saint Delafield", "Snell Roundhand", cursive; font-size: 196px; fill: transparent; stroke: var(--accent); stroke-width: 1.6; stroke-linejoin: round; stroke-dasharray: 900; stroke-dashoffset: 900; }
+  .sig.write svg { animation: write 2.4s cubic-bezier(.45,.05,.35,1) forwards; }
+  .sig.write text { animation: draw 2.6s ease forwards, ink 1s ease 1.9s forwards; }
+  @keyframes write { to { clip-path: inset(-25% -10% -25% -10%); } }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes ink { to { fill: var(--ink); stroke: var(--ink); stroke-width: .6; } }
+  .hero p, .hero .go { opacity: 0; transform: translateY(8px); transition: opacity .8s ease, transform .8s ease; }
+  .hero.ready p, .hero.ready .go { opacity: 1; transform: none; }
+  .hero.ready .go { transition-delay: .15s; }
+  @media (prefers-reduced-motion: reduce) {
+    .sig svg { clip-path: none; animation: none !important; }
+    .sig text { fill: var(--ink); stroke: none; animation: none !important; }
+    .hero p, .hero .go { opacity: 1; transform: none; }
+  }
   .duo-pics { grid-template-columns: 1fr 1fr; }
   .duo-pics .media { aspect-ratio: 3 / 4; }
   .duo-pics .media:nth-child(2) { margin-top: 40px; }
   /* borderless preview */
-  :root[data-cards="bare"] .panel { border-color: transparent; border-radius: 0; padding-inline: 0; }
-  :root[data-cards="bare"] .stackcards { gap: 8px; }
-  :root[data-cards="bare"] .projgrid { gap: 32px; }
-  .pal .sep { width: 1px; background: rgba(var(--ink-rgb), .2); margin: 2px 2px; }
-  .pal .cardbtn { width: auto; padding: 0 10px; border-radius: 99px; background: transparent; color: var(--ink); font: 500 12px var(--text); box-shadow: inset 0 0 0 1.5px rgba(var(--ink-rgb), .35); }
-  .pal .cardbtn[aria-pressed="true"] { background: var(--ink); color: var(--bg); box-shadow: none; outline: none; }
+  .panel { border-color: transparent; border-radius: 0; padding-inline: 0; }
+  .stackcards { gap: 8px; }
+  .projgrid { gap: 32px; }
   @media (max-width: 860px) { .duo-pics .media:nth-child(2) { margin-top: 0; } }
   @media (max-width: 860px) {
     .split { grid-template-columns: 1fr; }
@@ -233,7 +248,7 @@
 <main>
   <header class="hero">
     <div>
-      <h1>Luke Sarausad</h1>
+      <h1 class="sig" aria-label="Luke Sarausad"><svg viewBox="0 0 1000 300" aria-hidden="true"><text x="500" y="195" text-anchor="middle">Luke Sarausad</text></svg></h1>
       <p>Software engineer. CS at UW. SWE intern at DoorDash.</p>
       <div class="go"><a class="btn" href="../../../assets/Luke_Resume_September.pdf">Resume</a><a class="btn ghost" href="#contact">Contact</a></div>
     </div>
@@ -314,9 +329,6 @@
   <button type="button" data-p="fairway" aria-label="Fairway" style="--a:#dfe6dc;--b:#2f8a4c"></button>
   <button type="button" data-p="glacier" aria-label="Glacier" style="--a:#e3ebf3;--b:#1f6feb"></button>
   <button type="button" data-p="night" aria-label="Night" style="--a:#0e1524;--b:#ffb547"></button>
-  <span class="sep" aria-hidden="true"></span>
-  <button type="button" class="cardbtn" data-c="" aria-label="Outlined cards">Outline</button>
-  <button type="button" class="cardbtn" data-c="bare" aria-label="Borderless cards">None</button>
 </div>
 <script>
   const cv = document.querySelector('canvas.field'), cx = cv.getContext('2d');
@@ -428,6 +440,12 @@
     el.addEventListener('error', () => m.classList.add('empty'));
     if (el.tagName === 'IMG' && el.complete && !el.naturalWidth) m.classList.add('empty');
   });
+
+  // start the signature once the script font has loaded so it doesn't jump
+  const sig = document.querySelector('.sig'), heroEl = document.querySelector('.hero');
+  const startSig = () => { sig.classList.add('write'); setTimeout(() => heroEl.classList.add('ready'), still ? 0 : 2300); };
+  (document.fonts && document.fonts.load ? document.fonts.load('196px "Mrs Saint Delafield"') : Promise.resolve()).then(startSig, startSig);
+  setTimeout(() => { if (!sig.classList.contains('write')) startSig(); }, 2500);
   // palette switcher (preview only)
   const palBtns = document.querySelectorAll('.pal button[data-p]');
   function setPal(name) {
@@ -439,15 +457,7 @@
   palBtns.forEach(b => b.addEventListener('click', () => setPal(b.dataset.p)));
   let savedPal = ''; try { savedPal = localStorage.getItem('field-open-pal') || ''; } catch (e) {}
   setPal(savedPal);
-  const cardBtns = document.querySelectorAll('.pal .cardbtn');
-  function setCards(c) {
-    if (c) document.documentElement.dataset.cards = c; else delete document.documentElement.dataset.cards;
-    cardBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.c === c));
-    try { localStorage.setItem('field-open-cards', c); } catch (e) {}
-  }
-  cardBtns.forEach(b => b.addEventListener('click', () => setCards(b.dataset.c)));
-  let savedCards = ''; try { savedCards = localStorage.getItem('field-open-cards') || ''; } catch (e) {}
-  setCards(savedCards);
+
 </script>
 </body>
 </html>
