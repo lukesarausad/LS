@@ -16,11 +16,9 @@
   :root[data-pal="glacier"] { --bg: #e3ebf3; --card: #f3f7fb; --ink: #0c2340; --ink-rgb: 12,35,64; --accent: #1f6feb; --accent-rgb: 31,111,235; --on-accent: #ffffff; --mute: #57708f; --line: #ccd8e5; --swim: #12a4a4; --shade-rgb: 12,35,64; }
   :root[data-pal="night"] { --bg: #0e1524; --card: #161f33; --ink: #e9edf6; --ink-rgb: 233,237,246; --accent: #ffb547; --accent-rgb: 255,181,71; --on-accent: #1b1405; --mute: #8e98b0; --line: #2a3550; --swim: #5aa2ff; --shade-rgb: 4,7,14; color-scheme: dark; }
   :root[data-pal="black"] { --bg: #000000; --card: #121212; --ink: #f1efea; --ink-rgb: 241,239,234; --accent: #f4c46a; --accent-rgb: 244,196,106; --on-accent: #1a1204; --mute: #9b978f; --line: #2a2a2a; --swim: #6fa8ff; --shade-rgb: 0,0,0; color-scheme: dark; }
+  .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 40; translate: -50% 12px; opacity: 0; padding: 9px 16px; border-radius: 99px; background: var(--ink); color: var(--bg); font: 500 14px var(--text); pointer-events: none; transition: opacity .3s, translate .3s; }
+  .toast.show { opacity: 1; translate: -50% 0; }
   body, .panel, .sheet, .btn, .tag, .media { transition: background-color .5s, color .5s; }
-  .pal { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 40; display: flex; gap: 6px; padding: 6px; border-radius: 99px; background: var(--card); box-shadow: 0 6px 20px -8px rgba(var(--shade-rgb),.5); }
-  .pal button { width: 26px; height: 26px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: linear-gradient(135deg, var(--a) 50%, var(--b) 50%); box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); transition: transform .2s; }
-  .pal button[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 2px; }
-  .pal button:hover { transform: scale(1.12); }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--text); }
@@ -322,14 +320,7 @@
   </section>
 </main>
 <footer>© 2025 Luke Sarausad</footer>
-<div class="pal" role="group" aria-label="Color palette">
-  <button type="button" data-p="" aria-label="Coral" style="--a:#dfe4ea;--b:#ff6b4a"></button>
-  <button type="button" data-p="husky" aria-label="Husky" style="--a:#e6e3ef;--b:#7048e8"></button>
-  <button type="button" data-p="fairway" aria-label="Fairway" style="--a:#dfe6dc;--b:#2f8a4c"></button>
-  <button type="button" data-p="glacier" aria-label="Glacier" style="--a:#e3ebf3;--b:#1f6feb"></button>
-  <button type="button" data-p="night" aria-label="Night" style="--a:#0e1524;--b:#ffb547"></button>
-  <button type="button" data-p="black" aria-label="Black" style="--a:#000;--b:#fff4dc"></button>
-</div>
+<div class="toast" role="status" aria-live="polite"></div>
 <script>
   const cv = document.querySelector('canvas.field'), cx = cv.getContext('2d');
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -480,17 +471,28 @@
     setTimeout(() => heroEl.classList.add('ready'), (t - 0.3) * 1000);
   })();
 
-  // palette switcher (preview only)
-  const palBtns = document.querySelectorAll('.pal button[data-p]');
-  function setPal(name) {
+  // colour styles on the number keys: 1 coral, 2 husky, 3 fairway, 4 glacier, 5 night, 6 black
+  const PALS = [['', 'Coral'], ['husky', 'Husky'], ['fairway', 'Fairway'], ['glacier', 'Glacier'], ['night', 'Night'], ['black', 'Black']];
+  const toast = document.querySelector('.toast'); let toastTimer;
+  function setPal(name, announce) {
     if (name) document.documentElement.dataset.pal = name; else delete document.documentElement.dataset.pal;
-    palBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.p === name));
     readPal(); matrices.forEach(d => d());
     try { localStorage.setItem('field-open-pal', name); } catch (e) {}
+    if (announce) {
+      const i = PALS.findIndex(p => p[0] === name);
+      toast.textContent = (i + 1) + '  ' + PALS[i][1];
+      toast.classList.add('show'); clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 1200);
+    }
   }
-  palBtns.forEach(b => b.addEventListener('click', () => setPal(b.dataset.p)));
+  addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest('input, textarea, [contenteditable]')) return;
+    const n = parseInt(e.key, 10);
+    if (n >= 1 && n <= PALS.length) setPal(PALS[n - 1][0], true);
+  });
   let savedPal = ''; try { savedPal = localStorage.getItem('field-open-pal') || ''; } catch (e) {}
-  setPal(savedPal);
+  if (!PALS.some(p => p[0] === savedPal)) savedPal = '';
+  setPal(savedPal, false);
 
 </script>
 </body>
