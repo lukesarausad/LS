@@ -24,9 +24,6 @@
   body { background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--text); }
   a { color: inherit; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
-  :root[data-cursor="ring"]:not([data-pal="black"]) body, :root[data-cursor="ring"]:not([data-pal="black"]) a, :root[data-cursor="ring"]:not([data-pal="black"]) button { cursor: none; }
-  @media (hover: none) { canvas.field { display: none; } }
-  canvas.field { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 30; pointer-events: none; }
   main, footer { position: relative; z-index: 1; }
   .wrap { width: min(880px, 100% - 32px); margin: 0 auto; }
 
@@ -244,7 +241,6 @@
 </style>
 </head>
 <body>
-<canvas class="field" aria-hidden="true"></canvas>
 <main>
   <header class="hero">
     <div>
@@ -324,165 +320,10 @@
 <footer>© 2025 Luke Sarausad</footer>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>
-  const cv = document.querySelector('canvas.field'), cx = cv.getContext('2d');
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let INK, CORAL;
   function readPal() { const cs = getComputedStyle(document.documentElement); INK = cs.getPropertyValue('--ink-rgb').split(',').map(Number); CORAL = cs.getPropertyValue('--accent-rgb').split(',').map(Number); }
   readPal();
-  // cursor styles (press C to cycle): dots, ink, ring, golf. Black theme always uses the light.
-  const CURSORS = [['dots', 'Dots'], ['ink', 'Ink'], ['ring', 'Ring'], ['golf', 'Golf']];
-  let cursorMode = 'dots'; try { cursorMode = localStorage.getItem('field-open-cursor') || 'dots'; } catch (e) {}
-  if (!CURSORS.some(c => c[0] === cursorMode)) cursorMode = 'dots';
-  let W, H, dpr, mx = -999, my = -999, seen = false, idle = 0, bursts = [], shots = [], hoverKind = '', hoverT = 0;
-  const TRAIL = 18, trail = Array.from({ length: TRAIL }, () => ({ x: -999, y: -999 }));
-  let ink = [];                       // recent pointer samples for the pen stroke
-  const ring = { x: -999, y: -999, r: 18 };
-  const ball = { x: -999, y: -999 };
-  function size() {
-    dpr = Math.min(devicePixelRatio || 1, 2);
-    W = innerWidth; H = innerHeight;
-    cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  size(); addEventListener('resize', size);
-  let running = false;
-  const kick = () => { if (!running && !still) { running = true; requestAnimationFrame(frame); } };
-  addEventListener('pointermove', e => {
-    if (e.pointerType === 'touch') return;
-    mx = e.clientX; my = e.clientY; idle = performance.now();
-    if (!seen) { trail.forEach(t => { t.x = mx; t.y = my; }); ring.x = ball.x = mx; ring.y = ball.y = my; seen = true; }
-    ink.push({ x: mx, y: my, t: idle }); if (ink.length > 60) ink.shift();
-    const el = e.target.closest && e.target.closest('a, button, .media');
-    hoverKind = !el ? '' : el.classList.contains('media') ? 'media' : 'link';
-    kick();
-  });
-  document.addEventListener('pointerleave', () => { seen = false; ink = []; });
-  addEventListener('pointerdown', e => {
-    if (still || e.pointerType === 'touch' || e.target.closest('a, button')) return;
-    const now = performance.now();
-    if (cursorMode === 'golf' && document.documentElement.dataset.pal !== 'black') {
-      const dir = e.clientX < W / 2 ? 1 : -1;
-      shots.push({ x0: ball.x, y0: ball.y, vx: dir * (260 + Math.random() * 120), vy: -(520 + Math.random() * 140), t: now });
-    } else {
-      const parts = Array.from({ length: 14 }, (_, i) => ({ a: i / 14 * Math.PI * 2 + Math.random() * .3, v: 90 + Math.random() * 70 }));
-      bursts.push({ x: e.clientX, y: e.clientY, t: now, parts });
-    }
-    kick();
-  });
-  function setCursor(m, announce) {
-    cursorMode = m; ink = [];
-    document.documentElement.dataset.cursor = m;
-    try { localStorage.setItem('field-open-cursor', m); } catch (e) {}
-    if (announce) showToast('Cursor: ' + CURSORS.find(c => c[0] === m)[1]);
-  }
-  addEventListener('keydown', e => {
-    if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest('input, textarea, [contenteditable]')) return;
-    if (e.key === 'c' || e.key === 'C') { const i = CURSORS.findIndex(c => c[0] === cursorMode); setCursor(CURSORS[(i + 1) % CURSORS.length][0], true); }
-  });
-
-  function drawDots(now, fadeOut) {
-    trail.forEach((t, i) => {
-      const f = 1 - i / TRAIL;
-      cx.fillStyle = `rgba(${CORAL},${(.15 + .75 * f) * fadeOut})`;
-      cx.beginPath(); cx.arc(t.x, t.y, 1.2 + 5 * f * f, 0, 6.283); cx.fill();
-    });
-  }
-  function drawInk(now) {
-    // a pen line that tapers toward its tail and dries away after ~0.45s
-    ink = ink.filter(p => now - p.t < 450);
-    if (ink.length < 2) return;
-    for (let i = 1; i < ink.length; i++) {
-      const a = ink[i - 1], b = ink[i], age = (now - b.t) / 450, f = i / ink.length;
-      const speed = Math.min(1, Math.hypot(b.x - a.x, b.y - a.y) / 40);
-      cx.strokeStyle = `rgba(${INK},${(1 - age) * .85})`;
-      cx.lineWidth = (1 + 4.5 * f) * (1 - .45 * speed) * (1 - age * .6);
-      cx.lineCap = 'round';
-      cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke();
-    }
-    const h = ink[ink.length - 1];
-    cx.fillStyle = `rgba(${INK},.9)`; cx.beginPath(); cx.arc(h.x, h.y, 2.6, 0, 6.283); cx.fill();
-  }
-  function drawRing(now, fadeOut) {
-    // lags behind the pointer, swells over links, becomes a "View" bubble over photos
-    ring.x += (mx - ring.x) * .16; ring.y += (my - ring.y) * .16;
-    const target = hoverKind === 'media' ? 38 : hoverKind === 'link' ? 34 : 17;
-    ring.r += (target - ring.r) * .18;
-    const fill = hoverKind === 'media' ? .92 : 0;
-    cx.globalAlpha = fadeOut;
-    if (fill) { cx.fillStyle = `rgba(${hoverKind === 'media' ? INK : CORAL},${fill})`; cx.beginPath(); cx.arc(ring.x, ring.y, ring.r, 0, 6.283); cx.fill(); }
-    cx.strokeStyle = `rgba(${CORAL},.9)`; cx.lineWidth = 1.5;
-    if (hoverKind !== 'media') { cx.beginPath(); cx.arc(ring.x, ring.y, ring.r, 0, 6.283); cx.stroke(); }
-    if (hoverKind === 'media' && ring.r > 30) {
-      cx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg');
-      cx.font = '500 13px "Hanken Grotesk", sans-serif'; cx.textAlign = 'center'; cx.textBaseline = 'middle';
-      cx.fillText('View', ring.x, ring.y);
-    }
-    cx.fillStyle = `rgb(${CORAL})`; cx.beginPath(); cx.arc(mx, my, 2.5, 0, 6.283); cx.fill();
-    cx.globalAlpha = 1;
-  }
-  function golfBall(x, y, r, a) {
-    cx.globalAlpha = a;
-    cx.fillStyle = 'rgba(0,0,0,.18)'; cx.beginPath(); cx.ellipse(x + 2, y + r + 4, r * .9, r * .3, 0, 0, 6.283); cx.fill();
-    const g = cx.createRadialGradient(x - r * .35, y - r * .4, r * .1, x, y, r);
-    g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#d9dde3');
-    cx.fillStyle = g; cx.beginPath(); cx.arc(x, y, r, 0, 6.283); cx.fill();
-    cx.strokeStyle = 'rgba(40,50,70,.45)'; cx.lineWidth = 1; cx.stroke();
-    cx.fillStyle = 'rgba(100,110,130,.4)';
-    [[-.3,-.1],[.25,-.3],[.1,.25],[-.2,.35],[.4,.1]].forEach(([u, v]) => { cx.beginPath(); cx.arc(x + u * r, y + v * r, r * .12, 0, 6.283); cx.fill(); });
-    cx.globalAlpha = 1;
-  }
-  function drawGolf(now, fadeOut) {
-    ball.x += (mx + 14 - ball.x) * .22; ball.y += (my + 16 - ball.y) * .22;
-    golfBall(ball.x, ball.y, 8, fadeOut);
-  }
-  function drawShots(now) {
-    // each hit flies on a parabola, leaving a dotted tracer that fades
-    shots = shots.filter(s => now - s.t < 1600);
-    for (const s of shots) {
-      const T = (now - s.t) / 1000, G = 1400, fl = Math.min(T, 1.1), fade = Math.max(0, 1 - (now - s.t - 1100) / 500);
-      cx.fillStyle = `rgba(${CORAL},${.8 * fade})`;
-      for (let u = 0; u < fl; u += .035) { const x = s.x0 + s.vx * u, y = s.y0 + s.vy * u + G * u * u / 2; cx.beginPath(); cx.arc(x, y, 2, 0, 6.283); cx.fill(); }
-      const x = s.x0 + s.vx * fl, y = s.y0 + s.vy * fl + G * fl * fl / 2;
-      golfBall(x, y, 8 * (1 - fl * .3), fade);
-    }
-  }
-  function drawLight(fadeOut) {
-    const h = trail[3], g = cx.createRadialGradient(h.x, h.y, 0, h.x, h.y, 170);
-    g.addColorStop(0, `rgba(255,236,200,${.20 * fadeOut})`); g.addColorStop(.35, `rgba(255,220,170,${.07 * fadeOut})`); g.addColorStop(1, 'rgba(255,220,170,0)');
-    cx.fillStyle = g; cx.fillRect(h.x - 170, h.y - 170, 340, 340);
-    cx.globalCompositeOperation = 'lighter';
-    trail.forEach((t, i) => { if (i < 2 || i % 2) return; const f = 1 - i / TRAIL; cx.fillStyle = `rgba(255,214,150,${.35 * f * fadeOut})`; cx.beginPath(); cx.arc(t.x, t.y, 1 + 2 * f, 0, 6.283); cx.fill(); });
-    const c = trail[0], core = cx.createRadialGradient(c.x, c.y, 0, c.x, c.y, 14);
-    core.addColorStop(0, `rgba(255,250,235,${fadeOut})`); core.addColorStop(.3, `rgba(255,228,180,${.6 * fadeOut})`); core.addColorStop(1, 'rgba(255,220,170,0)');
-    cx.fillStyle = core; cx.beginPath(); cx.arc(c.x, c.y, 14, 0, 6.283); cx.fill();
-    cx.globalCompositeOperation = 'source-over';
-  }
-  function frame(now) {
-    cx.clearRect(0, 0, W, H);
-    let px = mx, py = my;
-    trail.forEach((t, i) => { const k = i === 0 ? .42 : .38; t.x += (px - t.x) * k; t.y += (py - t.y) * k; px = t.x; py = t.y; });
-    const glow = document.documentElement.dataset.pal === 'black';
-    const sticky = glow || cursorMode === 'ring' || cursorMode === 'golf';
-    const quiet = now - idle > 1400;
-    let fadeOut = quiet ? Math.max(0, 1 - (now - idle - 1400) / 600) : 1;
-    if (sticky) fadeOut = 1;
-    if (glow) fadeOut = quiet ? Math.max(.55, 1 - (now - idle - 1400) / 1500) : 1;
-    if (seen && fadeOut > 0) {
-      if (glow) drawLight(fadeOut);
-      else if (cursorMode === 'ink') drawInk(now);
-      else if (cursorMode === 'ring') drawRing(now, fadeOut);
-      else if (cursorMode === 'golf') drawGolf(now, fadeOut);
-      else drawDots(now, fadeOut);
-    }
-    drawShots(now);
-    bursts = bursts.filter(b => now - b.t < 700);
-    for (const b of bursts) {
-      const k = (now - b.t) / 700, e = 1 - Math.pow(1 - k, 3);
-      cx.fillStyle = glow ? `rgba(255,226,170,${1 - k})` : `rgba(${CORAL},${1 - k})`;
-      for (const p of b.parts) { cx.beginPath(); cx.arc(b.x + Math.cos(p.a) * p.v * e, b.y + Math.sin(p.a) * p.v * e, (glow ? 2 : 3) * (1 - k) + .6, 0, 6.283); cx.fill(); }
-    }
-    const busy = (seen && (sticky || fadeOut > 0 || ink.length)) || bursts.length || shots.length;
-    if (busy) requestAnimationFrame(frame); else { running = false; cx.clearRect(0, 0, W, H); }
-  }
   // dot rows: one dot per mile, the half Ironman drawn as rings because it is still ahead
   document.querySelectorAll('.dots').forEach((el, r) => {
     if (el.dataset.legs.includes('swim')) el.classList.add('ring');
@@ -591,7 +432,6 @@
   let savedPal = ''; try { savedPal = localStorage.getItem('field-open-pal') || ''; } catch (e) {}
   if (!PALS.some(p => p[0] === savedPal)) savedPal = '';
   setPal(savedPal, false);
-  setCursor(cursorMode, false);
 
 </script>
 </body>
