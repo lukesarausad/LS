@@ -272,7 +272,7 @@
       <ol class="list">
         <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="Summer 2026" data-title="DoorDash" data-role="SWE intern" data-desc="Software engineering intern on the LaunchPad team, building new product initiatives." data-img="journey-doordash-1.jpg:1.333,journey-doordash-2.jpg:0.75" data-alts="Luke and coworkers toasting at dinner|Luke and another intern in the DoorDash office"><span class="y">2026</span><span class="n">DoorDash</span><span class="m">SWE intern</span><span class="more" aria-hidden="true"><i></i></span></button></li>
         <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="2026" data-title="Study abroad" data-role="" data-desc="Details coming soon." data-img="journey-abroad-1.jpg:1.333,journey-abroad-2.jpg:1.333" data-alts="Luke and friends on a sand dune in the desert|Luke and friends in a busy market square at dusk"><span class="y">2026</span><span class="n">Study abroad</span><span class="m"></span><span class="more" aria-hidden="true"><i></i></span></button></li>
-        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="Summer 2025" data-title="Amazon" data-role="SDE intern" data-desc="Software development engineer intern in the Stores division." data-img="journey-amazon-1.jpg:0.75,journey-amazon-2.jpg:0.563" data-alts="Luke holding his Amazon badge|Luke and another intern in an Amazon office overlooking Seattle"><span class="y">2025</span><span class="n">Amazon</span><span class="m">SDE intern</span><span class="more" aria-hidden="true"><i></i></span></button></li>
+        <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="Summer 2025" data-title="Amazon" data-role="SDE intern" data-desc="Software development engineer intern in the Stores division." data-img="journey-amazon-1.jpg:0.75,journey-amazon-2.mp4:0.563" data-alts="Luke holding his Amazon badge|Luke and another intern in an Amazon office overlooking Seattle"><span class="y">2025</span><span class="n">Amazon</span><span class="m">SDE intern</span><span class="more" aria-hidden="true"><i></i></span></button></li>
         <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="2023 to present" data-title="University of Washington" data-role="B.S. CS" data-desc="Studying Computer Science with a Data Science focus and a minor in Business." data-img="journey-uw.jpg"><span class="y">2023</span><span class="n">University of Washington</span><span class="m">B.S. CS</span><span class="more" aria-hidden="true"><i></i></span></button></li>
         <li class="j"><button class="jrow" type="button" data-open="row" aria-haspopup="dialog" data-when="2019 to 2023" data-title="First line of code" data-role="" data-desc="Explored programming through high school courses and personal projects." data-img="journey-start.jpg" data-alts="Luke as a young kid wearing headphones at a desk"><span class="y">2019</span><span class="n">First line of code</span><span class="m"></span><span class="more" aria-hidden="true"><i></i></span></button></li>
       </ol>
@@ -447,7 +447,14 @@
       const fig = document.createElement('figure'); fig.className = 'media ' + cls;
       if (ar) fig.style.setProperty('--ar', ar);
       fig.dataset.label = d.title + ' photo'; fig.dataset.file = 'assets/' + file;
-      const img = document.createElement('img'); img.src = '../../../assets/' + file; img.alt = alts[i] || d.title;
+      let img;
+      if (file.endsWith('.mp4')) {
+        img = document.createElement('video');
+        Object.assign(img, { autoplay: true, muted: true, loop: true, playsInline: true });
+        img.poster = '../../../assets/' + file.replace(/\.mp4$/, '.jpg');
+        img.setAttribute('aria-label', alts[i] || d.title);
+      } else { img = document.createElement('img'); img.alt = alts[i] || d.title; }
+      img.src = '../../../assets/' + file;
       fig.appendChild(img); return fig;
     };
     if (imgs.length > 1) {
