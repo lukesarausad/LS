@@ -117,7 +117,7 @@
   .pics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .pics .media { aspect-ratio: 3 / 4; }
   .media { position: relative; margin: 0; border-radius: 20px; overflow: hidden; background: var(--bg); aspect-ratio: 1; max-width: 100%; }
-  .media.tall { aspect-ratio: 9 / 14; max-height: 72svh; justify-self: center; width: 100%; }
+  .media.tall { aspect-ratio: 9 / 16; max-height: 72svh; justify-self: center; width: 100%; }
   .media img, .media video { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.85) contrast(1.04); }
   /* halftone dot screen ties photos to the field */
   .media::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(rgba(var(--ink-rgb),.22) 1px, transparent 1.6px) 0 0 / 7px 7px; mix-blend-mode: multiply; opacity: .55; }
@@ -154,6 +154,20 @@
     .jrow .y { grid-column: 1; } .jrow .n { grid-column: 1; } .jrow .m { grid-column: 1; }
     .jrow .more { grid-column: 2; grid-row: 1 / 4; }
   }
+
+  .detail.stack { grid-template-columns: 1fr; align-items: start; }
+  .detail.stack .dl { max-width: 60ch; }
+  .races { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .races .race { margin: 0; }
+  .pics.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pics.three .media { aspect-ratio: 3 / 4; }
+  .media figcaption { position: absolute; left: 10px; bottom: 10px; z-index: 2; font-size: 13px; padding: 5px 10px; border-radius: 99px; background: var(--card); color: var(--ink); }
+  .media.empty figcaption { display: none; }
+  @media (max-width: 760px) {
+    .races { grid-template-columns: 1fr; gap: 0; }
+    .pics.three { grid-template-columns: 1fr 1fr; }
+    .pics.three .media:first-child { grid-column: 1 / -1; aspect-ratio: 4 / 5; }
+  }
   @media (max-width: 760px) { .duo { grid-template-columns: 1fr; } }
   @media (prefers-reduced-motion: reduce) { .dots i { transition: none; } }
 
@@ -178,7 +192,7 @@
   <section class="wrap" id="about">
     <div class="panel intro">
       <h2>About me</h2>
-      <p class="lead">Outside of code, I'm usually training or on the golf course. I ran the Seattle Marathon last November, and this July I'm racing Ironman 70.3 Coeur d'Alene.</p>
+      <p class="lead">Outside of code, I'm usually training or on the golf course. I ran the Seattle Marathon last November and the Barcelona Half Marathon, and this July I'm racing Ironman 70.3 Coeur d'Alene.</p>
     </div>
     <div class="duo">
       <button class="panel card golf" type="button" data-open="golf" aria-haspopup="dialog">
@@ -193,6 +207,11 @@
           <span class="rh"><span class="n">Seattle Marathon</span><span class="tag done">3:54:45</span></span>
           <span class="dots" data-legs="run:26.2" aria-label="26.2 miles, finished November 2025"></span>
           <span class="m">26.2 mi, November 2025</span>
+        </span>
+        <span class="race">
+          <span class="rh"><span class="n">Barcelona Half Marathon</span><span class="tag done">1:48</span></span>
+          <span class="dots" data-legs="run:13.1" aria-label="13.1 miles, finished in Barcelona"></span>
+          <span class="m">13.1 mi, Barcelona</span>
         </span>
         <span class="race">
           <span class="rh"><span class="n">Ironman 70.3 Coeur d'Alene</span><span class="tag">Training</span></span>
@@ -218,22 +237,26 @@
         <p class="dl">Here's my swing.</p>
       </div>
       <figure class="media tall" data-label="Swing video" data-file="assets/golf-swing.mp4">
-        <video src="../../../assets/golf-swing.mp4" autoplay muted loop playsinline aria-label="Luke swinging a golf club"></video>
+        <video src="../../../assets/golf-swing.mp4" poster="../../../assets/golf-swing-poster.jpg" autoplay muted loop playsinline aria-label="Luke swinging a golf club"></video>
       </figure>
     </div>
   </template>
 
   <template id="tpl-fit">
-    <div class="detail">
+    <div class="detail stack">
       <div class="dtext">
         <h3 id="sheet-title">Fitness</h3>
-        <p class="dl">I ran the Seattle Marathon last November. Now I'm adding swimming and cycling to train for a half Ironman this July.</p>
-        <div class="race"><div class="rh"><span class="n">Seattle Marathon</span><span class="tag done">3:54:45</span></div><p class="m">November 2025, 26.2 mi</p></div>
-        <div class="race"><div class="rh"><span class="n">Ironman 70.3 Coeur d'Alene</span><span class="tag">July 2027</span></div><p class="m"><i class="k swim"></i>1.2 swim <i class="k bike"></i>56 bike <i class="k run"></i>13.1 run</p></div>
+        <p class="dl">My family met me at the Seattle finish. Since then I've run Barcelona, and now I'm adding swimming and cycling for a half Ironman.</p>
+        <div class="races">
+          <div class="race"><div class="rh"><span class="n">Seattle Marathon</span><span class="tag done">3:54:45</span></div><p class="m">November 2025, 26.2 mi</p></div>
+          <div class="race"><div class="rh"><span class="n">Barcelona Half Marathon</span><span class="tag done">1:48</span></div><p class="m">Barcelona, 13.1 mi</p></div>
+          <div class="race"><div class="rh"><span class="n">Ironman 70.3 Coeur d'Alene</span><span class="tag">July 2027</span></div><p class="m"><i class="k swim"></i>1.2 swim <i class="k bike"></i>56 bike <i class="k run"></i>13.1 run</p></div>
+        </div>
       </div>
-      <div class="pics">
-        <figure class="media" data-label="Marathon photo" data-file="assets/marathon.jpg"><img src="../../../assets/marathon.jpg" alt="Luke running the Seattle Marathon" /></figure>
-        <figure class="media" data-label="Training photo" data-file="assets/training.jpg"><img src="../../../assets/training.jpg" alt="Luke training for the half Ironman" /></figure>
+      <div class="pics three">
+        <figure class="media" data-label="Seattle family" data-file="assets/fitness-seattle-family.jpg"><img src="../../../assets/fitness-seattle-family.jpg" alt="Luke with his family after the Seattle Marathon" /><figcaption>Seattle, with family</figcaption></figure>
+        <figure class="media" data-label="Seattle friends" data-file="assets/fitness-seattle-friends.jpg"><img src="../../../assets/fitness-seattle-friends.jpg" alt="Luke and two friends with their Seattle Marathon medals" /><figcaption>Seattle, with friends</figcaption></figure>
+        <figure class="media" data-label="Barcelona" data-file="assets/fitness-barcelona.jpg"><img src="../../../assets/fitness-barcelona.jpg" alt="Luke and a friend biting their medals at the Barcelona finish" /><figcaption>Barcelona</figcaption></figure>
       </div>
     </div>
   </template>
@@ -325,7 +348,7 @@
   requestAnimationFrame(frame);
   // dot rows: one dot per mile, the half Ironman drawn as rings because it is still ahead
   document.querySelectorAll('.dots').forEach((el, r) => {
-    if (r === 1) el.classList.add('ring');
+    if (el.dataset.legs.includes('swim')) el.classList.add('ring');
     let n = 0;
     el.dataset.legs.split(',').forEach(leg => {
       const [cls, mi] = leg.split(':'); const v = parseFloat(mi);
