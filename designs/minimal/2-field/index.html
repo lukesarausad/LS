@@ -8,13 +8,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600&display=swap" rel="stylesheet" />
 <style>
-  :root { --bg: #dfe4ea; --ink: #14213d; --coral: #ff6b4a; --mute: #5d6b85; --card: #eef1f5; }
+  :root { --bg: #dfe4ea; --ink: #14213d; --coral: #ff6b4a; --mute: #5d6b85; --card: #eef1f5; --swim: #3f74d6; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--ink); font: 300 17px/1.6 "Sora", system-ui, sans-serif; }
   a { color: inherit; }
   :focus-visible { outline: 2px solid var(--coral); outline-offset: 4px; border-radius: 6px; }
-  canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  canvas.field { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
   main, footer { position: relative; z-index: 1; }
   .wrap { width: min(880px, 100% - 32px); margin: 0 auto; }
 
@@ -51,6 +51,32 @@
   .contact .go { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
   footer { text-align: center; color: var(--mute); font-size: 13px; padding: 30px 0 40px; }
 
+  .duo { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; }
+  .golf { display: flex; flex-direction: column; }
+  .golf .matrix { margin-top: auto; }
+  .golf .cap { margin-bottom: auto; }
+  .matrix { width: 100%; max-width: 100%; height: auto; aspect-ratio: 19 / 7; display: block; }
+  .cap { margin-top: 14px; color: var(--mute); font-size: 15px; }
+  .race + .race { margin-top: 28px; }
+  .rh { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .rh .n { font-size: clamp(19px, 2.2vw, 24px); font-weight: 400; letter-spacing: -0.01em; }
+  .tag { font-size: 13px; padding: 4px 10px; border-radius: 99px; box-shadow: inset 0 0 0 1px var(--ink); white-space: nowrap; }
+  .tag.done { background: var(--coral); color: #fff; box-shadow: none; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .dots { display: flex; flex-wrap: wrap; gap: 5px; margin: 14px 0 10px; }
+  .dots i { width: 9px; height: 9px; border-radius: 50%; transform: scale(0); transition: transform .35s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(var(--i) * 18ms); }
+  .dots.on i { transform: scale(var(--s, 1)); }
+  .dots .run { background: var(--coral); }
+  .dots .bike { background: var(--ink); }
+  .dots .swim { background: var(--swim); }
+  .dots.ring i { background: transparent; box-shadow: inset 0 0 0 2px currentColor; }
+  .dots.ring .run { color: var(--coral); } .dots.ring .bike { color: var(--ink); } .dots.ring .swim { color: var(--swim); }
+  .endure .m, .golf .m { color: var(--mute); font-size: 14px; }
+  .m .k { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin: 0 5px 0 10px; vertical-align: 1px; }
+  .m .k:first-child { margin-left: 0; }
+  .m .k.swim { background: var(--swim); } .m .k.bike { background: var(--ink); } .m .k.run { background: var(--coral); }
+  @media (max-width: 760px) { .duo { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .dots i { transition: none; } }
+
   @media (max-width: 600px) {
     .list li { grid-template-columns: 1fr; gap: 2px; }
     .hint { display: none; }
@@ -58,7 +84,7 @@
 </style>
 </head>
 <body>
-<canvas aria-hidden="true"></canvas>
+<canvas class="field" aria-hidden="true"></canvas>
 <main>
   <header class="hero">
     <div>
@@ -69,11 +95,26 @@
     <span class="hint">Move or click anywhere</span>
   </header>
 
-  <section class="wrap">
-    <div class="panel">
-      <h2>About</h2>
-      <p class="lead">I build fast, simple software for the web and love turning ideas into real products.</p>
-      <ul class="tags"><li>Java</li><li>TypeScript</li><li>JavaScript</li><li>React</li><li>Node.js</li><li>Python</li><li>C</li><li>HTML/CSS</li><li>Git</li><li>MongoDB</li><li>AWS</li><li>Azure</li></ul>
+  <section class="wrap" id="off">
+    <div class="duo">
+      <div class="panel golf">
+        <h2>Golf</h2>
+        <canvas class="matrix" width="380" height="140" role="img" aria-label="Handicap index 14.2"></canvas>
+        <p class="cap">Handicap index</p>
+      </div>
+      <div class="panel endure">
+        <h2>Endurance</h2>
+        <div class="race">
+          <div class="rh"><span class="n">Seattle Marathon</span><span class="tag done">3:54:45</span></div>
+          <div class="dots" data-legs="run:26.2" aria-label="26.2 miles, finished November 2025"></div>
+          <p class="m">26.2 mi, November 2025</p>
+        </div>
+        <div class="race">
+          <div class="rh"><span class="n">Half Ironman</span><span class="tag">Training</span></div>
+          <div class="dots" data-legs="swim:1.2,bike:56,run:13.1" aria-label="70.3 miles: 1.2 mile swim, 56 mile bike, 13.1 mile run, July 2027"></div>
+          <p class="m"><i class="k swim"></i>1.2 swim <i class="k bike"></i>56 bike <i class="k run"></i>13.1 run, July 2027</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -112,7 +153,7 @@
 <footer>© 2025 Luke Sarausad</footer>
 
 <script>
-  const cv = document.querySelector('canvas'), cx = cv.getContext('2d');
+  const cv = document.querySelector('canvas.field'), cx = cv.getContext('2d');
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const GAP = 26, INK = [20, 33, 61], CORAL = [255, 107, 74];
   let W, H, dpr, dots = [], mx = -999, my = -999, waves = [], t0 = performance.now();
@@ -152,6 +193,62 @@
     if (!still) requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+  // dot rows: one dot per mile, the half Ironman drawn as rings because it is still ahead
+  document.querySelectorAll('.dots').forEach((el, r) => {
+    if (r === 1) el.classList.add('ring');
+    let n = 0;
+    el.dataset.legs.split(',').forEach(leg => {
+      const [cls, mi] = leg.split(':'); const v = parseFloat(mi);
+      const whole = Math.floor(v), frac = v - whole;
+      for (let k = 0; k < whole; k++) { const d = document.createElement('i'); d.className = cls; d.style.setProperty('--i', n++); el.appendChild(d); }
+      if (frac > 0.05) { const d = document.createElement('i'); d.className = cls; d.style.setProperty('--i', n++); d.style.setProperty('--s', Math.max(.45, frac)); el.appendChild(d); }
+    });
+  });
+
+  // dot-matrix handicap that counts down to 14.2
+  const FONT = { '0':['01110','10001','10011','10101','11001','10001','01110'], '1':['00100','01100','00100','00100','00100','00100','01110'], '2':['01110','10001','00001','00010','00100','01000','11111'], '3':['11110','00001','00001','01110','00001','00001','11110'], '4':['00010','00110','01010','10010','11111','00010','00010'], '5':['11111','10000','11110','00001','00001','10001','01110'], '6':['00110','01000','10000','11110','10001','10001','01110'], '7':['11111','00001','00010','00100','01000','01000','01000'], '8':['01110','10001','10001','01110','10001','10001','01110'], '9':['01110','10001','10001','01111','00001','00010','01100'], '.':['0','0','0','0','0','0','1'] };
+  const mc = document.querySelector('.matrix'), mx2 = mc.getContext('2d');
+  const TARGET = 14.2, COLS = 19, ROWS = 7;
+  let hover = -1;
+  function drawMatrix(val) {
+    const dprM = Math.min(devicePixelRatio || 1, 2), w = mc.clientWidth || 380, h = w * ROWS / COLS;
+    if (mc.width !== Math.round(w * dprM)) { mc.width = Math.round(w * dprM); mc.height = Math.round(h * dprM); }
+    mx2.setTransform(dprM, 0, 0, dprM, 0, 0); mx2.clearRect(0, 0, w, h);
+    const str = val.toFixed(1).padStart(4, ' '), cell = w / COLS;
+    let col = 0; const lit = new Set();
+    for (const ch of str) {
+      const g = FONT[ch];
+      if (g) g.forEach((row, y) => [...row].forEach((b, x) => { if (b === '1') lit.add((col + x) + ',' + y); }));
+      col += (ch === '.' ? 1 : 5) + 1;
+    }
+    for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) {
+      const on = lit.has(x + ',' + y), near = hover >= 0 && Math.abs(x - hover) <= 1;
+      mx2.fillStyle = on ? '#ff6b4a' : 'rgba(20,33,61,.12)';
+      mx2.beginPath(); mx2.arc((x + .5) * cell, (y + .5) * cell, cell * (on ? (near ? .47 : .4) : .16), 0, 6.283); mx2.fill();
+    }
+  }
+  let shown = TARGET;
+  drawMatrix(shown);
+  addEventListener('resize', () => drawMatrix(shown));
+  mc.addEventListener('pointermove', e => { const r = mc.getBoundingClientRect(); hover = Math.floor((e.clientX - r.left) / r.width * COLS); drawMatrix(shown); });
+  mc.addEventListener('pointerleave', () => { hover = -1; drawMatrix(shown); });
+  function countDown() {
+    if (still) return;
+    const from = 36, t0 = performance.now(), dur = 1800;
+    (function step(now) {
+      const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      shown = p < 1 ? Math.round((from + (TARGET - from) * e) * 10) / 10 : TARGET;
+      drawMatrix(shown);
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (!en.isIntersecting) return;
+    io.unobserve(en.target);
+    if (en.target === mc) countDown(); else en.target.classList.add('on');
+  }), { threshold: .4 });
+  io.observe(mc);
+  document.querySelectorAll('.dots').forEach(d => still ? d.classList.add('on') : io.observe(d));
 </script>
 </body>
 </html>
