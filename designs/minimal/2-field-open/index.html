@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Luke Sarausad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root { --display: "Hedvig Letters Serif", Georgia, serif; --text: "Hanken Grotesk", system-ui, sans-serif;
+    --bg: #dfe4ea; --card: #eef1f5; --ink: #14213d; --ink-rgb: 20,33,61; --accent: #ff6b4a; --accent-rgb: 255,107,74; --on-accent: #ffffff; --mute: #5d6b85; --line: #cdd4de; --swim: #3f74d6; --shade-rgb: 20,33,61; }
+  /* palette previews */
+  :root[data-pal="husky"] { --bg: #e6e3ef; --card: #f3f1f8; --ink: #241a4a; --ink-rgb: 36,26,74; --accent: #7048e8; --accent-rgb: 112,72,232; --on-accent: #ffffff; --mute: #625a80; --line: #d3cde3; --swim: #2f9e8f; --shade-rgb: 36,26,74; }
+  :root[data-pal="fairway"] { --bg: #dfe6dc; --card: #eff3ec; --ink: #18321f; --ink-rgb: 24,50,31; --accent: #2f8a4c; --accent-rgb: 47,138,76; --on-accent: #ffffff; --mute: #5a6d5e; --line: #cad6c6; --swim: #3a78c2; --shade-rgb: 24,50,31; }
+  :root[data-pal="glacier"] { --bg: #e3ebf3; --card: #f3f7fb; --ink: #0c2340; --ink-rgb: 12,35,64; --accent: #1f6feb; --accent-rgb: 31,111,235; --on-accent: #ffffff; --mute: #57708f; --line: #ccd8e5; --swim: #12a4a4; --shade-rgb: 12,35,64; }
+  :root[data-pal="night"] { --bg: #0e1524; --card: #161f33; --ink: #e9edf6; --ink-rgb: 233,237,246; --accent: #ffb547; --accent-rgb: 255,181,71; --on-accent: #1b1405; --mute: #8e98b0; --line: #2a3550; --swim: #5aa2ff; --shade-rgb: 4,7,14; color-scheme: dark; }
+  body, .panel, .sheet, .btn, .tag, .media { transition: background-color .5s, color .5s; }
+  .pal { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 40; display: flex; gap: 6px; padding: 6px; border-radius: 99px; background: var(--card); box-shadow: 0 6px 20px -8px rgba(var(--shade-rgb),.5); }
+  .pal button { width: 26px; height: 26px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: linear-gradient(135deg, var(--a) 50%, var(--b) 50%); box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); transition: transform .2s; }
+  .pal button[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .pal button:hover { transform: scale(1.12); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--text); }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+  canvas.field { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  main, footer { position: relative; z-index: 1; }
+  .wrap { width: min(880px, 100% - 32px); margin: 0 auto; }
+
+  .hero { position: relative; min-height: 100svh; display: grid; place-items: center; text-align: center; pointer-events: none; }
+  .hero > div { pointer-events: auto; }
+  h1 { font: 400 clamp(44px, 8.4vw, 112px)/1 var(--display); letter-spacing: -0.03em; }
+  .hero p { margin-top: 18px; color: var(--mute); font-size: clamp(16px, 1.6vw, 19px); }
+  .hero .go { display: inline-flex; gap: 10px; margin-top: 36px; }
+  .btn { padding: 12px 22px; border-radius: 99px; text-decoration: none; font-weight: 400; background: var(--ink); color: var(--bg); transition: background .25s; }
+  .btn.ghost { background: transparent; box-shadow: inset 0 0 0 1px var(--ink); color: var(--ink); }
+  .btn:hover { background: var(--accent); color: var(--on-accent); box-shadow: none; }
+  .hint { position: absolute; bottom: 28px; left: 50%; translate: -50% 0; font-size: 13px; color: var(--mute); }
+
+  section { padding: 36px 0; }
+  .contact { padding-top: 120px; }
+  .panel { background: var(--card); border-radius: 28px; padding: clamp(28px, 5vw, 56px); }
+  h2 { font-weight: 600; font-size: 15px; color: var(--accent); margin-bottom: 28px; }
+  .lead { font-size: clamp(22px, 3vw, 32px); line-height: 1.35; letter-spacing: -0.02em; font-weight: 400; max-width: 26ch; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; list-style: none; }
+  .tags li { padding: 8px 16px; border-radius: 99px; background: var(--bg); font-size: 15px; }
+
+  .list { list-style: none; }
+  .list li { display: grid; grid-template-columns: 90px 1fr auto; gap: 16px; align-items: baseline; padding: 18px 0; border-top: 1px solid var(--line); }
+  .list li:first-child { border-top: 0; }
+  .list .y { color: var(--mute); font-size: 15px; }
+  .list .n { font-size: clamp(19px, 2.2vw, 24px); font-weight: 400; letter-spacing: -0.01em; }
+  .list a.n { text-decoration: none; position: relative; }
+  .list a.n::after { content: ""; position: absolute; left: 0; bottom: -2px; height: 2px; width: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .35s; }
+  .list a.n:hover::after, .list a.n:focus-visible::after { transform: none; }
+  .list .m { color: var(--mute); font-size: 14px; }
+
+  .contact { text-align: center; padding-bottom: 60px; }
+  .contact h3 { font: 400 clamp(40px, 6vw, 76px)/1 var(--display); letter-spacing: -0.03em; }
+  .contact .go { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+  footer { text-align: center; color: var(--mute); font-size: 13px; padding: 30px 0 40px; }
+
+  .duo { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; }
+  .golf .matrix { margin-top: auto; }
+  .golf .cap { margin-bottom: auto; }
+  .matrix { width: 100%; max-width: 100%; height: auto; aspect-ratio: 19 / 7; display: block; }
+  .cap { margin-top: 14px; color: var(--mute); font-size: 15px; }
+  .race + .race { margin-top: 28px; }
+  .rh { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .rh .n { font-size: clamp(19px, 2.2vw, 24px); font-weight: 400; letter-spacing: -0.01em; }
+  .tag { font-size: 13px; padding: 4px 10px; border-radius: 99px; box-shadow: inset 0 0 0 1px var(--ink); white-space: nowrap; }
+  .tag.done { background: var(--accent); color: var(--on-accent); box-shadow: none; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .dots { display: flex; flex-wrap: wrap; gap: 5px; margin: 14px 0 10px; }
+  .dots i { width: 9px; height: 9px; border-radius: 50%; transform: scale(0); transition: transform .35s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(var(--i) * 18ms); }
+  .dots.on i { transform: scale(var(--s, 1)); }
+  .dots .run { background: var(--accent); }
+  .dots .bike { background: var(--ink); }
+  .dots .swim { background: var(--swim); }
+  .dots.ring i { background: transparent; box-shadow: inset 0 0 0 2px currentColor; }
+  .dots.ring .run { color: var(--accent); } .dots.ring .bike { color: var(--ink); } .dots.ring .swim { color: var(--swim); }
+  .endure .m, .golf .m { color: var(--mute); font-size: 14px; }
+  .m .k { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin: 0 5px 0 10px; vertical-align: 1px; }
+  .m .k:first-child { margin-left: 0; }
+  .m .k.swim { background: var(--swim); } .m .k.bike { background: var(--ink); } .m .k.run { background: var(--accent); }
+
+  .intro { margin-bottom: 16px; }
+  .card { font: inherit; color: inherit; text-align: left; border: 0; cursor: pointer; position: relative; display: flex; flex-direction: column; transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -18px rgba(var(--shade-rgb),.45); }
+  .card .h2 { display: block; font-weight: 600; font-size: 15px; color: var(--accent); margin-bottom: 28px; }
+  .card .race, .card .rh, .card .m, .card .cap { display: block; }
+  .card .rh { display: flex; }
+  .card .dots { display: flex; }
+  .more { margin-top: 24px; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 400; color: var(--ink); }
+  .more i { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); position: relative; transition: background .3s, transform .4s; }
+  .more i::before, .more i::after { content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 2px; margin: -1px -5px; background: var(--card); border-radius: 2px; }
+  .more i::after { transform: rotate(90deg); }
+  .card:hover .more i { background: var(--accent); transform: rotate(90deg); }
+  .card.hide { visibility: hidden; }
+
+  .sheet { position: fixed; inset: 0; margin: auto; width: min(980px, 100% - 32px); max-height: min(90svh, 860px); border: 0; padding: 0; border-radius: 28px; background: var(--card); color: var(--ink); overflow: auto; transform-origin: 0 0; }
+  .sheet::backdrop { background: rgba(var(--ink-rgb),0); backdrop-filter: blur(0); transition: background .45s, backdrop-filter .45s; }
+  .sheet.open::backdrop { background: rgba(var(--shade-rgb),.45); backdrop-filter: blur(6px); }
+  .sheet-body { opacity: 0; transition: opacity .3s; }
+  .sheet.open .sheet-body { opacity: 1; transition-delay: .25s; }
+  .close { position: absolute; top: 18px; right: 18px; z-index: 2; font: 500 14px var(--text); padding: 8px 16px; border-radius: 99px; border: 0; background: var(--ink); color: var(--card); cursor: pointer; opacity: 0; transition: opacity .3s, background .25s; }
+  .sheet.open .close { opacity: 1; transition-delay: .25s; }
+  .close:hover { background: var(--accent); }
+  .detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 48px); padding: clamp(28px, 5vw, 56px); align-items: center; }
+  .dtext { display: grid; gap: 16px; align-content: start; }
+  .detail h3 { font: 400 clamp(34px, 4.4vw, 52px)/1.02 var(--display); letter-spacing: -0.025em; }
+  .dl { font-size: 18px; line-height: 1.55; color: var(--ink); max-width: 36ch; }
+  .detail .cap { margin: -6px 0 0; }
+  .detail .race { padding-top: 14px; border-top: 1px solid var(--line); }
+  .detail .race .m { margin-top: 6px; }
+  .pics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .pics .media { aspect-ratio: 3 / 4; }
+  .media { position: relative; margin: 0; border-radius: 20px; overflow: hidden; background: var(--bg); aspect-ratio: 1; max-width: 100%; }
+  .media.tall { aspect-ratio: 9 / 16; max-height: 72svh; justify-self: center; width: 100%; }
+  .media img, .media video { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.85) contrast(1.04); }
+  /* halftone dot screen ties photos to the field */
+  .media::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(rgba(var(--ink-rgb),.22) 1px, transparent 1.6px) 0 0 / 7px 7px; mix-blend-mode: multiply; opacity: .55; }
+  .media.empty img, .media.empty video { display: none; }
+  .media.empty { display: grid; place-items: center; text-align: center; padding: 20px; }
+  .media.empty::after { opacity: 1; background: radial-gradient(rgba(var(--ink-rgb),.18) 1.4px, transparent 2px) 0 0 / 14px 14px; }
+  .media.empty::before { content: attr(data-label) "\A" "Add " attr(data-file); white-space: pre-wrap; max-width: 100%; font-size: 12px; color: var(--mute); line-height: 1.5; position: relative; z-index: 1; background: var(--bg); padding: 6px 12px; border-radius: 99px; }
+  @media (max-width: 760px) {
+    .detail { grid-template-columns: 1fr; padding-top: 64px; }
+    .media.tall { max-height: 60svh; }
+  }
+
+  .lead, .list .n, .rh .n { font-family: var(--display); font-weight: 400; }
+  .lead { letter-spacing: -0.015em; line-height: 1.3; }
+  .list .n, .rh .n { letter-spacing: -0.01em; }
+  .btn, .tags li, .tag, .more { font-family: var(--text); }
+  /* journey rows open like the cards */
+  .list li.j { padding: 0; display: block; }
+  .jrow { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 90px 1fr auto 22px; gap: 16px; align-items: baseline; width: 100%; padding: 18px 12px; margin: 0 -12px; width: calc(100% + 24px); border-radius: 14px; transition: background .25s; }
+  .jrow:hover { background: rgba(var(--ink-rgb),.05); }
+  .jrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .jrow .more { margin: 0; align-self: center; }
+  .jrow:hover .more i { background: var(--accent); transform: rotate(90deg); }
+  .jrow.hide { visibility: hidden; }
+  .detail .when { color: var(--accent); font-weight: 600; font-size: 15px; }
+  .detail .role { color: var(--mute); margin-top: -6px; }
+  .dtext .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+  .media.shot { aspect-ratio: 1; width: 100%; max-height: 70svh; justify-self: center; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+  .media.shot img { object-fit: contain; filter: none; }
+  .media.shot::after { opacity: .18; }
+  .media.photo { aspect-ratio: 4 / 5; max-height: 70svh; width: 100%; justify-self: center; }
+  @media (max-width: 600px) {
+    .jrow { grid-template-columns: 1fr 22px; row-gap: 2px; }
+    .jrow .y { grid-column: 1; } .jrow .n { grid-column: 1; } .jrow .m { grid-column: 1; }
+    .jrow .more { grid-column: 2; grid-row: 1 / 4; }
+  }
+
+  .detail.stack { grid-template-columns: 1fr; align-items: start; }
+  .detail.stack .dl { max-width: 60ch; }
+  .races { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .races .race { margin: 0; }
+  .pics.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pics.three .media { aspect-ratio: 3 / 4; }
+  .media figcaption { position: absolute; left: 10px; bottom: 10px; z-index: 2; font-size: 13px; padding: 5px 10px; border-radius: 99px; background: var(--card); color: var(--ink); }
+  .media.empty figcaption { display: none; }
+  @media (max-width: 760px) {
+    .races { grid-template-columns: 1fr; gap: 0; }
+    .pics.three { grid-template-columns: 1fr 1fr; }
+    .pics.three .media:first-child { grid-column: 1 / -1; aspect-ratio: 4 / 5; }
+  }
+
+  .rowwrap { container-type: inline-size; }
+  .pics.row { display: flex; gap: 12px; justify-content: center; height: min(50svh, calc((100cqw - 12px * (var(--n) - 1)) / var(--sum))); }
+  .pics.row .media.fit { flex: none; height: 100%; aspect-ratio: var(--ar, 1); }
+  @media (max-width: 600px) { .pics.row { flex-direction: column; height: auto; } .pics.row .media.fit { width: 100%; height: auto; } }
+  @media (max-width: 760px) { .duo { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .dots i { transition: none; } }
+
+  @media (max-width: 600px) {
+    .list li { grid-template-columns: 1fr; gap: 2px; }
+    .hint { display: none; }
+  }
+
+  /* open version: everything visible, outlined cards on the page colour */
+  .wrap { width: min(1080px, 100% - 32px); }
+  .panel { background: var(--bg); border: 1.5px solid rgba(var(--ink-rgb), .2); border-radius: 28px; }
+  section { padding: 28px 0; }
+  .stackcards { display: grid; gap: 20px; }
+  .sec-h { font: 400 clamp(34px, 4.6vw, 56px)/1 var(--display); letter-spacing: -0.03em; color: var(--ink); margin: 56px 0 24px; }
+  .sec-h:first-child { margin-top: 0; }
+  .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+  .golf-open .matrix { max-width: 440px; margin: 8px 0 12px; }
+  .golf-open .media.tall { max-height: 560px; }
+  .fit-open .races { margin: 4px 0 28px; row-gap: 22px; }
+  .fit-open .race .dots { margin: 12px 0 8px; }
+  .entry .when { color: var(--accent); font-weight: 600; font-size: 15px; }
+  .entry h3 { font: 400 clamp(30px, 3.6vw, 44px)/1.04 var(--display); letter-spacing: -0.025em; margin: 6px 0 4px; }
+  .entry .role { color: var(--mute); }
+  .entry .dl { margin-top: 14px; }
+  .entry .dtext { display: block; }
+  .entry.wide .dtext { margin-bottom: 24px; max-width: 62ch; }
+  .entry .media.photo { aspect-ratio: 4 / 5; max-height: 460px; }
+  .entry:nth-child(even of .entry.side) .split > :first-child { order: 2; }
+  .projgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .proj { display: flex; flex-direction: column; gap: 14px; }
+  .proj .media.shot { aspect-ratio: 1; width: 100%; }
+  .proj h3 { font: 400 28px/1.05 var(--display); letter-spacing: -0.02em; }
+  .proj .kind { color: var(--accent); font-weight: 600; font-size: 14px; }
+  .proj p.d { color: var(--ink); font-size: 16px; line-height: 1.55; }
+  .proj .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 6px; }
+  .proj .btn { padding: 10px 18px; font-size: 15px; }
+  @media (max-width: 860px) {
+    .split { grid-template-columns: 1fr; }
+    .entry:nth-child(even of .entry.side) .split > :first-child { order: 0; }
+    .projgrid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<canvas class="field" aria-hidden="true"></canvas>
+<main>
+  <header class="hero">
+    <div>
+      <h1>Luke Sarausad</h1>
+      <p>Software engineer. CS at UW. SWE intern at DoorDash.</p>
+      <div class="go"><a class="btn" href="../../../assets/Luke_Resume_September.pdf">Resume</a><a class="btn ghost" href="#contact">Contact</a></div>
+    </div>
+    <span class="hint">Move or click anywhere</span>
+  </header>
+
+  <section class="wrap" id="about">
+    <div class="stackcards">
+      <h2 class="sec-h">About me</h2>
+      <div class="panel intro"><p class="lead">Outside of code, I'm usually training or on the golf course. I ran the Seattle Marathon last November and the Barcelona Half Marathon, and this July I'm racing Ironman 70.3 Coeur d'Alene.</p></div>
+      <article class="panel golf-open">
+        <div class="split">
+          <div>
+            <h2>Golf</h2>
+            <canvas class="matrix" width="380" height="140" role="img" aria-label="Handicap index 14.2"></canvas>
+            <p class="cap">Handicap index</p>
+          </div>
+          <figure class="media tall" data-label="Luke swinging a golf club" data-file="assets/golf-swing.mp4"><video src="../../../assets/golf-swing.mp4" poster="../../../assets/golf-swing-poster.jpg" autoplay muted loop playsinline aria-label="Luke swinging a golf club"></video></figure>
+        </div>
+      </article>
+      <article class="panel fit-open">
+        <h2>Fitness</h2>
+        <div class="races">
+          <div class="race"><div class="rh"><span class="n">Seattle Marathon</span><span class="tag done">3:54:45</span></div><div class="dots" data-legs="run:26.2" aria-label="26.2 miles, finished November 2025"></div><p class="m">November 2025, 26.2 mi</p></div>
+          <div class="race"><div class="rh"><span class="n">Barcelona Half Marathon</span><span class="tag done">1:48</span></div><div class="dots" data-legs="run:13.1" aria-label="13.1 miles, finished in Barcelona"></div><p class="m">Barcelona, 13.1 mi</p></div>
+          <div class="race"><div class="rh"><span class="n">Ironman 70.3 Coeur d'Alene</span><span class="tag">Training</span></div><div class="dots" data-legs="swim:1.2,bike:56,run:13.1" aria-label="70.3 miles: 1.2 mile swim, 56 mile bike, 13.1 mile run, July 2027"></div><p class="m"><i class="k swim"></i>1.2 swim <i class="k bike"></i>56 bike <i class="k run"></i>13.1 run, July 2027</p></div>
+        </div>
+        <div class="pics three">
+          <figure class="media " data-label="Luke with his family after the Seattle Marathon" data-file="assets/fitness-seattle-family.jpg"><img src="../../../assets/fitness-seattle-family.jpg" alt="Luke with his family after the Seattle Marathon" loading="lazy" /><figcaption>Seattle, with family</figcaption></figure>
+          <figure class="media " data-label="Luke and two friends with their Seattle Marathon medals" data-file="assets/fitness-seattle-friends.jpg"><img src="../../../assets/fitness-seattle-friends.jpg" alt="Luke and two friends with their Seattle Marathon medals" loading="lazy" /><figcaption>Seattle, with friends</figcaption></figure>
+          <figure class="media " data-label="Luke and a friend at the Barcelona finish" data-file="assets/fitness-barcelona.jpg"><img src="../../../assets/fitness-barcelona.jpg" alt="Luke and a friend at the Barcelona finish" loading="lazy" /><figcaption>Barcelona</figcaption></figure>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap" id="journey">
+    <div class="stackcards">
+      <h2 class="sec-h">Journey</h2>
+      <article class="panel entry wide"><div class="dtext"><p class="when">Summer 2026</p><h3>DoorDash</h3><p class="role">SWE intern</p><p class="dl">Software engineering intern on the LaunchPad team, building new product initiatives.</p></div><div class="rowwrap"><div class="pics row" style="--n:2;--sum:2.083"><figure class="media fit" style="--ar:1.333" data-label="Luke and coworkers toasting at dinner" data-file="assets/journey-doordash-1.jpg"><img src="../../../assets/journey-doordash-1.jpg" alt="Luke and coworkers toasting at dinner" loading="lazy" /></figure><figure class="media fit" style="--ar:0.75" data-label="Luke and another intern in the DoorDash office" data-file="assets/journey-doordash-2.jpg"><img src="../../../assets/journey-doordash-2.jpg" alt="Luke and another intern in the DoorDash office" loading="lazy" /></figure></div></div></article>
+      <article class="panel entry wide"><div class="dtext"><p class="when">2026</p><h3>Study abroad</h3><p class="dl">Details coming soon.</p></div><div class="rowwrap"><div class="pics row" style="--n:2;--sum:2.666"><figure class="media fit" style="--ar:1.333" data-label="Luke and friends on a sand dune in the desert" data-file="assets/journey-abroad-1.jpg"><img src="../../../assets/journey-abroad-1.jpg" alt="Luke and friends on a sand dune in the desert" loading="lazy" /></figure><figure class="media fit" style="--ar:1.333" data-label="Luke and friends in a busy market square at dusk" data-file="assets/journey-abroad-2.jpg"><img src="../../../assets/journey-abroad-2.jpg" alt="Luke and friends in a busy market square at dusk" loading="lazy" /></figure></div></div></article>
+      <article class="panel entry wide"><div class="dtext"><p class="when">Summer 2025</p><h3>Amazon</h3><p class="role">SDE intern</p><p class="dl">Software development engineer intern in the Stores division.</p></div><div class="rowwrap"><div class="pics row" style="--n:2;--sum:1.313"><figure class="media fit" style="--ar:0.75" data-label="Luke holding his Amazon badge" data-file="assets/journey-amazon-1.jpg"><img src="../../../assets/journey-amazon-1.jpg" alt="Luke holding his Amazon badge" loading="lazy" /></figure><figure class="media fit" style="--ar:0.563" data-label="Luke and another intern in an Amazon office overlooking Seattle" data-file="assets/journey-amazon-2.mp4"><video src="../../../assets/journey-amazon-2.mp4" poster="../../../assets/journey-amazon-2.jpg" autoplay muted loop playsinline aria-label="Luke and another intern in an Amazon office overlooking Seattle"></video></figure></div></div></article>
+      <article class="panel entry side"><div class="split"><div class="dtext"><p class="when">2023 to present</p><h3>University of Washington</h3><p class="role">B.S. CS</p><p class="dl">Studying Computer Science with a Data Science focus and a minor in Business.</p></div><figure class="media photo" data-label="Luke in front of a building on the UW campus" data-file="assets/journey-uw.jpg"><img src="../../../assets/journey-uw.jpg" alt="Luke in front of a building on the UW campus" loading="lazy" /></figure></div></article>
+      <article class="panel entry side"><div class="split"><div class="dtext"><p class="when">2019 to 2023</p><h3>First line of code</h3><p class="dl">Explored programming through high school courses and personal projects.</p></div><figure class="media photo" data-label="Luke as a young kid wearing headphones at a desk" data-file="assets/journey-start.jpg"><img src="../../../assets/journey-start.jpg" alt="Luke as a young kid wearing headphones at a desk" loading="lazy" /></figure></div></article>
+    </div>
+  </section>
+
+  <section class="wrap" id="projects">
+    <h2 class="sec-h">Projects</h2>
+    <div class="projgrid">
+      <article class="panel proj"><figure class="media shot" data-label="CourtFinder screenshot" data-file="assets/project1.png"><img src="../../../assets/project1.png" alt="CourtFinder screenshot" loading="lazy" /></figure><p class="kind">Web app</p><h3>CourtFinder</h3><p class="d">Find nearby parks in Issaquah, see which tennis courts are open, and book a time.</p><div class="links"><a class="btn" href="https://issaquah-tennis-queue.vercel.app/" target="_blank" rel="noopener">Live demo</a><a class="btn ghost" href="https://github.com/bilal-ali1/Issaquah-Tennis-Queue" target="_blank" rel="noopener">GitHub</a></div></article>
+      <article class="panel proj"><figure class="media shot" data-label="Summairy screenshot" data-file="assets/project2.png"><img src="../../../assets/project2.png" alt="Summairy screenshot" loading="lazy" /></figure><p class="kind">AI tool</p><h3>Summairy</h3><p class="d">Paste an article link and get a short summary, or a version ready to post on LinkedIn or X.</p><div class="links"><a class="btn" href="https://github.com/lukesarausad/summairy" target="_blank" rel="noopener">GitHub</a></div></article>
+      <article class="panel proj"><figure class="media shot" data-label="Market Predictor screenshot" data-file="assets/portfolio_graphic.png"><img src="../../../assets/portfolio_graphic.png" alt="Market Predictor screenshot" loading="lazy" /></figure><p class="kind">ML model</p><h3>Market Predictor</h3><p class="d">A machine learning model that predicts stock market movement.</p><div class="links"><a class="btn" href="https://github.com/lukesarausad/MarketPredictor" target="_blank" rel="noopener">GitHub</a></div></article>
+    </div>
+  </section>
+
+  <section class="contact wrap" id="contact">
+    <h3>Let's talk.</h3>
+    <div class="go">
+      <a class="btn" href="mailto:lukes25@uw.edu">Email</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/lukesarausad/">LinkedIn</a>
+      <a class="btn ghost" href="https://github.com/lukesarausad">GitHub</a>
+    </div>
+  </section>
+</main>
+<footer>© 2025 Luke Sarausad</footer>
+<div class="pal" role="group" aria-label="Color palette">
+  <button type="button" data-p="" aria-label="Coral" style="--a:#dfe4ea;--b:#ff6b4a"></button>
+  <button type="button" data-p="husky" aria-label="Husky" style="--a:#e6e3ef;--b:#7048e8"></button>
+  <button type="button" data-p="fairway" aria-label="Fairway" style="--a:#dfe6dc;--b:#2f8a4c"></button>
+  <button type="button" data-p="glacier" aria-label="Glacier" style="--a:#e3ebf3;--b:#1f6feb"></button>
+  <button type="button" data-p="night" aria-label="Night" style="--a:#0e1524;--b:#ffb547"></button>
+</div>
+<script>
+  const cv = document.querySelector('canvas.field'), cx = cv.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const GAP = 26; let INK, CORAL;
+  function readPal() { const cs = getComputedStyle(document.documentElement); INK = cs.getPropertyValue('--ink-rgb').split(',').map(Number); CORAL = cs.getPropertyValue('--accent-rgb').split(',').map(Number); }
+  readPal();
+  let W, H, dpr, dots = [], mx = -999, my = -999, waves = [], t0 = performance.now();
+
+  function size() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    dots = [];
+    for (let y = GAP / 2; y < H; y += GAP) for (let x = GAP / 2; x < W; x += GAP) dots.push({ x, y });
+  }
+  size(); addEventListener('resize', size);
+  addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; });
+  addEventListener('pointerleave', () => { mx = my = -999; });
+  addEventListener('pointerdown', e => { if (!e.target.closest('a')) waves.push({ x: e.clientX, y: e.clientY, t: performance.now() }); });
+  // load ripple from the center
+  waves.push({ x: innerWidth / 2, y: innerHeight / 2, t: t0 });
+
+  function frame(now) {
+    cx.clearRect(0, 0, W, H);
+    // fade the field as you scroll away from the hero
+    const fade = Math.max(0.25, 1 - scrollY / H);
+    waves = waves.filter(w => now - w.t < 2600);
+    for (const d of dots) {
+      let r = 1.1, push = 0, heat = 0;
+      const dx = d.x - mx, dy = d.y - my, dist = Math.hypot(dx, dy);
+      if (dist < 160) { const k = 1 - dist / 160; r += k * k * 5; push = k * 10; heat = k; }
+      for (const w of waves) {
+        const wd = Math.hypot(d.x - w.x, d.y - w.y), front = (now - w.t) * 0.7, band = Math.abs(wd - front);
+        if (band < 50) { const k = (1 - band / 50) * (1 - (now - w.t) / 2600); r += k * 4; heat = Math.max(heat, k); }
+      }
+      const ox = dist ? dx / dist * push : 0, oy = dist ? dy / dist * push : 0;
+      const c = INK.map((v, i) => Math.round(v + (CORAL[i] - v) * heat));
+      cx.fillStyle = `rgba(${c},${(0.28 + heat * 0.7) * fade})`;
+      cx.beginPath(); cx.arc(d.x + ox, d.y + oy, r, 0, 6.283); cx.fill();
+    }
+    if (!still) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  // dot rows: one dot per mile, the half Ironman drawn as rings because it is still ahead
+  document.querySelectorAll('.dots').forEach((el, r) => {
+    if (el.dataset.legs.includes('swim')) el.classList.add('ring');
+    let n = 0;
+    el.dataset.legs.split(',').forEach(leg => {
+      const [cls, mi] = leg.split(':'); const v = parseFloat(mi);
+      const whole = Math.floor(v), frac = v - whole;
+      for (let k = 0; k < whole; k++) { const d = document.createElement('i'); d.className = cls; d.style.setProperty('--i', n++); el.appendChild(d); }
+      if (frac > 0.05) { const d = document.createElement('i'); d.className = cls; d.style.setProperty('--i', n++); d.style.setProperty('--s', Math.max(.45, frac)); el.appendChild(d); }
+    });
+  });
+
+  // dot-matrix handicap that counts down to 14.2
+  const FONT = { '0':['01110','10001','10011','10101','11001','10001','01110'], '1':['00100','01100','00100','00100','00100','00100','01110'], '2':['01110','10001','00001','00010','00100','01000','11111'], '3':['11110','00001','00001','01110','00001','00001','11110'], '4':['00010','00110','01010','10010','11111','00010','00010'], '5':['11111','10000','11110','00001','00001','10001','01110'], '6':['00110','01000','10000','11110','10001','10001','01110'], '7':['11111','00001','00010','00100','01000','01000','01000'], '8':['01110','10001','10001','01110','10001','10001','01110'], '9':['01110','10001','10001','01111','00001','00010','01100'], '.':['0','0','0','0','0','0','1'] };
+  const TARGET = 14.2, COLS = 19, ROWS = 7;
+  const matrices = [];
+  function matrix(mc) {
+    const g = mc.getContext('2d'); let hover = -1, shown = TARGET;
+    function draw() {
+      const dpr = Math.min(devicePixelRatio || 1, 2), w = mc.clientWidth || 380, h = w * ROWS / COLS;
+      if (mc.width !== Math.round(w * dpr)) { mc.width = Math.round(w * dpr); mc.height = Math.round(h * dpr); }
+      g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+      const str = shown.toFixed(1).padStart(4, ' '), cell = w / COLS, lit = new Set();
+      let col = 0;
+      for (const ch of str) {
+        const f = FONT[ch];
+        if (f) f.forEach((row, y) => [...row].forEach((b, x) => { if (b === '1') lit.add((col + x) + ',' + y); }));
+        col += (ch === '.' ? 1 : 5) + 1;
+      }
+      for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) {
+        const on = lit.has(x + ',' + y), near = hover >= 0 && Math.abs(x - hover) <= 1;
+        g.fillStyle = on ? `rgb(${CORAL})` : `rgba(${INK},.12)`;
+        g.beginPath(); g.arc((x + .5) * cell, (y + .5) * cell, cell * (on ? (near ? .47 : .4) : .16), 0, 6.283); g.fill();
+      }
+    }
+    mc.addEventListener('pointermove', e => { const r = mc.getBoundingClientRect(); hover = Math.floor((e.clientX - r.left) / r.width * COLS); draw(); });
+    mc.addEventListener('pointerleave', () => { hover = -1; draw(); });
+    addEventListener('resize', draw);
+    function count(from = 36, dur = 1800) {
+      if (still) { shown = TARGET; return draw(); }
+      const t0 = performance.now();
+      (function step(now) {
+        const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+        shown = p < 1 ? Math.round((from + (TARGET - from) * e) * 10) / 10 : TARGET;
+        draw(); if (p < 1) requestAnimationFrame(step);
+      })(t0);
+    }
+    draw(); matrices.push(draw);
+    return { draw, count };
+  }
+  const cardMatrix = matrix(document.querySelector('.matrix'));
+
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (!en.isIntersecting) return;
+    io.unobserve(en.target);
+    if (en.target.tagName === 'CANVAS') cardMatrix.count(); else en.target.classList.add('on');
+  }), { threshold: .4 });
+  io.observe(document.querySelector('.matrix'));
+  document.querySelectorAll('.dots').forEach(d => still ? d.classList.add('on') : io.observe(d));
+
+
+  // show a dotted placeholder if a photo or clip is missing
+  document.querySelectorAll('.media').forEach(m => {
+    const el = m.querySelector('img, video'); if (!el) return;
+    el.addEventListener('error', () => m.classList.add('empty'));
+    if (el.tagName === 'IMG' && el.complete && !el.naturalWidth) m.classList.add('empty');
+  });
+  // palette switcher (preview only)
+  const palBtns = document.querySelectorAll('.pal button');
+  function setPal(name) {
+    if (name) document.documentElement.dataset.pal = name; else delete document.documentElement.dataset.pal;
+    palBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.p === name));
+    readPal(); matrices.forEach(d => d()); if (still) requestAnimationFrame(frame);
+    try { localStorage.setItem('field-open-pal', name); } catch (e) {}
+  }
+  palBtns.forEach(b => b.addEventListener('click', () => setPal(b.dataset.p)));
+  let savedPal = ''; try { savedPal = localStorage.getItem('field-open-pal') || ''; } catch (e) {}
+  setPal(savedPal);
+</script>
+</body>
+</html>
