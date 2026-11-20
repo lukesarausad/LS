@@ -86,6 +86,7 @@
   .item > button { width: 100%; text-align: left; display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 18px 0; }
   .item .y { color: var(--mute); font-size: 14px; font-variant-numeric: tabular-nums; }
   .item .ti { font: 400 clamp(24px, 2.6vw, 34px)/1.1 var(--display); letter-spacing: -0.03em; color: var(--mute); transition: color .3s; display: inline-flex; align-items: center; gap: .3em; }
+  .split.wide .item .ti { font-size: clamp(20px, 2vw, 28px); }
   .item .ti img, .item .ti svg { height: .72em; width: auto; opacity: .35; filter: grayscale(1); transition: opacity .3s, filter .3s; }
   .item button:hover .ti, .item.on .ti { color: var(--ink); }
   .item.on .ti img, .item.on .ti svg, .item button:hover .ti img, .item button:hover .ti svg { opacity: 1; filter: none; }
@@ -95,9 +96,11 @@
   .item .more p { color: var(--ink); max-width: 46ch; padding-bottom: 20px; }
   .item .more .role { color: var(--mute); padding-bottom: 6px; }
   .item .more .links { padding-bottom: 22px; }
-  .stage { position: sticky; top: 110px; height: min(68svh, 620px); }
+  .split.wide { grid-template-columns: minmax(0, .62fr) minmax(0, 1.38fr); gap: clamp(28px, 4vw, 64px); }
+  .stage { position: sticky; top: 110px; height: min(68svh, 620px); container-type: inline-size; }
   .shot { position: absolute; inset: 0; display: flex; gap: 12px; justify-content: flex-end; align-items: flex-start; }
-  .shot .media { height: 100%; flex: 0 1 auto; aspect-ratio: var(--ar); max-width: 100%; }
+  .shot .media { flex: none; aspect-ratio: var(--ar); height: min(min(68svh, 620px), calc((100cqw - 12px * (var(--n) - 1)) / var(--sum))); }
+  .shot .media img, .shot .media video { object-fit: contain; }
   .shot.contain .media { background: #fff; box-shadow: inset 0 0 0 1px var(--hair); }
   .shot.contain .media img { object-fit: contain; }
   .shot .media { clip-path: inset(0 0 100% 0); transition: clip-path .7s var(--ease); }
@@ -192,7 +195,7 @@
   </section>
 
   <section class="room" id="career" hidden>
-    <div class="wrap split" data-picker>
+    <div class="wrap split wide" data-picker>
       <ul class="list">
         <li class="item r" style="--d:0" data-media="journey-doordash-1.jpg:1.333,journey-doordash-2.jpg:0.75"><button type="button"><span class="y">2026</span><span class="ti">DoorDash <img src="../../../assets/logo-doordash.png" alt="" /></span></button>
           <div class="more"><div><p class="role">Software engineering intern, Ads and Promos, New York</p><p>Built a credits ledger that gives 300K+ advertisers transaction-level visibility into their ad credits.</p></div></div></li>
@@ -249,7 +252,9 @@
     const shots = items.map(it => {
       const s = document.createElement('div'); s.className = 'shot' + (contain ? ' contain' : '');
       const mob = document.createElement('div'); mob.className = 'mob' + (contain ? ' contain' : '');
-      it.dataset.media.split(',').forEach(m => { const [f, ar] = m.split(':'); s.appendChild(fig(f, ar)); mob.appendChild(fig(f, ar)); });
+      const ms = it.dataset.media.split(',').map(m => m.split(':'));
+      s.style.setProperty('--n', ms.length); s.style.setProperty('--sum', ms.reduce((a, m) => a + parseFloat(m[1]), 0));
+      ms.forEach(([f, ar]) => { s.appendChild(fig(f, ar)); mob.appendChild(fig(f, ar)); });
       stage.appendChild(s); it.querySelector('.more > div').prepend(mob); return s;
     });
     function pick(i) {
@@ -259,7 +264,6 @@
     items.forEach((it, i) => {
       const b = it.querySelector('button');
       b.addEventListener('click', () => pick(i));
-      b.addEventListener('mouseenter', () => { if (matchMedia('(min-width: 821px)').matches) pick(i); });
     });
     pk.pick = pick;
   });
