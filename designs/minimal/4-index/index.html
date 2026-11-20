@@ -80,12 +80,10 @@
   .lab-row .label { margin: 0; }
   .strava { font: 400 15px/1 var(--display); text-decoration: none; color: #fc4c02; border-bottom: 1px solid currentColor; padding-bottom: 4px; }
   .strava:hover { color: var(--ink); }
-  .listen { grid-column: 1 / -1; }
-  .pl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-  .pl figure { margin: 0; display: grid; gap: 8px; }
-  .pl iframe { width: 100%; max-width: 660px; height: 450px; border: 0; border-radius: 12px; overflow: hidden; background: transparent; }
-  .pl a { font-size: 14px; color: var(--mute); text-decoration: none; }
-  .pl a:hover { color: var(--ink); }
+  .listen { grid-column: 1 / -1; padding-top: 48px; border-top: 1px solid var(--hair); }
+  .artist { display: inline-block; font: 300 clamp(44px, 7vw, 104px)/1 var(--display); letter-spacing: -0.05em; text-decoration: none; transition: color .3s; }
+  .artist:hover { color: var(--accent); }
+  .races .tl { display: block; font: 500 13px/1 var(--text); letter-spacing: 0; color: var(--mute); text-align: right; margin-bottom: 8px; }
   .runpics { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
   .runpics .media { aspect-ratio: 3 / 4; }
 
@@ -154,8 +152,7 @@
     .about .media { justify-self: start; max-width: 320px; }
     .swing { justify-self: start; max-height: 70svh; }
     .runpics { grid-template-columns: 1fr 1fr; }
-    .pl { grid-template-columns: 1fr; }
-    .runpics .media:first-child { grid-column: 1 / -1; aspect-ratio: 4 / 5; }
+      .runpics .media:first-child { grid-column: 1 / -1; aspect-ratio: 4 / 5; }
     .stage { display: none; }
     .item .more .mob { display: flex; gap: 8px; padding-bottom: 20px; }
     .item .more .mob .media { flex: var(--ar) 1 0; aspect-ratio: var(--ar); min-width: 0; }
@@ -209,25 +206,22 @@
         <p class="label r">Golf</p>
         <p class="hcap r" style="--d:1" data-count="14.2" aria-label="Current handicap 14.2">14.2</p>
         <p class="hcap-l r" style="--d:2">Current handicap</p>
-        <div class="lab-row r" style="--d:3"><p class="label">Running</p><a class="strava" href="https://www.strava.com/athletes/lsarausad" target="_blank" rel="noopener">Follow on Strava</a></div>
+        <div class="lab-row r" style="--d:3"><p class="label">Running</p><a class="strava" href="https://www.strava.com/athletes/lsarausad" target="_blank" rel="noopener">Follow me on Strava</a></div>
         <ul class="races">
           <li class="r" style="--d:4"><div><p class="n">Seattle Marathon</p><p class="m">November 2025, 26.2 mi</p></div><p class="t" data-time="3:54:45">3:54:45</p></li>
           <li class="r" style="--d:5"><div><p class="n">Barcelona Half Marathon</p><p class="m">13.1 mi</p></div><p class="t" data-time="1:48">1:48</p></li>
-          <li class="r" style="--d:6"><div><p class="n">Ironman 70.3 Coeur d'Alene</p><p class="m">1.2 swim, 56 bike, 13.1 run</p></div><p class="t soon">July</p></li>
+          <li class="r" style="--d:6"><div><p class="n">Ironman 70.3 Coeur d'Alene</p><p class="m">1.2 swim, 56 bike, 13.1 run</p></div><p class="t soon"><span class="tl">Target</span>sub 6:00</p></li>
         </ul>
       </div>
       <figure class="media swing r" style="--d:2"><video src="../../../assets/golf-swing.mp4" poster="../../../assets/golf-swing-poster.jpg" muted loop playsinline aria-label="Luke swinging a golf club"></video></figure>
-      <div class="listen">
-        <p class="label r" style="--d:8">Listening to</p>
-        <div class="pl">
-          <figure class="r" style="--d:9"><iframe title="Apple Music playlist" src="https://embed.music.apple.com/us/playlist/pl.u-8aAVzm6fxqrva4" height="450" loading="lazy" frameborder="0" allow="autoplay *; encrypted-media *;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"></iframe><a href="https://music.apple.com/us/playlist/pl.u-8aAVzm6fxqrva4" target="_blank" rel="noopener">Open in Apple Music</a></figure>
-          <figure class="r" style="--d:10"><iframe title="Wired Headphones, Apple Music playlist" src="https://embed.music.apple.com/us/playlist/wired-headphones/pl.u-WabZzy7U6GYev4" height="450" loading="lazy" frameborder="0" allow="autoplay *; encrypted-media *;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"></iframe><a href="https://music.apple.com/us/playlist/wired-headphones/pl.u-WabZzy7U6GYev4" target="_blank" rel="noopener">Open Wired Headphones in Apple Music</a></figure>
-        </div>
-      </div>
       <div class="runpics">
         <figure class="media r" style="--d:6"><img src="../../../assets/fitness-seattle-family.jpg" alt="Luke with his family after the Seattle Marathon" loading="lazy" /></figure>
         <figure class="media r" style="--d:7"><img src="../../../assets/fitness-barcelona.jpg" alt="Luke and a friend at the Barcelona finish" loading="lazy" /></figure>
         <figure class="media r" style="--d:8"><img src="../../../assets/fitness-seattle-friends.jpg" alt="Luke and two friends with their Seattle Marathon medals" loading="lazy" /></figure>
+      </div>
+      <div class="listen r" style="--d:9">
+        <p class="label">Current favorite artist</p>
+        <a class="artist" href="https://music.apple.com/us/search?term=Norah%20Jones" target="_blank" rel="noopener">Norah Jones</a>
       </div>
     </div>
   </section>
