@@ -70,14 +70,6 @@
   .rh .n { font-size: clamp(19px, 2.2vw, 24px); font-weight: 400; letter-spacing: -0.01em; }
   .tag { font-size: 13px; padding: 4px 10px; border-radius: 99px; box-shadow: inset 0 0 0 1px var(--ink); white-space: nowrap; }
   .tag.done { background: var(--accent); color: var(--on-accent); box-shadow: none; font-variant-numeric: tabular-nums; font-weight: 600; }
-  .dots { display: flex; flex-wrap: wrap; gap: 5px; margin: 14px 0 10px; }
-  .dots i { width: 9px; height: 9px; border-radius: 50%; transform: scale(0); transition: transform .35s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(var(--i) * 18ms); }
-  .dots.on i { transform: scale(var(--s, 1)); }
-  .dots .run { background: var(--accent); }
-  .dots .bike { background: var(--ink); }
-  .dots .swim { background: var(--swim); }
-  .dots.ring i { background: transparent; box-shadow: inset 0 0 0 2px currentColor; }
-  .dots.ring .run { color: var(--accent); } .dots.ring .bike { color: var(--ink); } .dots.ring .swim { color: var(--swim); }
   .endure .m, .golf .m { color: var(--mute); font-size: 14px; }
   .m .k { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin: 0 5px 0 10px; vertical-align: 1px; }
   .m .k:first-child { margin-left: 0; }
@@ -89,7 +81,6 @@
   .card .h2 { display: block; font-weight: 600; font-size: 15px; color: var(--accent); margin-bottom: 28px; }
   .card .race, .card .rh, .card .m, .card .cap { display: block; }
   .card .rh { display: flex; }
-  .card .dots { display: flex; }
   .more { margin-top: 24px; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 400; color: var(--ink); }
   .more i { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); position: relative; transition: background .3s, transform .4s; }
   .more i::before, .more i::after { content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 2px; margin: -1px -5px; background: var(--card); border-radius: 2px; }
@@ -172,8 +163,28 @@
   .pics.row { display: flex; gap: 12px; justify-content: center; height: min(50svh, calc((100cqw - 12px * (var(--n) - 1)) / var(--sum))); }
   .pics.row .media.fit { flex: none; height: 100%; aspect-ratio: var(--ar, 1); }
   @media (max-width: 600px) { .pics.row { flex-direction: column; height: auto; } .pics.row .media.fit { width: 100%; height: auto; } }
+
+  /* split-flap boards for race times */
+  .rn { font: 400 clamp(19px, 2.2vw, 24px)/1.2 var(--display); letter-spacing: -0.01em; color: var(--ink); }
+  .board { all: unset; box-sizing: border-box; display: flex; gap: 4px; margin: 14px 0 10px; cursor: pointer; border-radius: 10px; }
+  .board:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .flap { --h: clamp(46px, 4.4vw, 58px); position: relative; width: calc(var(--h) * .68); height: var(--h); border-radius: 7px; background: var(--ink); color: var(--bg); font: 600 calc(var(--h) * .62)/var(--h) var(--text); font-variant-numeric: tabular-nums; text-align: center; perspective: 220px; box-shadow: 0 8px 18px -12px rgba(var(--shade-rgb), .7); }
+  .flap.sep { width: calc(var(--h) * .26); background: none; box-shadow: none; color: var(--ink); }
+  .flap .half { position: absolute; left: 0; right: 0; height: 50%; overflow: hidden; background: inherit; border-radius: inherit; backface-visibility: hidden; }
+  .flap .half > span { display: block; height: var(--h); }
+  .flap .t { top: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; transform-origin: 50% 100%; }
+  .flap .b { bottom: 0; border-top-left-radius: 0; border-top-right-radius: 0; transform-origin: 50% 0; }
+  .flap .b > span { margin-top: calc(var(--h) / -2); }
+  .flap::after { content: ""; position: absolute; left: 0; right: 0; top: calc(50% - .5px); height: 1px; background: rgba(var(--shade-rgb), .5); z-index: 3; }
+  .flap.sep::after { display: none; }
+  .flap .ft { z-index: 2; filter: brightness(1.12); }
+  .flap .fb { z-index: 2; transform: rotateX(90deg); }
+  .flap.go .ft { animation: flapTop var(--d) ease-in forwards; }
+  .flap.go .fb { animation: flapBot var(--d) ease-out var(--d) forwards; }
+  @keyframes flapTop { to { transform: rotateX(-90deg); } }
+  @keyframes flapBot { from { transform: rotateX(90deg); } to { transform: rotateX(0); } }
+  .board.next .flap:not(.sep) { background: var(--accent); color: var(--on-accent); }
   @media (max-width: 760px) { .duo { grid-template-columns: 1fr; } }
-  @media (prefers-reduced-motion: reduce) { .dots i { transition: none; } }
 
   @media (max-width: 600px) {
     .list li { grid-template-columns: 1fr; gap: 2px; }
@@ -191,7 +202,6 @@
   .golf-open .matrix { max-width: 440px; margin: 8px 0 12px; }
   .golf-open .media.tall { max-height: 560px; }
   .fit-open .races { margin: 4px 0 28px; row-gap: 22px; }
-  .fit-open .race .dots { margin: 12px 0 8px; }
   .entry .when { color: var(--accent); font-weight: 600; font-size: 15px; }
   .entry h3 { font: 400 clamp(30px, 3.6vw, 44px)/1.04 var(--display); letter-spacing: -0.025em; margin: 6px 0 4px; }
   :root[data-pal="black"] .logo.inv, :root[data-pal="night"] .logo.inv { filter: invert(1) hue-rotate(180deg); }
@@ -275,9 +285,9 @@
       <article class="panel fit-open">
         <h2>Fitness</h2>
         <div class="races">
-          <div class="race"><div class="rh"><span class="n">Seattle Marathon</span><span class="tag done">3:54:45</span></div><div class="dots" data-legs="run:26.2" aria-label="26.2 miles, finished November 2025"></div><p class="m">November 2025, 26.2 mi</p></div>
-          <div class="race"><div class="rh"><span class="n">Barcelona Half Marathon</span><span class="tag done">1:48</span></div><div class="dots" data-legs="run:13.1" aria-label="13.1 miles, finished in Barcelona"></div><p class="m">Barcelona, 13.1 mi</p></div>
-          <div class="race"><div class="rh"><span class="n">Ironman 70.3 Coeur d'Alene</span><span class="tag">Training</span></div><div class="dots" data-legs="swim:1.2,bike:56,run:13.1" aria-label="70.3 miles: 1.2 mile swim, 56 mile bike, 13.1 mile run, July 2027"></div><p class="m"><i class="k swim"></i>1.2 swim <i class="k bike"></i>56 bike <i class="k run"></i>13.1 run, July 2027</p></div>
+          <div class="race"><p class="rn">Seattle Marathon</p><button type="button" class="board" data-text="3:54:45" aria-label="Finish time 3 hours 54 minutes 45 seconds"></button><p class="m">November 2025, 26.2 mi</p></div>
+          <div class="race"><p class="rn">Barcelona Half Marathon</p><button type="button" class="board" data-text="1:48" aria-label="Finish time 1 hour 48 minutes"></button><p class="m">Barcelona, 13.1 mi</p></div>
+          <div class="race"><p class="rn">Ironman 70.3 Coeur d'Alene</p><button type="button" class="board next" data-text="JULY" aria-label="Race day July 2027, in training"></button><p class="m"><i class="k swim"></i>1.2 swim <i class="k bike"></i>56 bike <i class="k run"></i>13.1 run, in training</p></div>
         </div>
         <div class="pics three">
           <figure class="media " data-label="Luke with his family after the Seattle Marathon" data-file="assets/fitness-seattle-family.jpg"><img src="../../../assets/fitness-seattle-family.jpg" alt="Luke with his family after the Seattle Marathon" loading="lazy" /></figure>
@@ -324,16 +334,40 @@
   let INK, CORAL;
   function readPal() { const cs = getComputedStyle(document.documentElement); INK = cs.getPropertyValue('--ink-rgb').split(',').map(Number); CORAL = cs.getPropertyValue('--accent-rgb').split(',').map(Number); }
   readPal();
-  // dot rows: one dot per mile, the half Ironman drawn as rings because it is still ahead
-  document.querySelectorAll('.dots').forEach((el, r) => {
-    if (el.dataset.legs.includes('swim')) el.classList.add('ring');
-    let n = 0;
-    el.dataset.legs.split(',').forEach(leg => {
-      const [cls, mi] = leg.split(':'); const v = parseFloat(mi);
-      const whole = Math.floor(v), frac = v - whole;
-      for (let k = 0; k < whole; k++) { const d = document.createElement('i'); d.className = cls; d.style.setProperty('--i', n++); el.appendChild(d); }
-      if (frac > 0.05) { const d = document.createElement('i'); d.className = cls; d.style.setProperty('--i', n++); d.style.setProperty('--s', Math.max(.45, frac)); el.appendChild(d); }
-    });
+  // split-flap boards: every tile flips through characters before settling on the real one
+  const DIGITS = '0123456789', LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  function makeTile(ch) {
+    const el = document.createElement('span');
+    if (ch === ':') { el.className = 'flap sep'; el.textContent = ':'; return { el, set() {} }; }
+    el.className = 'flap'; el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = '<span class="half t"><span></span></span><span class="half b"><span></span></span><span class="half t ft"><span></span></span><span class="half b fb"><span></span></span>';
+    const [t, b, ft, fb] = [...el.querySelectorAll('.half > span')];
+    let cur = ' ';
+    t.textContent = b.textContent = ft.textContent = fb.textContent = cur;
+    return { el, set(next, d) {
+      // old char on the falling top flap and the static bottom; new char on the static top and the rising bottom flap
+      ft.textContent = cur; b.textContent = cur; t.textContent = next; fb.textContent = next;
+      el.style.setProperty('--d', d + 'ms');
+      el.classList.remove('go'); void el.offsetWidth; el.classList.add('go');
+      cur = next; setTimeout(() => { b.textContent = next; }, d * 2);
+    } };
+  }
+  const boards = [...document.querySelectorAll('.board')].map(bd => {
+    const text = bd.dataset.text, tiles = [...text].map(makeTile);
+    tiles.forEach(t => bd.appendChild(t.el));
+    let timers = [];
+    function play() {
+      timers.forEach(clearTimeout); timers = [];
+      [...text].forEach((ch, i) => {
+        if (ch === ':') return;
+        const pool = /\d/.test(ch) ? DIGITS : LETTERS, tile = tiles[i];
+        if (still) { tile.set(ch, 1); return; }
+        const spins = 6 + i * 2, D = 55;
+        for (let k = 0; k < spins; k++) timers.push(setTimeout(() => tile.set(k === spins - 1 ? ch : pool[Math.floor(Math.random() * pool.length)], D), k * D * 2));
+      });
+    }
+    bd.addEventListener('click', play);
+    return { bd, play };
   });
 
   // dot-matrix handicap that counts down to 14.2
@@ -379,10 +413,10 @@
   const io = new IntersectionObserver(es => es.forEach(en => {
     if (!en.isIntersecting) return;
     io.unobserve(en.target);
-    if (en.target.tagName === 'CANVAS') cardMatrix.count(); else en.target.classList.add('on');
+    if (en.target.tagName === 'CANVAS') cardMatrix.count(); else { const b = boards.find(x => x.bd === en.target); if (b) b.play(); }
   }), { threshold: .4 });
   io.observe(document.querySelector('.matrix'));
-  document.querySelectorAll('.dots').forEach(d => still ? d.classList.add('on') : io.observe(d));
+  boards.forEach(b => io.observe(b.bd));
 
 
   // show a dotted placeholder if a photo or clip is missing
