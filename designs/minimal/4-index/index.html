@@ -23,9 +23,9 @@
   :root[data-theme="graphite"] { --paper: #101113; --ink: #ecece8; --mute: #7d7f84; --hair: #26282c; --accent: #8fa8ff; --card: #1a1b1e; color-scheme: dark; }
   :root[data-theme="stone"] { --paper: #e7e5df; --ink: #1d1c1a; --mute: #85827a; --hair: #d2cfc7; --accent: #2f5d45; }
   :root[data-theme="mist"] { --paper: #eaeff4; --ink: #0e1b29; --mute: #7b8a9a; --hair: #d4dde6; --accent: #0a7cff; }
-  :root[data-theme="midnight"] { --paper: #0b1322; --ink: #e5ebf5; --mute: #7586a0; --hair: #1c2840; --accent: #f2c36b; --card: #121c30; color-scheme: dark; }
+  :root[data-theme="babyblue"] { --paper: #d7e9fa; --ink: #0d2238; --mute: #5d7690; --hair: #bdd5ec; --accent: #1554c4; --card: #f2f8fe; }
   :root[data-theme="mono"] { --paper: #000000; --ink: #ffffff; --mute: #8a8a8a; --hair: #242424; --accent: #ff5a36; --card: #111111; color-scheme: dark; }
-  :root[data-theme="graphite"] .logo-inv, :root[data-theme="midnight"] .logo-inv, :root[data-theme="mono"] .logo-inv { filter: invert(1) hue-rotate(180deg) !important; }
+  :root[data-theme="graphite"] .logo-inv, :root[data-theme="mono"] .logo-inv { filter: invert(1) hue-rotate(180deg) !important; }
   body, .top { transition: background-color .5s ease, color .5s ease; }
   body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--text); -webkit-font-smoothing: antialiased; }
   a { color: inherit; }
@@ -272,7 +272,7 @@
 <script>
   // themes on the number keys; no label, the page just changes
   (function () {
-    const THEMES = ['', 'graphite', 'stone', 'mist', 'midnight', 'mono'];
+    const THEMES = ['', 'graphite', 'stone', 'mist', 'babyblue', 'mono'];
     addEventListener('keydown', e => {
       if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest('input, textarea, [contenteditable]')) return;
       const n = parseInt(e.key, 10);
