@@ -71,16 +71,20 @@
   .links a:hover { border-color: var(--ink); }
 
   /* about */
-  .about { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: clamp(32px, 6vw, 96px); align-items: end; min-height: calc(100svh - 200px); }
-  .about .media { aspect-ratio: 4 / 5; max-width: 420px; justify-self: end; width: 100%; }
-  .about .meta { margin-top: 36px; color: var(--mute); }
+  .about { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: clamp(32px, 6vw, 96px); align-items: center; padding-top: clamp(8px, 4vh, 48px); }
+  .about .big { font-size: clamp(48px, 7vw, 104px); }
+  .about .bio { margin-top: 28px; font: 400 clamp(17px, 1.5vw, 20px)/1.6 var(--text); max-width: 58ch; }
+  .about .media { aspect-ratio: 4 / 5; max-width: 440px; justify-self: end; width: 100%; max-height: calc(100svh - 180px); }
+  .about .meta { margin-top: 24px; color: var(--mute); font-size: 15px; }
   .about .links { margin-top: 28px; }
 
   /* hobbies */
   .hob { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); }
   .hcap { font: 300 clamp(110px, 16vw, 240px)/.8 var(--display); letter-spacing: -0.07em; font-variant-numeric: tabular-nums; }
   .hcap-l { color: var(--mute); margin-top: 18px; }
-  .swing { aspect-ratio: 9 / 16; max-height: 560px; width: auto; justify-self: end; }
+  .swingfig { margin: 0; justify-self: end; align-self: start; display: grid; align-content: start; gap: 10px; }
+  .swing { aspect-ratio: 9 / 16; height: min(560px, 70svh); width: auto; }
+  .swingfig figcaption { color: var(--mute); font-size: 14px; }
   .races { list-style: none; margin-top: 8px; }
   .races li { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 16px; padding: 18px 0; border-top: 1px solid var(--hair); }
   .races .t { font: 300 clamp(36px, 4.6vw, 64px)/1 var(--display); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
@@ -99,7 +103,7 @@
   .runpics { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
   .runpics .media { aspect-ratio: 3 / 4; }
 
-  /* career + projects: a list on the left, a stage on the right */
+  /* journey + projects: a list on the left, a stage on the right */
   .split { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
   .list { list-style: none; }
   .item { border-top: 1px solid var(--hair); }
@@ -162,7 +166,8 @@
     .about, .hob, .split, .split.wide { grid-template-columns: 1fr; }
     .about { min-height: 0; }
     .about .media { justify-self: start; max-width: 320px; }
-    .swing { justify-self: start; max-height: 70svh; }
+    .swingfig { justify-self: start; }
+    .swing { height: auto; width: min(100%, 360px); }
     .runpics { grid-template-columns: 1fr 1fr; }
       .runpics .media:first-child { grid-column: 1 / -1; aspect-ratio: 4 / 5; }
     .stage { display: none; }
@@ -189,7 +194,7 @@
     <ul class="words">
       <li style="--i:0;--vt:w-about"><a href="#about">About<span class="dot"></span></a></li>
       <li style="--i:1;--vt:w-hobbies"><a href="#hobbies">Hobbies<span class="dot"></span></a></li>
-      <li style="--i:2;--vt:w-career"><a href="#career">Career<span class="dot"></span></a></li>
+      <li style="--i:2;--vt:w-journey"><a href="#journey">Journey<span class="dot"></span></a></li>
       <li style="--i:3;--vt:w-projects"><a href="#projects">Projects<span class="dot"></span></a></li>
     </ul>
   </nav>
@@ -199,9 +204,10 @@
   <section class="room" id="about" hidden>
     <div class="wrap about">
       <div>
-        <p class="big r" style="--d:1">I'm Luke. I like to golf, workout and code feel free to peep my site.</p>
-        <p class="meta r" style="--d:2">Software engineer studying Computer Science at the University of Washington.</p>
-        <div class="links r" style="--d:3">
+        <p class="big r" style="--d:1">I'm Luke.</p>
+        <p class="bio r" style="--d:2">I'm 22 years old and have experience in Software engineering and am looking to leverage that to pivot into forward deployed roles in the future. I love working with people and miss that part of the job with typical SWE roles. Aside from work I've always loved fitness and playing sports. Always looking to chat so if anything here piques your interest, feel free to connect.</p>
+        <p class="meta r" style="--d:3">Software engineer studying Computer Science at the University of Washington.</p>
+        <div class="links r" style="--d:4">
           <a href="assets/Luke_Resume_Nov.pdf" target="_blank" rel="noopener">Resume</a>
           <a href="mailto:lukes25@uw.edu">Email</a>
           <a href="https://www.linkedin.com/in/lukesarausad/" target="_blank" rel="noopener">LinkedIn</a>
@@ -225,7 +231,7 @@
           <li class="r" style="--d:6"><div><p class="n">Ironman 70.3 Coeur d'Alene</p><p class="m">1.2 swim, 56 bike, 13.1 run</p></div><p class="t soon"><span class="tl">Target</span>sub 6:00</p></li>
         </ul>
       </div>
-      <figure class="media swing r" style="--d:2"><video src="assets/golf-swing.mp4" poster="assets/golf-swing-poster.jpg" muted loop playsinline aria-label="Luke swinging a golf club"></video></figure>
+      <figure class="swingfig r" style="--d:2"><div class="media swing"><video src="assets/golf-swing.mp4" poster="assets/golf-swing-poster.jpg" muted loop playsinline aria-label="Luke swinging a golf club"></video></div><figcaption>Latest swing vid</figcaption></figure>
       <div class="runpics">
         <figure class="media r" style="--d:6"><img src="assets/fitness-seattle-family.jpg" alt="Luke with his family after the Seattle Marathon" loading="lazy" /></figure>
         <figure class="media r" style="--d:7"><img src="assets/fitness-barcelona.jpg" alt="Luke and a friend at the Barcelona finish" loading="lazy" /></figure>
@@ -238,7 +244,7 @@
     </div>
   </section>
 
-  <section class="room" id="career" hidden>
+  <section class="room" id="journey" hidden>
     <div class="wrap split wide" data-picker>
       <ul class="list">
         <li class="item r" style="--d:0" data-media="journey-doordash-1.jpg:1.333,journey-doordash-2.jpg:0.75"><button type="button"><span class="y">2026</span><span class="ti">DoorDash <img src="assets/logo-doordash.png" alt="" /></span></button>
@@ -288,7 +294,7 @@
   const A = 'assets/';
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const body = document.body;
-  const ROOMS = ['about', 'hobbies', 'career', 'projects'];
+  const ROOMS = ['about', 'hobbies', 'journey', 'projects'];
 
   // split the name into letters for the opening
   const nameEl = document.querySelector('.name');
@@ -303,7 +309,7 @@
     el.src = A + file; f.appendChild(el); return f;
   }
 
-  // list + stage pickers (career, projects)
+  // list + stage pickers (journey, projects)
   document.querySelectorAll('[data-picker]').forEach(pk => {
     const items = [...pk.querySelectorAll('.item')], stage = pk.querySelector('.stage'), contain = pk.hasAttribute('data-contain');
     const shots = items.map(it => {
@@ -375,8 +381,9 @@
     if (!document.startViewTransition || still) return render(room);
     document.startViewTransition(() => render(room));
   }
-  addEventListener('hashchange', () => go(location.hash.slice(1)));
-  render(location.hash.slice(1));
+  const route = () => { const h = location.hash.slice(1); return h === 'career' ? 'journey' : h; };
+  addEventListener('hashchange', () => go(route()));
+  render(route());
 </script>
 <script>
   // secret switch: type "lukepoop" anywhere to swap between the two site styles
